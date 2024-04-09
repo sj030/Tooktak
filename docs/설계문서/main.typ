@@ -11,7 +11,7 @@
 #indent 프로그램은 다음과 같이 구성됩니다.
 - Frontend: React.js
 - Backend: Node.js
-- Database: MySQL
+- Database: MongoDB(NoSQL)
 - Container: Docker
 == 프로그램 설치 및 실행
 = 프로그램 사용 흐름도
