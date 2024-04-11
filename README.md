@@ -1,172 +1,70 @@
-# Tooktak
-산학협력프로젝트 과목 (3230) 팀프로젝트입니다. 
+# Getting Started with Create React App
 
-## 실행 방법
-터미널을 각각 `Tooktak\backend`와 `Tooktak\frontend`의 경로로 이동해주세요.
-- `npm install` 명령어로 `package.json` 내의 모듈을 설치합니다.
-    - 만약, 동작하지 않는다면 `npm update` 로 업데이트를 진행해주세요.
-    - 그래도 동작하지 않는다면 `npm cache clean` 및 `npm uninstall` 명령어를 사용해 모듈을 삭제 후 다시 시도해주세요.
-- `npm run dev` 명령어로 프로그램을 실행할 수 있습니다.
-    - 코드 수정 시, 새로 고침을 해주면 즉시 반영됩니다.
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-실행되는 포트 번호입니다.
-- frontend: 3000
-- backend: 3001
+## Available Scripts
 
-<details>
-<summary>API</summary>
+In the project directory, you can run:
 
-## API
-기본적으로 `axios`가 임포트 되어 있는 상황을 가정합니다.
-```js
-import axios from 'axios';
-```
+### `npm start`
 
-<details>
-<summary>계정</summary>
+Runs the app in the development mode.\
+Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
-### 계정
-#### 로그인
-```js
-// 로그인 정보
-var account = {
-    id: 'id',
-    password: 'password'
-};
-try {
-    var response = await axios.post('http://localhost:3001/account/login', account);
-} catch (error) { 
+The page will reload when you make changes.\
+You may also see any lint errors in the console.
 
-}
-```
-#### 로그아웃
-```js
-try {
-    var response = await axios.get('http://localhost:3001/account/logout');
-} catch (error) {
+### `npm test`
 
-}
-```
-#### 서브 관리자 계정 생성
-```js
-// 추가하려는 계정 정보
-var account = {
-    id: 'id',
-    password: 'password',
-    permission: 'permission'
-};
+Launches the test runner in the interactive watch mode.\
+See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-try {
-    var response = await axios.post('http://localhost:3001/account/create', account);
-} catch (error) {
+### `npm run build`
 
-}
-```
-#### 서브 관리자 계정 제거
-```js
-// 삭제하려는 계정 정보
-var account = {
-    id: 'id'
-};
+Builds the app for production to the `build` folder.\
+It correctly bundles React in production mode and optimizes the build for the best performance.
 
-try {
-    var response = await axios.post('http://localhost:3001/account/delete', account);
-} catch (error) {
+The build is minified and the filenames include the hashes.\
+Your app is ready to be deployed!
 
-}
-```
-#### 서브 관리자 계정 목록
-```js
-try {
-    var response = await axios.get('http://localhost:3001/account/list');
-} catch (error) {
+See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-}
-```
-#### 관리자 계정 아이디 및 비밀번호 재설정
-```js
-// 변경하려는 계정 정보
-var account = {
-    id: 'id', 
-    password: 'password'
-};
+### `npm run eject`
 
-try {
-    var response = await axios.post('http://localhost:3001/account/reset', account);
-} catch (error) {
+**Note: this is a one-way operation. Once you `eject`, you can't go back!**
 
-}
-```
-#### 로그 확인
-```js
-try {
-    var response = await axios.get('http://localhost:3001/account/log');
-} catch (error) {
+If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-}
-```
-</details>
+Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
 
-<details>
-<summary>파일</summary>
+You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
 
-### 파일
-#### 파일 업로드
-```js
-// 업로드할 파일
-var onSubmit = async (e) => {
-    e.preventDefault();
-    e.persist();
-    var file = new FormData();
-    for (var i = 0; i < e.target.files.length; i++) {
-        file.append('file', e.target.files[i]);
-        var metaData = {
-            name: 'name',
-            format: 'format',
-            version: 'version',
-            chapter: 'chapter',
-            length: 'length',
-            created: 'created',
-            user: {
-                name: 'name',
-                age: 'age',
-                gender: 'gender',
-                mmse: 'mmse',
-                place: 'place'
-            },
-            path: 'path'
-        };
-        file.append('metaData', JSON.stringify(metaData));
-    }
+## Learn More
 
-    try {
-        var response = await axios.post('http://localhost:3001/file/upload', file, {
-            headers: {
-                'Content-Type': 'multipart/form-data'
-            }
-        });
-    } catch (error) {
+You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-    }
-}
-```
-#### 파일 다운로드
-```js
-```
-#### 파일 검색
-```js
-// 검색할 파일 정보
-var filter = "";
+To learn React, check out the [React documentation](https://reactjs.org/).
 
-try {
-    var response = await axios.get('http://localhost:3001/file/search', {
-        params: {
-            filter: filter
-        }
-    });
-} catch (error) {
+### Code Splitting
 
-}
-```
-</details>
-</details>
+This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+
+### Analyzing the Bundle Size
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+
+### Making a Progressive Web App
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+
+### Advanced Configuration
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+
+### Deployment
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+
+### `npm run build` fails to minify
+
+This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
