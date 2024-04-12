@@ -1,5 +1,5 @@
 import { Outlet } from "react-router-dom";
-import Navbar from "../components/nav/Navbar";
+import Menu from "../components/menu/Menu";
 export default function Root() {
   return (
     <section className=" columns is-fullheight">
@@ -7,7 +7,7 @@ export default function Root() {
         className="column is-3 is-narrow-mobile 
       is-fullheight section is-hidden-mobile"
       >
-        <Navbar />
+        <Menu />
       </aside>
       <div className="column is-9">
         <Outlet className="column is-9" />

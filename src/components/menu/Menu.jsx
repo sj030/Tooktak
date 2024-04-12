@@ -1,21 +1,20 @@
-import NavItem from "./NavItem";
+import MenuItem from "./MenuItem";
 import { Menu, MenuLabel, MenuList } from "../../styles/MenuStyle";
 export default function Navbar() {
   return (
     <Menu>
       <MenuLabel>Account</MenuLabel>
       <MenuList>
-        <NavItem path={"/login"} name={"Login"} />
-        <NavItem path={"/login"} name={"Logout"} />
+        <MenuItem path={"/login"} name={"Login"} />
       </MenuList>
       <MenuLabel>Data Management</MenuLabel>
       <MenuList>
-        <NavItem path={"/search"} name={"Data Search"} />
-        <NavItem path={"/upload"} name={"Data Upload"} />
+        <MenuItem path={"/search"} name={"Data Search"} />
+        <MenuItem path={"/upload"} name={"Data Upload"} />
       </MenuList>
       <MenuLabel>Admin</MenuLabel>
       <MenuList>
-        <NavItem path={"/admin"} name={"Account Management"} />
+        <MenuItem path={"/admin"} name={"Account Management"} />
       </MenuList>
     </Menu>
   );
