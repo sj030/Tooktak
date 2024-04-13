@@ -1,4 +1,4 @@
-import { Menu, MenuLabel, MenuList, MenuItem } from "./basicComponents/Menu";
+import { Menu, MenuLabel, MenuList, MenuItem } from "../basicComponents/Menu";
 import logo from "../asset/logo.png";
 export default function Navigation() {
   return (

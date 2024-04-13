@@ -1,5 +1,5 @@
-import { SmallSection } from "./basicComponents/Section";
-import { Card } from "./basicComponents/Card";
+import { SmallSection } from "../basicComponents/Section";
+import { Card } from "../basicComponents/Card";
 export default function FilterBox() {
   return (
     <SmallSection>

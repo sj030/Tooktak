@@ -1,3 +1,22 @@
-export function Table({ children, tableHeader }) {
-  return <table className="table">{children}</table>;
+export function Table({ header, item }) {
+  return (
+    <table className="table">
+      <thead>
+        <tr>
+          {header.map((header) => (
+            <th>{header}</th>
+          ))}
+        </tr>
+      </thead>
+      <tbody>
+        {item.map((data) => (
+          <tr>
+            {data.map((d) => (
+              <td>{d}</td>
+            ))}
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
 }
