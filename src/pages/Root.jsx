@@ -1,17 +1,6 @@
 import { Outlet } from "react-router-dom";
-import Menu from "../components/menu/Menu";
+import Navigation from "../components/Navigation";
+import RootLayout from "../components/RootLayout";
 export default function Root() {
-  return (
-    <section className=" columns is-fullheight">
-      <aside
-        className="column is-3 is-narrow-mobile 
-      is-fullheight section is-hidden-mobile"
-      >
-        <Menu />
-      </aside>
-      <div className="column is-9">
-        <Outlet className="column is-9" />
-      </div>
-    </section>
-  );
+  return <RootLayout left={<Navigation />} right={<Outlet />} />;
 }
