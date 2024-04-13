@@ -1,4 +1,4 @@
-import { InputField } from "./basicComponents/InputField";
+import { InputField } from "./basicComponents/Input";
 import { Button } from "./basicComponents/Button";
 export function LoginBox({
   id,

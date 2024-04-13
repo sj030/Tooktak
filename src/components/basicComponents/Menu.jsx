@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
-import logo from "../assets/logo.png";
 
-export function Menu({ children }) {
+export function Menu({ children, logo }) {
   return (
     <aside className="menu">
       <figure class="image is-3by1">

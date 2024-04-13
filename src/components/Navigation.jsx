@@ -1,7 +1,8 @@
-import { MenuLabel, MenuList, MenuItem } from "./Navigation";
+import { Menu, MenuLabel, MenuList, MenuItem } from "./basicComponents/Menu";
+import logo from "../asset/logo.png";
 export default function Navigation() {
   return (
-    <Menu>
+    <Menu logo={logo}>
       <MenuLabel label={"계정"} />
       <MenuList>
         <MenuItem path={"/login"} name={"Login"} />
