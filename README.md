@@ -11,7 +11,7 @@
 ### Tooktak\frontend     
 ### Tooktak\backend
 - `cp .env.example .env` 명령어를 사용해 `.env`파일을 세팅해주세요.
--  `mongodb`를 설치 및 실행해주세요. [install mongodb community-edition](https://www.mongodb.com/ko-kr/docs/manual/administration/install-community/)
+-  로컬에서 `mongodb`를 설치 및 실행해주세요. [install mongodb community-edition](https://www.mongodb.com/ko-kr/docs/manual/administration/install-community/)
     - url을 `mongodb://127.0.0.1:27017/voinosis`로 세팅해주세요.  `# voinosis : database명` 
     - `MongoDB Compass`로 gui를 편리하게 이용할 수 있습니다.             
 - `npm run dev` 명령어로 프로그램을 실행할 수 있습니다.
