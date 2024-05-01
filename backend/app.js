@@ -1,18 +1,18 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var cors = require("cors");
-var morgan = require('morgan');
-var accountRouter = require('./routes/account');
-var fileRouter = require('./routes/file');
-var { logs } = require('./config/vars');
-var mongoose = require('./config/mongoose');
-var logger = require('./config/logger');
+const createError = require('http-errors');
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const cors = require("cors");
+const morgan = require('morgan');
+const accountRouter = require('./routes/account');
+const fileRouter = require('./routes/file');
+const { logs } = require('./config/consts');
+const mongoose = require('./config/mongoose');
+const logger = require('./config/logger');
 
 // MongoDB 연결
 mongoose.connect();
-var app = express();
+const app = express();
 
 // morgan을 사용한 요청 로깅 설정, 환경별 로그 다르게 설정
 app.use(morgan(logs));

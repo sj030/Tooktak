@@ -1,8 +1,8 @@
-var winston = require('winston');
+const winston = require('winston');
 var { combine, timestamp, json, colorize, simple } = winston.format;
 
 // 개발 환경에서는 콘솔에 로그를 출력하는 전송 설정
-var loggerTransports = [
+const loggerTransports = [
     new winston.transports.Console({
         format: combine(
             colorize(),  // 로그에 색을 추가하여 콘솔에서 로그를 더 쉽게 구분할 수 있게 함
@@ -20,7 +20,7 @@ if (process.env.NODE_ENV === 'prod') {
 }
 
 // 로거 설정
-var logger = winston.createLogger({
+const logger = winston.createLogger({
     level: 'info',  // 기본 로그 레벨을 'info'로 설정. info 이상 레벨의 로그만 기록됨
     format: combine(
         timestamp(),  // 각 로그 메시지에 타임스탬프 추가
