@@ -6,7 +6,7 @@ const cors = require("cors");
 const morgan = require('morgan');
 const accountRouter = require('./routes/account');
 const fileRouter = require('./routes/file');
-const { logs } = require('./config/consts');
+const { logs } = require('./config/vars');
 const mongoose = require('./config/mongoose');
 const logger = require('./config/logger');
 
