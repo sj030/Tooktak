@@ -1,5 +1,5 @@
 const winston = require('winston');
-var { combine, timestamp, json, colorize, simple } = winston.format;
+const { combine, timestamp, json, colorize, simple } = winston.format;
 
 // 개발 환경에서는 콘솔에 로그를 출력하는 전송 설정
 const loggerTransports = [
