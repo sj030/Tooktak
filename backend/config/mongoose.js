@@ -1,7 +1,7 @@
-var mongoose = require('mongoose'); // mongoose 모듈 가져오기
-var logger = require('./../config/logger'); // 로거 설정 파일 가져오기
-var { mongo, env } = require('./vars'); // 환경 변수 파일에서 MongoDB 설정과 환경 정보 가져오기
-var { User } = require('../db/models/users'); // Admin 사용자 생성 함수 가져오기
+const mongoose = require('mongoose'); // mongoose 모듈 가져오기
+const logger = require('./../config/logger'); // 로거 설정 파일 가져오기
+const { mongo, env } = require('./vars'); // 환경 변수 파일에서 MongoDB 설정과 환경 정보 가져오기
+const { User } = require('../db/models/users'); // Admin 사용자 생성 함수 가져오기
 
 // mongoose의 Promise를 Bluebird로 설정
 mongoose.Promise = Promise;
