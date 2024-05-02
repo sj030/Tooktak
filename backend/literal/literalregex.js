@@ -1,3 +1,5 @@
-export const LiteralRegex = {
+const LiteralRegex = {
     SOMETHING_LIKE_THIS: /abc/,
 };
+
+module.exports = { LiteralRegex };
