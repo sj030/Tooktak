@@ -2,9 +2,15 @@ const express = require("express");
 const router = express.Router();
 const fs = require("fs");
 const path = require("path");
+const { FileTransferService } = require("../services/filetransferservice");
 
-router.get("/upload", (req, res) => {
+// Multer 객체 생성 및 파일 업로드 미들웨어 설정 (TEST 용도입니다)
+const upload = FileTransferService.initMulter();
+const uploadMiddleware = upload.single("filekey"); // filekey는 클라이언트에서 전송한 파일의 키 값, single()은 하나의 파일만 업로드할 때 사용 (array()는 여러 파일 업로드)
 
+router.post("/upload", uploadMiddleware, (req, res) => {
+    console.log(req.file);
+    res.json({ header: req.file });
 });
 
 router.get("/download", (req, res) => {

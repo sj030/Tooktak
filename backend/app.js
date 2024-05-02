@@ -1,11 +1,15 @@
+// Express 기본 모듈
 const createError = require("http-errors");
 const express = require("express");
 const path = require("path");
+// Express 미들웨어 
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
-const morgan = require("morgan");
+// 라우터
 const accountRouter = require("./routes/account");
 const fileRouter = require("./routes/file");
+// 로깅
+const morgan = require("morgan");
 const { logs } = require("./config/vars");
 const mongoose = require("./config/mongoose");
 const logger = require("./config/logger");
@@ -27,6 +31,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 // 정적 파일 제공을 위한 디렉토리 설정
 app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(path.join(__dirname, "uploads")));
 
 // 라우트 핸들러 설정
 app.use("/account", accountRouter);
