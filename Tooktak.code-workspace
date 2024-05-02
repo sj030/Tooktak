@@ -1,0 +1,16 @@
+{
+	"folders": [
+        {
+            "path": "."
+        },
+        {
+            "name": "backend",
+            "path": "backend"
+        }
+    ],
+    "settings": {
+        "jest.disabledWorkspaceFolders": [
+            "Tooktak"
+        ]
+    }
+}
