@@ -1,9 +1,9 @@
 // bcrypt 모듈 불러오기
-const bcrypt = require('bcrypt');
+const bcrypt = require("bcrypt");
 // 로깅을 위한 winston 로거 구성 불러오기
-const logger = require('../../config/logger');
-const { UserModel, saltRounds, roles } = require('../schemas/users');
-const { Literals } = require('../../literal/literals');
+const logger = require("../../config/logger");
+const { UserModel, saltRounds, roles } = require("../schemas/users");
+const { Literals } = require("../../literal/literals");
 
 class User {
     /**
@@ -16,25 +16,25 @@ class User {
                 if (!user) {
                     bcrypt.hash(process.env.ADMIN_PW, saltRounds, function (err, hash) {
                         if (err) {
-                            logger.error('Error hashing password:', err);
+                            logger.error("Error hashing password:", err);
                             return;
                         }
-                        // 새 사용자 생성, 'role'에 'admin' 할당
+                        // 새 사용자 생성, "role"에 "admin" 할당
                         const newUser = new UserModel({
                             username: process.env.ADMIN_ID,
                             password: hash,
-                            role: 'admin'  // 관리자 권한 부여
+                            role: "admin"  // 관리자 권한 부여
                         });
                         newUser.save()
-                            .then(() => logger.info('Admin user created'))
-                            .catch(err => logger.error('Error creating admin user:', err));
+                            .then(() => logger.info("Admin user created"))
+                            .catch(err => logger.error("Error creating admin user:", err));
                     });
                 } else {
-                    logger.info('Admin user already exists');
+                    logger.info("Admin user already exists");
                 }
             })
             .catch(err => {
-                logger.error('Error checking for admin user:', err);
+                logger.error("Error checking for admin user:", err);
             });
     }
 }

@@ -1,4 +1,4 @@
-const winston = require('winston');
+const winston = require("winston");
 const { combine, timestamp, json, colorize, simple } = winston.format;
 
 // 개발 환경에서는 콘솔에 로그를 출력하는 전송 설정
@@ -12,16 +12,16 @@ const loggerTransports = [
 ];
 
 // 프로덕션 환경에서는 파일에 로그를 저장하는 전송 설정 추가
-if (process.env.NODE_ENV === 'prod') {
+if (process.env.NODE_ENV === "prod") {
     loggerTransports.push(
-        new winston.transports.File({ filename: 'error.log', level: 'error' }),  // 오류 로그만을 'error.log' 파일에 저장
-        new winston.transports.File({ filename: 'combined.log' })                // 모든 로그를 'combined.log' 파일에 저장
+        new winston.transports.File({ filename: "error.log", level: "error" }),  // 오류 로그만을 "error.log" 파일에 저장
+        new winston.transports.File({ filename: "combined.log" })                // 모든 로그를 "combined.log" 파일에 저장
     );
 }
 
 // 로거 설정
 const logger = winston.createLogger({
-    level: 'info',  // 기본 로그 레벨을 'info'로 설정. info 이상 레벨의 로그만 기록됨
+    level: "info",  // 기본 로그 레벨을 "info"로 설정. info 이상 레벨의 로그만 기록됨
     format: combine(
         timestamp(),  // 각 로그 메시지에 타임스탬프 추가
         json()        // 로그를 JSON 형식으로 저장하여 데이터 구조를 명확하게 함
