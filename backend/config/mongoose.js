@@ -1,20 +1,20 @@
-const mongoose = require('mongoose'); // mongoose 모듈 가져오기
-const logger = require('./../config/logger'); // 로거 설정 파일 가져오기
-const { mongo, env } = require('./vars'); // 환경 변수 파일에서 MongoDB 설정과 환경 정보 가져오기
-const { User } = require('../db/models/users'); // Admin 사용자 생성 함수 가져오기
+const mongoose = require("mongoose"); // mongoose 모듈 가져오기
+const logger = require("./../config/logger"); // 로거 설정 파일 가져오기
+const { mongo, env } = require("./vars"); // 환경 변수 파일에서 MongoDB 설정과 환경 정보 가져오기
+const { User } = require("../db/models/users"); // Admin 사용자 생성 함수 가져오기
 
 // mongoose의 Promise를 Bluebird로 설정
 mongoose.Promise = Promise;
 
 // MongoDB 연결 에러 발생 시 처리
-mongoose.connection.on('error', (err) => {
+mongoose.connection.on("error", (err) => {
     logger.error(`MongoDB connection error: ${err}`); // 로그에 에러 메시지 기록
     process.exit(-1); // 에러 발생 시 애플리케이션 종료
 });
 
 // 개발 환경에서는 mongoose 로그를 출력
-if (env === 'dev') {
-    mongoose.set('debug', true); // mongoose 디버그 모드 활성화
+if (env === "dev") {
+    mongoose.set("debug", true); // mongoose 디버그 모드 활성화
 }
 
 /**
