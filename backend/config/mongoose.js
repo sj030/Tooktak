@@ -1,7 +1,7 @@
 const mongoose = require("mongoose"); // mongoose 모듈 가져오기
 const logger = require("./../config/logger"); // 로거 설정 파일 가져오기
 const { mongo, env } = require("./vars"); // 환경 변수 파일에서 MongoDB 설정과 환경 정보 가져오기
-const { User } = require("../db/models/users"); // Admin 사용자 생성 함수 가져오기
+const { User, UserRepository } = require("../db/models/users"); // Admin 사용자 생성 함수 가져오기
 
 // mongoose의 Promise를 Bluebird로 설정
 mongoose.Promise = Promise;
@@ -25,6 +25,6 @@ if (env === "dev") {
  */
 exports.connect = () => {
     mongoose.connect(mongo.uri); // 설정된 URI를 사용하여 MongoDB에 연결
-    User.ensureAdminUser(); // 연결 후 관리자 사용자가 있는지 확인하고 없으면 생성
+    UserRepository.ensureAdminUser(); // 연결 후 관리자 사용자가 있는지 확인하고 없으면 생성
     return mongoose.connection; // mongoose 연결 객체 반환
 };

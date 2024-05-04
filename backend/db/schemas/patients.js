@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
  * 환자 스키마 정의.
  * p_no를 기준으로 파일 모델이 환자를 찾기에 unique
  */
-let patientSchema = mongoose.Schema({
+const patientSchema = mongoose.Schema({
     p_no: {
         type: String,
         required: true,
@@ -30,6 +30,6 @@ let patientSchema = mongoose.Schema({
     }
 });
 
-let Patients = mongoose.model("Patient", patientSchema);
+const PatientModel = mongoose.model("Patient", patientSchema);
 
-module.exports = Patients;
+module.exports = { PatientModel };
