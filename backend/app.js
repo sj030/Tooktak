@@ -8,6 +8,7 @@ const cors = require("cors");
 // 라우터
 const accountRouter = require("./routes/account");
 const fileRouter = require("./routes/file");
+const hospitalRouter = require("./routes/hospitals");
 // 로깅
 const morgan = require("morgan");
 const { logs } = require("./config/vars");
@@ -56,6 +57,7 @@ app.use(function (req, res, next) {
 // 라우트 핸들러 설정
 app.use("/account", accountRouter);
 app.use("/file", fileRouter);
+app.use("/hospitals", hospitalRouter);
 
 // 404 에러 핸들링
 app.use(function (req, res, next) {
