@@ -3,6 +3,7 @@ const router = express.Router();
 const fs = require("fs");
 const path = require("path");
 const { FileTransferService } = require("../services/filetransferservice");
+const { PatientService } = require("../services/patientservice");
 
 // Multer 객체 생성 및 파일 업로드 미들웨어 설정 (TEST 용도입니다)
 const upload = FileTransferService.initMulter();
@@ -21,7 +22,7 @@ router.get("/download", (req, res) => {
 // router.post('/search', searchFiles);
 
 // 임시 DB 채우기 용 API(추후 삭제예정)
-// router.post('/addPatients', addPatients);
+router.post('/addPatients', PatientService.addPatient);
 // router.post('/addFiles', addFiles);
 
 // Get the header of the CSV file (TEST)

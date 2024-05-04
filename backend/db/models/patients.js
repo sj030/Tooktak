@@ -1,9 +1,9 @@
-const { PatientModel } = require('../db/models/patients');
+const { PatientModel } = require('../schemas/patients');
 
 class PatientRepository {
     static async addPatient(patientData) {
         try {
-            const newPatient = await Patients.create(patientData);
+            const newPatient = await PatientModel.create(patientData);
             if (!newPatient) {
                 return JSON.stringify({
                     status: 400,
