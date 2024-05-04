@@ -18,6 +18,23 @@ class authService {
                 break;
         }
     }
+
+    static async createUser(req, res) {
+        const userData = req.body;
+        const result = await UserRepository.addUser(userData);
+        const resultobj = JSON.parse(result);
+        switch (resultobj.status) {
+            case 200:
+                res.status(200).send(resultobj.data);
+                break;
+            case 400:
+                res.status(400).send(resultobj.message);
+                break;
+            case 500:
+                res.status(500).send(resultobj.message);
+                break;
+        }
+    }
 }
 
 module.exports = { authService };
