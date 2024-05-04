@@ -1,5 +1,5 @@
 const Literals = {
-    SOMETHING_LIKE_THIS: "abc",
+    NO_SERVICE: "No Service Found",
 };
 
 module.exports = { Literals };
