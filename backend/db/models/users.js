@@ -32,10 +32,11 @@ class UserRepository {
         }
     }
 
-    static async login(userData) {
+    static async login(userData, ip) {
         try {
             const findUser = await UserModel.findOne({ username: userData.username });
             if (!findUser || !bcrypt.compareSync(userData.password, findUser.password)) {
+                logger.error(`Login failed: Authentication failed. Invalid user or password: ${userData.username} from IP: ${ip}`);
                 return JSON.stringify({
                     status: 401,
                     message: "Authentication failed. Invalid user or password."
@@ -53,6 +54,7 @@ class UserRepository {
                         expiresIn: process.env.JWT_EXPIRATION_MINUTES // 토큰 유효 기간 설정, 예: 15분
                     }
                 );
+                logger.info(`User ${userData.username} logged in successfully. from IP: ${ip}`);
                 return JSON.stringify({
                     status: 200,
                     data: {
@@ -67,6 +69,7 @@ class UserRepository {
                 });
             }
         } catch (error) {
+            logger.error(`Login error for user ${userData.username}: ${error.message}`);
             return JSON.stringify({
                 status: 500,
                 message: error.message
