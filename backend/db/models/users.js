@@ -103,11 +103,24 @@ class UserRepository {
 
     static async addUser(userData) {
         try {
+
+            const existingUser = await UserModel.findOne({ username: userData.username })
+            if (existingUser) {
+                return JSON.stringify({
+                    status: 409,
+                    message: "User already exists with the same username"
+                });
+            }
+
+            // Encrypt the password
+            const hashedPassword = await bcrypt.hash(userData.password, saltRounds);
+            userData.password = hashedPassword;
+
             const newUser = await UserModel.create(userData);
             if (!newUser) {
                 return JSON.stringify({
                     status: 400,
-                    message: "Required Valid JSON"
+                    message: "Failed to create new user"
                 });
             } else {
                 return JSON.stringify({

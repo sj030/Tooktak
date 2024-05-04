@@ -27,6 +27,9 @@ class authService {
             case 200:
                 res.status(200).send(resultobj.data);
                 break;
+            case 409:
+                res.status(409).send(resultobj.message);
+                break;
             case 400:
                 res.status(400).send(resultobj.message);
                 break;
