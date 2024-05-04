@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
  * 파일 스키마 정의.
  * 병원 별로 구현 할 때 병원 정보도 추가시킬 예정
  */
-let fileSchema = mongoose.Schema({
+const fileSchema = new mongoose.Schema({
     f_name: {
         type: String,
         required: true
@@ -21,7 +21,7 @@ let fileSchema = mongoose.Schema({
         type: String,
         required: true
     },
-    chapter:{
+    chapter: {
         type: Number,
         required: true
     },
@@ -33,5 +33,6 @@ let fileSchema = mongoose.Schema({
     timestamps: true
 });
 
-let Files = mongoose.model("File", fileSchema);
-module.exports = Files;
+const FileModel = mongoose.model("File", fileSchema);
+
+module.exports = { FileModel };
