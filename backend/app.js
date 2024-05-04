@@ -13,8 +13,6 @@ const morgan = require("morgan");
 const { logs } = require("./config/vars");
 const mongoose = require("./config/mongoose");
 const logger = require("./config/logger");
-//jwt
-const jwt = require('jsonwebtoken');
 
 // MongoDB 연결
 mongoose.connect();
@@ -34,24 +32,6 @@ app.use(cookieParser());
 // 정적 파일 제공을 위한 디렉토리 설정
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.static(path.join(__dirname, "uploads")));
-
-// JWT 검증 미들웨어
-app.use(function (req, res, next) {
-    if (req.headers && req.headers.authorization && req.headers.authorization.split(' ')[0] === 'Bearer') {
-        const token = req.headers.authorization.split(' ')[1];
-        jwt.verify(token, process.env.JWT_SECRET, function (err, decoded) {
-            if (err) {
-                req.user = undefined; // 인증 실패
-                return res.status(401).json({ message: 'Invalid token' });
-            }
-            req.user = decoded; // 인증 성공, 사용자 정보 저장
-            next();
-        });
-    } else {
-        req.user = undefined; // 토큰 없음
-        next();
-    }
-});
 
 // 라우트 핸들러 설정
 app.use("/account", accountRouter);
