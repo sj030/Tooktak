@@ -69,7 +69,7 @@ class UserRepository {
                 });
             }
         } catch (error) {
-            logger.error(`Login error for user ${userData.username}: ${error.message}`);
+            logger.error(`Login error for user ${userData.username}: ${error.message} from IP: ${ip}`);
             return JSON.stringify({
                 status: 500,
                 message: error.message
