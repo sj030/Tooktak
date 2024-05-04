@@ -18,7 +18,7 @@ router.get("/download", (req, res) => {
 });
 
 // 중복 필터 검색 용 API(기본형, 병원 추가예정)
-router.post('/search', searchFiles);
+// router.post('/search', searchFiles);
 
 // 임시 DB 채우기 용 API(추후 삭제예정)
 // router.post('/addPatients', addPatients);
