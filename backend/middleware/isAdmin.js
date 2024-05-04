@@ -1,15 +1,23 @@
 function isAdmin(req, res, next) {
-    // 이미 인증을 완료했고, 사용자 정보가 req.user에 저장되어 있는지 확인
-    if (!req.user) {
-        return res.status(401).json({ message: "Authentication required" });
+    // Make sure req.user is an object
+    if (typeof req.user === 'string') {
+        try {
+            req.user = JSON.parse(req.user);
+        } catch (error) {
+            return res.status(400).json({ message: "User data is corrupted" });
+        }
     }
 
-    // 사용자가 admin 역할을 가지고 있는지 확인
-    if (req.user.role === "admin") {
-        next(); // 사용자가 admin이면 요청을 계속 진행
+    if (!req.user || !req.user.data || !req.user.data.role) {
+        return res.status(401).json({ message: "Authentication required or incomplete user data" });
+    }
+
+    if (req.user.data.role === "admin") {
+        next();
     } else {
-        res.status(403).json({ message: "Access denied. Admins only." }); // admin이 아니면 접근 거부
+        res.status(403).json({ message: "Access denied. Admins only." });
     }
 }
+
 
 module.exports = isAdmin;
