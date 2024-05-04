@@ -7,7 +7,12 @@ export function Card({ children, header, footer }) {
       <div className="card-content">
         <div className="content">{children}</div>
       </div>
-      <footer className="card-footer ">{footer}</footer>
+      <div className="columns">
+        <div className="column is-9"></div>
+        <div className="column is-5">
+          <footer className="card-footer">{footer}</footer>
+        </div>
+      </div>
     </div>
   );
 }

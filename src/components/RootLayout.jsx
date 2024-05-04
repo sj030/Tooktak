@@ -1,4 +1,4 @@
-import { Columns, Column } from "./basicComponents/Column";
+import { Columns, Column } from "./commons/Column";
 export default function RootLayout({ left, right }) {
   return (
     <Columns>

@@ -1,6 +1,26 @@
-import { InputField } from "../basicComponents/Input";
-import { Button } from "../basicComponents/Button";
+import { InputField } from "../commons/Input";
+import { Button } from "../commons/Button";
 import { useState } from "react";
+import { loginApi } from "../../services/auth";
+
+const LoginLayout = function ({ children }) {
+  return (
+    <section className="hero has-background-grey-light is-fullheight ">
+      <div className="hero-body">
+        <div className="container">
+          <div className="columns is-centered">
+            <div className="column is-7-tablet is-5-desktop is-6-widescreen">
+              <form action="" className="box">
+                {children}
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
 export function LoginBox() {
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
@@ -9,7 +29,7 @@ export function LoginBox() {
     loginApi(id, password);
   };
   return (
-    <loginLayout>
+    <LoginLayout>
       <InputField
         label="id"
         value={id}
@@ -22,22 +42,6 @@ export function LoginBox() {
         onChange={(e) => setPassword(e.target.value)}
       />
       <Button onClick={onLogin} children={"login"} />
-    </loginLayout>
-  );
-}
-
-function loginLayout({ children }) {
-  return (
-    <section className="hero has-background-grey-light is-fullheight ">
-      <div className="hero-body">
-        <div className="container">
-          <div className="columns is-centered">
-            <div className="column is-7-tablet is-5-desktop is-6-widescreen">
-              <form action="" className="box"></form>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
+    </LoginLayout>
   );
 }
