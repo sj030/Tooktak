@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const {authService} = require("../services/authservice");
 const authenticateToken = require('../middleware/authenticateToken'); // Import the middleware
+const isAdmin = require("../middleware/isAdmin"); 
 
 router.post("/login", authService.login);
 
@@ -9,7 +10,7 @@ router.get("/logout", authenticateToken, (req, res) => {
 
 });
 
-router.post("/add", authenticateToken, (req, res) => {
+router.post("/add", authenticateToken, isAdmin, (req, res) => {
 
 });
 
