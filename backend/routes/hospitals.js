@@ -8,9 +8,9 @@ const { Literals } = require("../literal/literals");
 router.post("/addservice", async (req, res) => {
     try {
         await ServiceAttrService.addService(req.body);
-        res.send(200);
+        res.status(200);
     } catch (error) {
-        res.send(500).send(error.message);
+        res.status(500).send(error.message);
     }
 });
 
