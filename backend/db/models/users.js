@@ -32,6 +32,30 @@ class UserRepository {
         }
     }
 
+    static async findById(id) {
+        try {
+            const user = await UserModel.findById(id);
+            if (!user) {
+                // 사용자를 찾지 못했을 경우
+                return JSON.stringify({
+                    status: 404,
+                    message: "User not found."
+                });
+            } else {
+                // 사용자를 찾았을 경우
+                return JSON.stringify({
+                    status: 200,
+                    data: user
+                });
+            }
+        } catch (err) {
+            // 데이터베이스 조회 중 에러 발생
+            return JSON.stringify({
+                status: 500,
+                message: "Server error: " + err.message
+            });
+        }
+    }
     static async login(userData, ip) {
         try {
             const findUser = await UserModel.findOne({ username: userData.username });
@@ -51,7 +75,7 @@ class UserRepository {
                     },
                     process.env.JWT_SECRET, // 비밀키, 환경 변수나 설정 파일에서 가져오기
                     {
-                        expiresIn: process.env.JWT_EXPIRATION_MINUTES // 토큰 유효 기간 설정, 예: 15분
+                        expiresIn: "2 days" // 토큰 유효 기간 설정
                     }
                 );
                 logger.info(`User ${userData.username} logged in successfully. from IP: ${ip}`);
@@ -70,6 +94,28 @@ class UserRepository {
             }
         } catch (error) {
             logger.error(`Login error for user ${userData.username}: ${error.message} from IP: ${ip}`);
+            return JSON.stringify({
+                status: 500,
+                message: error.message
+            });
+        }
+    }
+
+    static async addUser(userData) {
+        try {
+            const newUser = await UserModel.create(userData);
+            if (!newUser) {
+                return JSON.stringify({
+                    status: 400,
+                    message: "Required Valid JSON"
+                });
+            } else {
+                return JSON.stringify({
+                    status: 200,
+                    data: newUser
+                });
+            }
+        } catch (error) {
             return JSON.stringify({
                 status: 500,
                 message: error.message
