@@ -3,7 +3,7 @@ const { PatientRepository } = require('../db/models/patients');
 class PatientService {
     static async addPatient(req, res) {
         const patientData = req.body;
-        const result = await JSON.parse(PatientRepository.addPatient(patientData));
+        const result = JSON.parse(await PatientRepository.addPatient(patientData));
         switch (result.status) {
             case 200:
                 res.status(200).send(result.data);

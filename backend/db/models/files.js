@@ -1,9 +1,9 @@
 const { FileModel } = require('../schemas/files');
 
 class FileRepository {
-    static async findByFullInfo(query) {
+    static async findByFullInfo(body) {
         try {
-            const { p_no, startAge, endAge, p_name, p_gender, startDate, endDate, f_name, f_extension } = query;
+            const { p_no, startAge, endAge, p_name, p_gender, startDate, endDate, f_name, f_extension } = body;
             let searchQuery = {};
 
             if (p_no) {                                 // 환자 번호 검색 (동치)
