@@ -3,7 +3,8 @@ const { UserRepository } = require("../db/models/users");
 class authService {
     static async login(req, res) {
         const userData = req.body;
-        const result = await UserRepository.login(userData);
+        const ip = req.ip;
+        const result = await UserRepository.login(userData, ip);
         const resultobj = JSON.parse(result);
         switch (resultobj.status) {
             case 200:
