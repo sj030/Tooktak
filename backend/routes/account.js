@@ -5,26 +5,16 @@ const authenticateToken = require('../middleware/authenticateToken'); // Import 
 const isAdmin = require("../middleware/isAdmin"); 
 
 router.post("/login", authService.login);
-
-router.get("/logout", authenticateToken, (req, res) => {
-
-});
+router.post("/refresh", authService.refresh);
+// router.get("/logout", authenticateToken, (req, res) => {
+// }); -> client쪽에서 세션 혹은 로컬스토리지에서 jwt 삭제
 
 router.post("/add", authenticateToken, isAdmin, authService.createUser);
+router.delete("/:username", authenticateToken, isAdmin, authService.deleteUser);
+router.get("", authenticateToken, isAdmin, authService.listUsers);
 
-router.post("/refresh", authService.refresh);
-
-router.post("/delete", authenticateToken, (req, res) => {
-
-});
-
-router.get("/list", authenticateToken, (req, res) => {
-
-});
-
-router.post("/reset", authenticateToken, (req, res) => {
-
-});
+// router.post("/reset", authenticateToken, (req, res) => {
+// }); -> 환경변수로 관리자 ID, PW 관리
 
 router.get("/log", authenticateToken, (req, res) => {
 
