@@ -38,6 +38,26 @@ class authService {
                 break;
         }
     }
+
+    static async refresh(req, res) {
+        const { refreshToken } = req.body;
+        const result = await UserRepository.refreshAccessToken(refreshToken);
+        const resultobj = JSON.parse(result);
+
+        switch (resultobj.status) {
+            case 200:
+                res.status(200).json(resultobj.data);
+                break;
+            case 401:
+            case 403:
+                res.status(resultobj.status).send(resultobj.message);
+                break;
+            case 500:
+                res.status(500).send(resultobj.message);
+                break;
+        }
+    }
+
 }
 
 module.exports = { authService };

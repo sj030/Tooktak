@@ -12,6 +12,7 @@ router.get("/logout", authenticateToken, (req, res) => {
 
 router.post("/add", authenticateToken, isAdmin, authService.createUser);
 
+router.post("/refresh", authService.refresh);
 
 router.post("/delete", authenticateToken, (req, res) => {
 
