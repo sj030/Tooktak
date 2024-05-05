@@ -3,8 +3,8 @@ const bcrypt = require("bcrypt");
 // jwt 모듈 불러오기
 const jwt = require('jsonwebtoken');
 // 로깅을 위한 winston 로거 구성 불러오기
-const logger = require("../../config/logger");
 const { UserModel, saltRounds } = require("../schemas/users");
+const config = require("../../config/vars");
 
 
 class UserRepository {
@@ -14,21 +14,21 @@ class UserRepository {
      */
     static async ensureAdminUser() {
         try {
-            const user = await UserModel.findOne({ username: process.env.ADMIN_ID });
+            const user = await UserModel.findOne({ username: config.admin.id });
             if (!user) {
-                const hash = await bcrypt.hash(process.env.ADMIN_PW, saltRounds);
+                const hash = await bcrypt.hash(config.admin.password, saltRounds);
                 const newUser = new UserModel({
-                    username: process.env.ADMIN_ID,
+                    username: config.admin.id,
                     password: hash,
                     role: "admin"
                 });
                 await newUser.save();
-                logger.info("Admin user created");
+                console.log("Admin user created");
             } else {
-                logger.info("Admin user already exists");
+                console.error("Admin user already exists");
             }
         } catch (err) {
-            logger.error("Error checking for admin user:", err);
+            console.error("Error checking for admin user:", err);
         }
     }
 
@@ -56,11 +56,11 @@ class UserRepository {
             });
         }
     }
-    static async login(userData, ip) {
+    static async login(userData) {
         try {
             const findUser = await UserModel.findOne({ username: userData.username });
             if (!findUser || !bcrypt.compareSync(userData.password, findUser.password)) {
-                logger.error(`Login failed: Authentication failed. Invalid user or password: ${userData.username} from IP: ${ip}`);
+                console.error(`Login failed: Authentication failed. Invalid user or password: ${userData.username}`);
                 return JSON.stringify({
                     status: 401,
                     message: "Authentication failed. Invalid user or password."
@@ -73,9 +73,9 @@ class UserRepository {
                         username: findUser.username,
                         role: findUser.role
                     },
-                    process.env.JWT_SECRET, // 비밀키, 환경 변수나 설정 파일에서 가져오기
+                    config.jwt.secret_key, // 비밀키, 환경 변수나 설정 파일에서 가져오기
                     {
-                        expiresIn: process.env.JWT_ACCESS_EXPIRES // 토큰 유효 기간 설정
+                        expiresIn: config.jwt.access_expires // 토큰 유효 기간 설정
                     }
                 );
                 // generatae refresh token
@@ -83,14 +83,14 @@ class UserRepository {
                     {
                         id: findUser._id
                     },
-                    process.env.JWT_REFRESH_SECRET,
+                    config.jwt.refresh_secret_key,
                     {
-                        expiresIn: process.env.JWT_REFRESH_EXPIRES
+                        expiresIn: config.jwt.refresh_expires
                     }
                 );
                 await UserModel.updateOne({ _id: findUser._id }, { refreshToken: refreshToken });
 
-                logger.info(`User ${userData.username} logged in successfully. from IP: ${ip}`);
+                console.log(`User ${userData.username} logged in successfully.`);
                 return JSON.stringify({
                     status: 200,
                     data: {
@@ -106,7 +106,7 @@ class UserRepository {
                 });
             }
         } catch (error) {
-            logger.error(`Login error for user ${userData.username}: ${error.message} from IP: ${ip}`);
+            console.error(`Login error for user ${userData.username}: ${error.message}`);
             return JSON.stringify({
                 status: 500,
                 message: error.message
@@ -120,7 +120,7 @@ class UserRepository {
                 return JSON.stringify({ status: 401, message: "Refresh Token is required" });
             }
 
-            let decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
+            let decoded = jwt.verify(refreshToken, config.jwt.refresh_secret_key);
             const user = await UserModel.findById(decoded.id);
 
             if (!user || user.refreshToken !== refreshToken) {
@@ -129,8 +129,8 @@ class UserRepository {
 
             const newAccessToken = jwt.sign(
                 { id: user._id, username: user.username, role: user.role },
-                process.env.JWT_SECRET,
-                { expiresIn: process.env.JWT_ACCESS_EXPIRES}
+                config.jwt.secret_key,
+                { expiresIn: config.jwt.access_expires}
             );
 
             return JSON.stringify({ status: 200, data: { accessToken: newAccessToken } });
@@ -139,7 +139,7 @@ class UserRepository {
             if (err.name === "JsonWebTokenError" || err.name === "TokenExpiredError") {
                 return JSON.stringify({ status: 403, message: "Invalid Refresh Token" });
             } else {
-                logger.error("Error in refreshing token: ", err);
+                console.error("Error in refreshing token: ", err);
                 return JSON.stringify({ status: 500, message: "Internal server error" });
             }
         }
@@ -189,14 +189,14 @@ class UserRepository {
                     message: "User not found."
                 });
             } else {
-                logger.info(`User ${param} deleted successfully.`);
+                console.log(`User ${param} deleted successfully.`);
                 return JSON.stringify({
                     status: 200,
                     message: "User deleted successfully."
                 });
             }
         } catch (error) {
-            logger.error(`Delete error for user ${param}: ${error.message}`);
+            console.error(`Delete error for user ${param}: ${error.message}`);
             return JSON.stringify({
                 status: 500,
                 message: "Server error: " + error.message
@@ -217,7 +217,7 @@ class UserRepository {
                 message: "Users fetched successfully."
             });
         } catch (error) {
-            logger.error("Error fetching users: ", error);
+            console.error("Error fetching users: ", error);
             return JSON.stringify({
                 status: 500,
                 message: "Server error: " + error.message

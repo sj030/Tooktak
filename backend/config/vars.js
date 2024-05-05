@@ -9,7 +9,6 @@ require("dotenv-safe").config({
 
 module.exports = {
     env: process.env.NODE_ENV, // 현재 작업 환경을 설정 ("dev", "prod", "test" 등)
-    logs: process.env.NODE_ENV === "prod" ? "combined" : "dev", // 로그 설정, 프로덕션 환경에서는 "combined" 로그, 개발 환경에서는 "dev" 로그 사용
 
     mongo: {
         uri: process.env.NODE_ENV === "test"
@@ -17,6 +16,17 @@ module.exports = {
             : process.env.MONGO_URI, // 기타 환경에서 사용할 MongoDB URI
     },
 
-    // jwt 설정 등 추가적인 구성 정보가 필요할 경우 여기에 포함
+    jwt: {
+        secret_key: process.env.JWT_SECRET,
+        refresh_secret_key: process.env.JWT_REFRESH_SECRET,
+        access_expires: process.env.JWT_ACCESS_EXPIRES,
+        refresh_expires: process.env.JWT_REFRESH_EXPIRES,
+    },
+
+    admin: {
+        id: process.env.ADMIN_ID,
+        password: process.env.ADMIN_PW
+    }
+
 }
 
