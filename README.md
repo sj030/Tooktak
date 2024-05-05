@@ -13,7 +13,7 @@
 - `cp .env.example .env` 명령어를 사용해 `.env`파일을 세팅해주세요.
 -  로컬에서 `mongodb`를 설치 및 실행해주세요. [install mongodb community-edition](https://www.mongodb.com/ko-kr/docs/manual/administration/install-community/)
     - url을 `mongodb://127.0.0.1:27017/voinosis`로 세팅해주세요.  `# voinosis : database명` 
-    - `MongoDB Compass`로 GUI로 이용할 수 있습니다.             
+    - `MongoDB Compass`를 사용하면 GUI로 이용할 수 있습니다.             
 - `npm run dev` 명령어로 프로그램을 실행할 수 있습니다.
     - 코드 수정 시, 새로 고침을 해주면 즉시 반영됩니다.
 - `npm run test` 명령어로 테스트를 실행할 수 있습니다. 
