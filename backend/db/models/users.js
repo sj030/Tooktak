@@ -180,6 +180,30 @@ class UserRepository {
         }
     }
 
+    static async deleteUser(param) {
+        try {
+            const user = await UserModel.findOneAndDelete({ username: param });
+            if (!user) {
+                return JSON.stringify({
+                    status: 404,
+                    message: "User not found."
+                });
+            } else {
+                logger.info(`User ${param} deleted successfully.`);
+                return JSON.stringify({
+                    status: 200,
+                    message: "User deleted successfully."
+                });
+            }
+        } catch (error) {
+            logger.error(`Delete error for user ${param}: ${error.message}`);
+            return JSON.stringify({
+                status: 500,
+                message: "Server error: " + error.message
+            });
+        }
+    }
+
 }
 
 // UserRepository 클래스 외부 공개
