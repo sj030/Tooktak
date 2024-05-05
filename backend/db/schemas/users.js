@@ -29,6 +29,10 @@ const usersSchema = new mongoose.Schema({
         enum: roles,  // "user", "admin" 중 하나 선택
         default: "user",  // 기본값 "user"
         required: true
+    },
+    refreshToken: {
+        type: String,
+        default: null
     }
 }, {
     timestamps: true,

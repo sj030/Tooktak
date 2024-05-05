@@ -66,8 +66,8 @@ class UserRepository {
                     message: "Authentication failed. Invalid user or password."
                 });
             } else {
-                // 사용자 정보로 JWT 생성
-                const token = jwt.sign(
+                // generate access token
+                const accessToken = jwt.sign(
                     {
                         id: findUser._id, // MongoDB에서 사용자의 고유 ID
                         username: findUser.username,
@@ -75,14 +75,27 @@ class UserRepository {
                     },
                     process.env.JWT_SECRET, // 비밀키, 환경 변수나 설정 파일에서 가져오기
                     {
-                        expiresIn: "2 days" // 토큰 유효 기간 설정
+                        expiresIn: process.env.JWT_ACCESS_EXPIRES // 토큰 유효 기간 설정
                     }
                 );
+                // generatae refresh token
+                const refreshToken = jwt.sign(
+                    {
+                        id: findUser._id
+                    },
+                    process.env.JWT_REFRESH_SECRET,
+                    {
+                        expiresIn: process.env.JWT_REFRESH_EXPIRES
+                    }
+                );
+                await UserModel.updateOne({ _id: findUser._id }, { refreshToken: refreshToken });
+
                 logger.info(`User ${userData.username} logged in successfully. from IP: ${ip}`);
                 return JSON.stringify({
                     status: 200,
                     data: {
-                        token: token, // 생성된 JWT
+                        accessToken: accessToken, 
+                        refreshToken: refreshToken,
                         user: {
                             id: findUser._id,
                             username: findUser.username,
@@ -98,6 +111,37 @@ class UserRepository {
                 status: 500,
                 message: error.message
             });
+        }
+    }
+
+    static async refreshAccessToken(refreshToken) {
+        try {
+            if (!refreshToken) {
+                return JSON.stringify({ status: 401, message: "Refresh Token is required" });
+            }
+
+            let decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
+            const user = await UserModel.findById(decoded.id);
+
+            if (!user || user.refreshToken !== refreshToken) {
+                return JSON.stringify({ status: 403, message: "Invalid Refresh Token" });
+            }
+
+            const newAccessToken = jwt.sign(
+                { id: user._id, username: user.username, role: user.role },
+                process.env.JWT_SECRET,
+                { expiresIn: process.env.JWT_ACCESS_EXPIRES}
+            );
+
+            return JSON.stringify({ status: 200, data: { accessToken: newAccessToken } });
+
+        } catch (err) {
+            if (err.name === "JsonWebTokenError" || err.name === "TokenExpiredError") {
+                return JSON.stringify({ status: 403, message: "Invalid Refresh Token" });
+            } else {
+                logger.error("Error in refreshing token: ", err);
+                return JSON.stringify({ status: 500, message: "Internal server error" });
+            }
         }
     }
 
