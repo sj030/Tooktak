@@ -204,6 +204,26 @@ class UserRepository {
         }
     }
 
+    static async listUsers(page, limit = 5) {
+        const skip = (page - 1) * limit; // 페이지 계산을 위해 건너뛸 아이템 수
+        try {
+            const users = await UserModel.find({ username: { $ne: process.env.ADMIN_ID } })
+                .skip(skip)
+                .limit(limit)
+                .exec();
+            return JSON.stringify({
+                status: 200,
+                data: users,
+                message: "Users fetched successfully."
+            });
+        } catch (error) {
+            logger.error("Error fetching users: ", error);
+            return JSON.stringify({
+                status: 500,
+                message: "Server error: " + error.message
+            });
+        }
+    }
 }
 
 // UserRepository 클래스 외부 공개

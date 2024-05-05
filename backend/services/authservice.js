@@ -77,8 +77,21 @@ class authService {
         }
     }
 
+    static async listUsers(req, res) {
+        const page = parseInt(req.query.page) || 1; // 페이지 번호, 기본값은 1
+        const result = await UserRepository.listUsers(page);
+        const resultObj = JSON.parse(result);
 
+        switch (resultObj.status) {
+            case 200:
+                res.status(200).json(resultObj.data);
+                break;
+            case 500:
+                res.status(500).send({ message: resultObj.message });
+                break;
+        }
 
+    }
 
 }
 

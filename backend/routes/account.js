@@ -11,9 +11,7 @@ router.post("/refresh", authService.refresh);
 
 router.post("/add", authenticateToken, isAdmin, authService.createUser);
 router.delete("/:username", authenticateToken, isAdmin, authService.deleteUser);
-router.get("/list", authenticateToken, isAdmin, (req, res) => {
-
-});
+router.get("", authenticateToken, isAdmin, authService.listUsers);
 
 // router.post("/reset", authenticateToken, (req, res) => {
 // }); -> 환경변수로 관리자 ID, PW 관리
