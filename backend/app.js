@@ -10,17 +10,12 @@ const accountRouter = require("./routes/account");
 const fileRouter = require("./routes/file");
 const hospitalRouter = require("./routes/hospitals");
 // 로깅
-const morgan = require("morgan");
-const { logs } = require("./config/vars");
 const mongoose = require("./config/mongoose");
 const logger = require("./config/logger");
 
 // MongoDB 연결
 mongoose.connect();
 const app = express();
-
-// morgan을 사용한 요청 로깅 설정, 환경별 로그 다르게 설정
-app.use(morgan(logs));
 
 // CORS 미들웨어 활성화
 app.use(cors());
@@ -47,8 +42,11 @@ app.use(function (req, res, next) {
 // 기본 에러 핸들링 미들웨어
 app.use(function (err, req, res, next) {
     // 모든 환경에서 에러 로그를 기록
-    logger.error(`Status: ${err.status || 500} - ${err.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`);
-
+    logger.error("error occured", {
+        ip,
+        requestUrl: req.originalUrl,
+        error: resultobj.message
+    });
     // 에러 정보를 JSON 형식으로 클라이언트에 응답
     res.status(err.status || 500).json({
         message: err.message,
