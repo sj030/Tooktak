@@ -6,8 +6,7 @@ class ServiceAttrRepository {
      * @param {ServiceAttrModel} attributes 
      */
     static async addService(attributes) {
-        const service = new ServiceAttrModel(attributes);
-        await service.save();
+        await ServiceAttrModel.insertMany(attributes);
     }
 
     /**
