@@ -4,7 +4,7 @@ const logger = require("../config/logger"); // 로거 설정 가져오기
 class authService {
     // 로그인 처리 함수
     static async login(req, res) {
-        const userData = req.body;
+        const userData = req.body; // 인증 요청한 사용자
         const ip = req.ip;
         const result = await UserRepository.login(userData);
         const resultobj = JSON.parse(result);
@@ -27,7 +27,9 @@ class authService {
                     username: userData.username,
                     ip,
                     requestUrl: req.originalUrl,
-                    f_name: null
+                    f_name: null,
+                    error: resultobj.message
+
                 });
                 res.status(401).send(resultobj.message);
                 break;
@@ -47,7 +49,7 @@ class authService {
 
     // 액세스 토큰 갱신 함수
     static async refresh(req, res) {
-        const { username, refreshToken } = req.body;
+        const { username, refreshToken } = req.body; // 재인증 요청한 사용자 이름
         const result = await UserRepository.refreshAccessToken(refreshToken);
         const resultobj = JSON.parse(result);
         const ip = req.ip;
@@ -92,7 +94,7 @@ class authService {
     // 사용자 생성 함수
     static async createUser(req, res) {
         const userData = req.body;
-        const authUsername = req.user.data.username;
+        const authUsername = req.user.data.username; // 생성된 사용자 이름
         const result = await UserRepository.addUser(userData);
         const resultobj = JSON.parse(result);
         const ip = req.ip;
@@ -101,7 +103,7 @@ class authService {
             case 200:
                 // 사용자 생성 성공 시 로그 기록
                 logger.info("User created successfully", {
-                    username: authUsername,
+                    username: authUsername, 
                     ip,
                     requestUrl: req.originalUrl,
                     f_name: null,
