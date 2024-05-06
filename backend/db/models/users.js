@@ -207,7 +207,7 @@ class UserRepository {
     static async listUsers(page, limit = 5) {
         const skip = (page - 1) * limit; // 페이지 계산을 위해 건너뛸 아이템 수
         try {
-            const users = await UserModel.find({ username: { $ne: process.env.ADMIN_ID } })
+            const users = await UserModel.find({ username: { $ne: config.admin.id } })
                 .skip(skip)
                 .limit(limit)
                 .exec();
