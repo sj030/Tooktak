@@ -11,17 +11,17 @@ const attributes = [
             {
                 "name": "S-NO",
                 "option": "range",
-                "type": "Number",
+                "type": "Number"
             },
             {
                 "name": "참여날짜",
                 "option": "range",
-                "type": "Date",
+                "type": "Date"
             },
             {
                 "name": "성명",
                 "option": "text",
-                "type": "String",
+                "type": "String"
             },
             {
                 "name": "병록번호",
