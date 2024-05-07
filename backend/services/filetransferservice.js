@@ -3,7 +3,7 @@ const multer = require('multer');
 /**
  * 파일 전송 서비스 클래스
  */
-class FileTransferService {
+class MetaTransferService {
     /**
      * csv, xlsx 파일만 업로드 가능한 multer 객체 생성
      * @returns {object} multer 객체
@@ -34,4 +34,4 @@ class FileTransferService {
     }
 }
 
-module.exports = { FileTransferService };
+module.exports = { MetaTransferService };
