@@ -27,7 +27,7 @@ class ServiceAttrRepository {
     /**
      * @returns {Array} 모든 서비스의 속성을 가져옵니다.
      */
-    static async getAllServicesAttributes() {
+    static async getAllServicesWithAttributes() {
         return await ServiceAttrModel.find({});
     }
 }
