@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const fs = require("fs");
 const path = require("path");
-const { MetaTransferService } = require("../services/MetaTransferService");
+const { MetaTransferService } = require("../services/filetransferservice");
 const { PatientService } = require("../services/patientservice");
 const { FileService } = require("../services/fileservice");
 
@@ -16,7 +16,7 @@ router.post("/upload/data", uploadMiddleware, (req, res) => {
 });
 
 router.get("/download", (req, res) => {
-
+    
 });
 
 // 중복 필터 검색 용 API(기본형, 병원 추가예정)
