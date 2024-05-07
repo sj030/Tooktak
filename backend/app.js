@@ -43,9 +43,9 @@ app.use(function (req, res, next) {
 app.use(function (err, req, res, next) {
     // 모든 환경에서 에러 로그를 기록
     logger.error("error occured", {
-        ip,
+        ip: req.ip,
         requestUrl: req.originalUrl,
-        error: resultobj.message
+        error: err.message
     });
     // 에러 정보를 JSON 형식으로 클라이언트에 응답
     res.status(err.status || 500).json({
