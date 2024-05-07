@@ -23,6 +23,13 @@ class ServiceAttrRepository {
     static async getServiceByName(name) {
         return await ServiceAttrModel.findOne({ name: name });
     }
+
+    /**
+     * @returns {Array} 모든 서비스의 속성을 가져옵니다.
+     */
+    static async getAllServicesAttributes() {
+        return await ServiceAttrModel.find({});
+    }
 }
 
 module.exports = { ServiceAttrRepository };

@@ -16,7 +16,7 @@ router.post("/addservice", async (req, res) => {
 
 // 모든 서비스 이름을 가져옵니다. 
 router.get("/", async (req, res) => {
-    const result = await ServiceAttrService.getAllServicesName();
+    const result = await ServiceAttrService.getAllServiceWithAttributes();
     if (!result) {
         res.status(400).send(Literals.NO_SERVICE);
     }
