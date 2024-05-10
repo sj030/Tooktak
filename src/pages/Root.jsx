@@ -1,6 +1,11 @@
-import { Outlet } from "react-router-dom";
-import Navigation from "../components/serviceComponents/Navigation";
-import RootLayout from "../components/RootLayout";
+import {Outlet} from "react-router-dom";
+import Navigation from "../components/service/Navigation";
+import Layout from "../components/layout/./Layout";
+
 export default function Root() {
-  return <RootLayout left={<Navigation />} right={<Outlet />} />;
+    return <Layout left={<Navigation/>} right={
+        <section className="hero has-background-light	 is-fullheight ">
+        <Outlet/>
+        </section>
+    } ratio={[3, 9]}/>;
 }
