@@ -1,10 +1,12 @@
-import {File} from "../commons/File";
+import {InputFile} from "../commons/InputFile";
+import {Grid} from "../commons/Grid";
+
 
 export default function UploadBox() {
     return (
-        <>
-            <File color={"red"} label={"metadata file"}/>
-            <File color={"blue"}  label={"data file"}/>
-        </>
+        <Grid>
+            <InputFile color={"red"} label={"metadata file"}/>
+            <InputFile color={"blue"}  label={"data file"}/>
+        </Grid>
     );
 }
