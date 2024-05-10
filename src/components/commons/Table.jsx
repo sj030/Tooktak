@@ -1,34 +1,22 @@
-export function Table({ header, items }) {
-  return (
-    <table className="table">
-      <thead>
-        <tr>
-          {header.map((header) => (
-            <th>{header}</th>
-          ))}
-        </tr>
-      </thead>
-      <tbody>
-        {items.map((data) => {
-          if (data[0] === "문찬규" || data[0] === "김민수") {
-            return (
-              <tr className="is-selected">
-                {data.map((d) => (
-                  <td>{d}</td>
+import {TableRow} from "./TableRow";
+
+export function Table({header, items}) {
+    return (
+        <div className={"table__wrapper"}>
+        <table className="table">
+            <thead>
+            <tr>
+                {header.map((header) => (
+                    <th>{header}</th>
                 ))}
-              </tr>
-            );
-          } else {
-            return (
-              <tr>
-                {data.map((d) => (
-                  <td>{d}</td>
-                ))}
-              </tr>
-            );
-          }
-        })}
-      </tbody>
-    </table>
-  );
+            </tr>
+            </thead>
+            <tbody>
+            {Object.entries(items).map((data) => {
+                return <TableRow key={data[0]} item={data[1]} />
+            })}
+            </tbody>
+        </table>
+        </div>
+    );
 }
