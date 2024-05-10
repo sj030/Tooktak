@@ -16,7 +16,7 @@ export default function Modal({body, title, onClose, active, setActive}) {
             </section>
             <footer className="modal-card-foot">
                 <div className="buttons">
-                    <button className="button" onClick={()=>{
+                    <button className="button is-danger" onClick={()=>{
                         onClose();
                         setActive(false);
                     }}>Cancel</button>
