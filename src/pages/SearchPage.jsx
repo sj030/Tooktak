@@ -1,16 +1,12 @@
-import FilterBox from "../components/serviceComponents/FilterBox";
-import FileList from "../components/serviceComponents/Filelist";
-import { useState } from "react";
-import { getFile } from "../services/search";
+import SearchBox from "../components/service/search/metadata/SearchBox";
+import FileBox from "../components/service/search/file/FileBox";
+import {FileProvider} from "../contexts/FileContext";
+
 export default function Search() {
-  const [fileList, setFileList] = useState([]);
-  const onSearch = (filter) => {
-    setFileList(getFile(filter));
-  };
-  return (
-    <>
-      <FilterBox onSearch={onSearch} />
-      <FileList fileList={fileList} />
-    </>
-  );
+    return (
+        <FileProvider>
+            <SearchBox/>
+            <FileBox />
+        </FileProvider>
+    );
 }

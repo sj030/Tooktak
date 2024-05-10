@@ -1,18 +1,19 @@
-export function Card({ children, header, footer }) {
+export function Card({ body, header, footer }) {
   return (
     <div className="card">
       <header className="card-header">
         <p className="card-header-title">{header}</p>
       </header>
       <div className="card-content">
-        <div className="content">{children}</div>
+        <div className="content">{body}</div>
       </div>
-      <div className="columns">
-        <div className="column is-9"></div>
-        <div className="column is-5">
-          <footer className="card-footer">{footer}</footer>
+        <div className="level">
+            <div className="level-left">
+            </div>
+            <div className="level-right">
+                <footer className="card-footer">{footer}</footer>
+            </div>
         </div>
-      </div>
     </div>
   );
 }
