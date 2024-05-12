@@ -3,34 +3,39 @@ export function metadataReducer(state, action) {
         case "INIT":
             return action.payload;
         case "SET_HOSPITAL":
-            return state.map((item) => {
-                if (item.name === action.payload) {
-                    return {...item, selected: true}
-                } else {
-                    return {...item, selected: false}
-                }
-            });
+            return {hospital: action.hospital, attributes: action.attributes};
         case "TEXT_ATTRIBUTE":
-            return state.map((attribute) => {
-                if (attribute.name === action.name) {
-                    return {...attribute, value: action.value}
-                }
-                return attribute;
-            })
+            return {
+                ...state, attributes: state.attributes.map((attribute) => {
+                    if (attribute.name === action.name) {
+                        return {...attribute, value: action.value}
+                    }
+                    return attribute;
+                })
+            }
         case "RANGE_ATTRIBUTE":
-            return state.map((attribute) => {
-                if (attribute.name === action.name) {
-                    return {...attribute, start: action.start, end: action.end}
-                }
-                return attribute;
-            })
+            return {
+                ...state, attributes: state.attributes.map((attribute) => {
+                    if (attribute.name === action.name) {
+                        return {...attribute, start: action.start, end: action.end}
+                    }
+                    return attribute;
+                })
+            }
         case "CHECKBOX_ATTRIBUTE":
-            return state.map((attribute) => {
-                if (attribute.name === action.name) {
-                    return {...attribute, value: action.value}
-                }
-                return attribute;
-            })
+            return {
+                ...state, attributes: state.attributes.map((attribute) => {
+                    if (attribute.name === action.name) {
+                        return {...attribute, value: action.value}
+                    }
+                    return attribute;
+                })
+            }
+        case "RESET_ATTRIBUTE":
+            return {...state, attributes:state.attributes.map((attribute) => {
+                return {...attribute, value: "",start: "", end: ""}
+                })
+            }
         default:
             return state;
     }

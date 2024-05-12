@@ -9,9 +9,7 @@ import {DropBox} from "../../../commons/DropBox";
 
 
 export default function AttributeList() {
-    const metadata = useMetadata();
-    const attributes = metadata ? metadata.attributes : [];
-    const hospital = metadata ? metadata.name : '';
+    const {hospital,attributes} = useMetadata();
     const { setText, setRange, setCheckbox } = useAttributeDispatch();
     return <Grid>
         {attributes.map((attribute) => {
@@ -21,20 +19,25 @@ export default function AttributeList() {
                         key={hospital + attribute.name}
                         label={attribute.name}
                         placeholder={attribute.type}
-                        setText={(value) => setText(attribute.name, value)}
+                        setValue={(value) => setText(attribute.name, value)}
+                        value={attribute.value}
                     />
                 case "checkbox":
                     return <DropBox
                         key={hospital + attribute.name}
                         label={attribute.name}
                         options={attribute.list}
-                        select={(value) => setCheckbox(attribute.name, value)}
+                        setValue={(value) => setCheckbox(attribute.name, value)}
+                        value={attribute.value}
                     />
                 case "range":
                     return <RangeBox
                         key={hospital + attribute.name}
                         label={attribute.name}
-                        setRange={(start, end) => setRange(attribute.name, start, end)}
+                        setStart={(start) => setRange(attribute.name, start, attribute.end)}
+                        setEnd={(end) => setRange(attribute.name, attribute.start, end)}
+                        start={attribute.start}
+                        end={attribute.end}
                     />
                 default:
                     return null;
