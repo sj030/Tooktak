@@ -1,23 +1,11 @@
 import {DropBox} from "../../../commons/DropBox";
-import {useEffect, useState} from "react";
-import {useAttributeDispatch} from "../../../../contexts/FilterContext";
-import {getMetadata} from "../../../../services/hospital";
+import { useHospitals, useSetHospital} from "../../../../contexts/MetadataContext";
 
 export default function Hospital() {
-    const [metadata, setMetadata] = useState(null);
-    const attributeDispatch = useAttributeDispatch();
-    const useSetHospital = (hospital) => {
-        attributeDispatch({
-            type: "reset",
-            payload: metadata ? metadata.filter(item=>item.name===hospital)[0].attributes : []
-        });
-    }
-    useEffect(() => {
-        setMetadata(getMetadata())
-    }, []);
-
+    const hospitals=useHospitals();
+    const setHospital = useSetHospital();
     return <DropBox label="병원"
-                    options={metadata ? metadata.map((data) => data.name) : []}
-                    select={useSetHospital}
+                    options={hospitals}
+                    select={setHospital}
     />
 }

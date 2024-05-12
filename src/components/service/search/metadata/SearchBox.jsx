@@ -3,19 +3,19 @@ import {Card} from "../../../commons/Card";
 import Hospital from "./Hospital";
 import AttributeList from "./AttributeList";
 import SearchButtons from "./SearchButtons";
-import {FilterProvider} from "../../../../contexts/FilterContext";
+import {MetadataProvider} from "../../../../contexts/MetadataContext";
 
 
 export default function SearchBox() {
     return (
         <SmallSection>
-                <FilterProvider>
+                <MetadataProvider>
                     <Card
                         header={<Hospital />}
                         body={<AttributeList/>}
                         footer={<SearchButtons/>}
                     />
-                </FilterProvider>
+                </MetadataProvider>
         </SmallSection>
     );
 }
