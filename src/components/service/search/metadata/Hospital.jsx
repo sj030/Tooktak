@@ -1,11 +1,12 @@
 import {DropBox} from "../../../commons/DropBox";
-import { useHospitals, useSetHospital} from "../../../../contexts/MetadataContext";
+import {useHospital, useHospitals} from "../../../../contexts/MetadataContext";
 
 export default function Hospital() {
     const hospitals=useHospitals();
-    const setHospital = useSetHospital();
+    const {hospital,setHospital} = useHospital();
     return <DropBox label="병원"
                     options={hospitals}
-                    select={setHospital}
+                    setValue={setHospital}
+                    value={hospital}
     />
 }
