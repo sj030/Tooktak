@@ -1,7 +1,5 @@
-import {useState} from "react";
 
-export function TextBox({label, placeholder="", setText}) {
-    const [value, setValue] = useState("");
+export function TextBox({label, placeholder="", setValue,value}) {
     return (
         <div className="box ">
             <div className="field">
@@ -15,7 +13,6 @@ export function TextBox({label, placeholder="", setText}) {
                         placeholder={placeholder}
                         value={value}
                         onChange={(e) => {
-                            setText(e.target.value)
                             setValue(e.target.value)
                         }}
                     />

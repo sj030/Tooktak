@@ -1,8 +1,7 @@
 import {useState} from "react";
 
-export function DropBox({label, options, select}) {
+export function DropBox({label, options, value, setValue}) {
     const [active, setActive] = useState(false);
-    const [value, setValue] = useState(null);
     return (<div className={"box is-primary "}>
         <div className={"level"}>
             <div className={"level-left"}>
@@ -26,13 +25,13 @@ export function DropBox({label, options, select}) {
                 </div>
                 <div className="dropdown-menu" id="dropdown-menu" role="menu">
                     <div className="dropdown-content">
-                        {options.map((option) => (<a key={option} className="dropdown-item" onClick={() => {
-                            select(option)
-                            setValue(option)
-                            setActive(false)
-                        }}>
-                            {option}
-                        </a>))}
+                        {options.map((option) => (
+                            <a key={option} className="dropdown-item" onClick={() => {
+                                setValue(option)
+                                setActive(false)
+                            }}>
+                                {option}
+                            </a>))}
                     </div>
                 </div>
             </div>
