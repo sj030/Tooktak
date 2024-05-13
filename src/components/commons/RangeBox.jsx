@@ -1,9 +1,4 @@
-import {useState} from "react";
-
-export default function RangeBox({label, setRange}) {
-    const [start, setStart] = useState("");
-    const [end, setEnd] = useState("");
-
+export default function RangeBox({label, setStart, setEnd, start, end}) {
     return (<div className={"box"}>
         <div className="level">
             <div className="level-left">
@@ -15,7 +10,6 @@ export default function RangeBox({label, setRange}) {
                        value={start}
                        onChange={(e) => {
                            setStart(e.target.value)
-                           setRange("start", e.target.value)
                        }}/>
                 <div className={"block"}>
                     <p className={"is-size-4"}> ~ </p>
@@ -23,7 +17,6 @@ export default function RangeBox({label, setRange}) {
                 <input className="input" type="number" value={end}
                        onChange={(e) => {
                            setEnd(e.target.value)
-                           setRange("end", e.target.value)
                        }}/>
             </div>
         </div>

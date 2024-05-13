@@ -1,15 +1,17 @@
 import {Button} from "../../../commons/Button";
-import {useSetFileContext} from "../../../../contexts/FileContext";
-import {getFile} from "../../../../services/hospital";
+import {useInitFile} from "../../../../contexts/FileContext";
+import {getFileList} from "../../../../services/hospital";
+import {useResetAttribute} from "../../../../contexts/MetadataContext";
 
 export default function SearchButtons() {
-    const setFile = useSetFileContext();
+    const initFile=useInitFile();
+    const resetAttribute= useResetAttribute();
     const onSearch = () => {
-        setFile(getFile());
+        initFile(getFileList());
     }
     return (
         <>
-            <Button color="red">Reset</Button>
+            <Button color="red" onClick={resetAttribute}>Reset</Button>
             <Button color="green" onClick={onSearch}>Search</Button>
         </>
     );
