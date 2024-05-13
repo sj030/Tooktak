@@ -1,0 +1,53 @@
+// mongoose 모듈 불러오기
+const mongoose = require("mongoose");
+
+const logSchema = new mongoose.Schema({
+    timestamp: {
+        type: Date,
+        maxlength: 128,
+        required: true,
+    },
+    level: {
+        type: String,
+        maxlength: 128,
+        required: true,
+    },
+    message: {
+        type: String,
+        maxlength: 128,
+        required: true,
+    },
+    meta: {
+        username: {
+            type: String,
+            maxlength: 128,
+            required: true,
+        },
+        ip: {
+            type: String,
+            maxlength: 128,
+            required: true,
+        },
+        role: {
+            type: String,
+            maxlength: 128,
+            required: true,
+        },
+        requestUrl: {
+            type: String,
+            maxlength: 128,
+            required: true,
+        },
+        f_name: {
+            type: String,
+            maxlength: 128,
+            default: null 
+        }
+    }
+});
+
+// Log 모델 스키마로 정의
+const LogModel = mongoose.model("Log", logSchema, "logs");
+
+// Log 모델 외부 공개
+module.exports = { LogModel };
