@@ -21,7 +21,7 @@ const logSchema = new mongoose.Schema({
         username: {
             type: String,
             maxlength: 128,
-            required: true,
+            default: null,
         },
         ip: {
             type: String,
@@ -31,7 +31,7 @@ const logSchema = new mongoose.Schema({
         role: {
             type: String,
             maxlength: 128,
-            required: true,
+            default: null,
         },
         requestUrl: {
             type: String,
@@ -41,7 +41,12 @@ const logSchema = new mongoose.Schema({
         f_name: {
             type: String,
             maxlength: 128,
-            default: null 
+            default: null,
+        },
+        error: {
+            type: String,
+            maxlength: 128,
+            default: null,
         }
     }
 });
