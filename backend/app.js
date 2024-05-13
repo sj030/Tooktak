@@ -11,6 +11,7 @@ const fileRouter = require("./routes/file");
 const hospitalRouter = require("./routes/hospitals");
 // 로깅
 const mongoose = require("./config/mongoose");
+const logger = require("./config/logger");
 
 // MongoDB 연결
 mongoose.connect();
@@ -40,6 +41,12 @@ app.use(function (req, res, next) {
 
 // 기본 에러 핸들링 미들웨어
 app.use(function (err, req, res, next) {
+    // 모든 환경에서 에러 로그를 기록
+    logger.error("error occured", {
+        ip: req.ip,
+        requestUrl: req.originalUrl,
+        error: err.message
+    });
     // 에러 정보를 JSON 형식으로 클라이언트에 응답
     res.status(err.status || 500).json({
         message: err.message,
