@@ -12,7 +12,6 @@ class LogRepository {
         if (ip) filter["meta.ip"] = ip;
         if (f_name) filter["meta.f_name"] = f_name;
 
-        // 날짜 필터 처리
         if (date) {
             const [startDate, endDate] = date.split("_to_").map(d => new Date(d));
             filter.timestamp = { $gte: startDate, $lte: endDate };
@@ -23,6 +22,12 @@ class LogRepository {
                 .skip(skip)
                 .limit(limit)
                 .exec();
+            if (logs.length === 0) {  // Check if the logs array is empty
+                return JSON.stringify({
+                    status: 400,  // "Not Found" might be more appropriate
+                    message: "No logs matched the query."
+                });
+            }
             return JSON.stringify({
                 status: 200,
                 data: logs,
