@@ -5,13 +5,15 @@ class LogRepository {
     static async getLogs(queryParams, page, limit = 10) {
         const { username, role, ip, f_name, date } = queryParams;
         const filter = {};
-        const skip = (page - 1) * limit;
+        const skip = (page - 1) * limit;  // 페이지 계산을 위해 건너뛸 아이템 수
 
+        // 필터 설정
         if (username) filter["meta.username"] = username;
         if (role) filter["meta.role"] = role;
         if (ip) filter["meta.ip"] = ip;
         if (f_name) filter["meta.f_name"] = f_name;
 
+        // 날짜 범위 필터
         if (date) {
             const [startDate, endDate] = date.split("_to_").map(d => new Date(d));
             filter.timestamp = { $gte: startDate, $lte: endDate };
@@ -22,12 +24,14 @@ class LogRepository {
                 .skip(skip)
                 .limit(limit)
                 .exec();
-            if (logs.length === 0) {  // Check if the logs array is empty
+            // 로그 데이터가 없을 경우
+            if (logs.length === 0) {
                 return JSON.stringify({
-                    status: 400,  // "Not Found" might be more appropriate
+                    status: 400,
                     message: "No logs matched the query."
                 });
             }
+            // 로그 데이터 반환
             return JSON.stringify({
                 status: 200,
                 data: logs,
