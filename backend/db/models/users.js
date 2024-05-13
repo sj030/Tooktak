@@ -6,7 +6,6 @@ const jwt = require('jsonwebtoken');
 const { UserModel, saltRounds } = require("../schemas/users");
 const config = require("../../config/vars");
 
-
 class UserRepository {
     /**
      * 관리자 사용자 확인 및 생성 함수. 설정된 관리자 ID로 사용자 검색,
@@ -32,30 +31,30 @@ class UserRepository {
         }
     }
 
+    // 사용자 ID로 찾기, 없으면 404 반환
     static async findById(id) {
         try {
             const user = await UserModel.findById(id);
             if (!user) {
-                // 사용자를 찾지 못했을 경우
                 return JSON.stringify({
                     status: 404,
                     message: "User not found."
                 });
             } else {
-                // 사용자를 찾았을 경우
                 return JSON.stringify({
                     status: 200,
                     data: user
                 });
             }
         } catch (err) {
-            // 데이터베이스 조회 중 에러 발생
             return JSON.stringify({
                 status: 500,
                 message: "Server error: " + err.message
             });
         }
     }
+    
+    // 사용자 로그인 처리
     static async login(userData) {
         try {
             const findUser = await UserModel.findOne({ username: userData.username });
@@ -66,19 +65,19 @@ class UserRepository {
                     message: "Authentication failed. Invalid user or password."
                 });
             } else {
-                // generate access token
+                // Access token 생성
                 const accessToken = jwt.sign(
                     {
                         id: findUser._id, // MongoDB에서 사용자의 고유 ID
                         username: findUser.username,
                         role: findUser.role
                     },
-                    config.jwt.secret_key, // 비밀키, 환경 변수나 설정 파일에서 가져오기
+                    config.jwt.secret_key, // 비밀키
                     {
-                        expiresIn: config.jwt.access_expires // 토큰 유효 기간 설정
+                        expiresIn: config.jwt.access_expires // 토큰 유효 기간
                     }
                 );
-                // generatae refresh token
+                // Refresh token 생성
                 const refreshToken = jwt.sign(
                     {
                         id: findUser._id
@@ -114,6 +113,7 @@ class UserRepository {
         }
     }
 
+    // Refresh Token으로 새 Access Token 발급
     static async refreshAccessToken(refreshToken) {
         try {
             if (!refreshToken) {
@@ -145,6 +145,7 @@ class UserRepository {
         }
     }
 
+    // 새 사용자 추가
     static async addUser(userData) {
         try {
 
@@ -156,7 +157,7 @@ class UserRepository {
                 });
             }
 
-            // Encrypt the password
+            // 비밀번호 암호화
             const hashedPassword = await bcrypt.hash(userData.password, saltRounds);
             userData.password = hashedPassword;
 
@@ -180,6 +181,7 @@ class UserRepository {
         }
     }
 
+    // 사용자 삭제
     static async deleteUser(param) {
         try {
             const user = await UserModel.findOneAndDelete({ username: param });
@@ -204,6 +206,7 @@ class UserRepository {
         }
     }
 
+    // 사용자 목록 조회
     static async listUsers(page, limit = 5) {
         const skip = (page - 1) * limit; // 페이지 계산을 위해 건너뛸 아이템 수
         try {
