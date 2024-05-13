@@ -17,6 +17,6 @@ router.get("", authenticateToken, isAdmin, authService.listUsers);
 // router.post("/reset", authenticateToken, (req, res) => {
 // }); -> 환경변수로 관리자 ID, PW 관리
 
-router.get("/log", LogService.fetchLogs);
+router.get("/log", authenticateToken, isAdmin, LogService.fetchLogs);
 
 module.exports = router;
