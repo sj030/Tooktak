@@ -14,7 +14,7 @@ const loggerTransports = [
         level: 'info',
         format: combine(
             timestamp(),
-            printf(info => `${info.timestamp} [${info.level}]: ${info.message} | ${JSON.stringify(info.meta)}`)
+            printf(info => `${info.timestamp} [${info.level}]: ${info.message} |  file: ${info.file}, username: ${info.username}, role: ${info.role}, requestUrl: ${info.requestUrl}, ip: ${info.ip}`)
         )
     }),
     new winston.transports.MongoDB({
@@ -37,17 +37,6 @@ const loggerTransports = [
             mongoDBFormat
         )
     }),
-    new winston.transports.MongoDB({
-        db: config.mongo.uri,
-        collection: 'error_logs',
-        options: { useUnifiedTopology: true },
-        level: 'error',
-        format: combine(
-            timestamp(),
-            errors({ stack: true }),
-            metadata({ fillExcept: ['message', 'level', 'timestamp', 'label'] }) // 메타데이터 추출 설정
-        )
-    })
 ];
 
 // 로거 설정
