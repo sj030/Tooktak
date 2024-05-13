@@ -43,23 +43,17 @@ export function useInitFile() {
     }
 }
 
+
 export function useSelectFile() {
     const dispatch = useContext(FileDispatchContext);
-    return (file_id) => {
+    const select=(file_id) => {
         dispatch({type: "SELECT_FILE", file_id: file_id});
-    }
-}
-
-export function useSelectAll() {
-    const dispatch = useContext(FileDispatchContext);
-    return () => {
+    };
+    const selectAll=()=>{
         dispatch({type: "SELECT_ALL"});
-    }
-}
-
-export function useUnselectAll() {
-    const dispatch = useContext(FileDispatchContext);
-    return () => {
+    };
+    const unselectAll=()=>{
         dispatch({type: "UNSELECT_ALL"});
-    }
+    };
+    return {select, selectAll, unselectAll};
 }

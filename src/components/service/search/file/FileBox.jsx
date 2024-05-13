@@ -14,7 +14,7 @@ export default function FileBox() {
             <Card
                 header={Hospital}
                 body={<FileTable/>}
-                footer={<Button children={"다운로드"} onClick={()=>setActive(true)}/>}
+                footer={<Button children={"다운로드"} onClick={() => setActive(true)}/>}
             />
             {<DownloadModal active={active} setActive={setActive}/>}
         </SmallSection>
