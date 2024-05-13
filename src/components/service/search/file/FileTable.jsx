@@ -1,9 +1,9 @@
 import {Table} from "../../../commons/Table";
-import {useFileAttributeContext, useFileListContext} from "../../../../contexts/FileContext";
+import {useFileAttribute, useFileList} from "../../../../contexts/FileContext";
 
 export function FileTable() {
-    const items = useFileListContext();
-    const attributes = useFileAttributeContext();
+    const items = useFileList();
+    const attributes = useFileAttribute();
     return <Table header={attributes}
                   items={items}
     />;

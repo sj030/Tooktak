@@ -3,7 +3,7 @@ import {createContext, useContext, useState} from "react";
 const initialState = {
     hospital: "",
     attributes: [],
-    files: {},
+    files: [],
 };
 
 const FileContext = createContext(null);
@@ -21,21 +21,21 @@ export function FileProvider({children}) {
     );
 }
 
-export function useFileHospitalContext() {
+export function useFileHospital() {
     const FC = useContext(FileContext);
     return FC.hospital ? FC.hospital : "";
 }
 
-export function useFileAttributeContext() {
+export function useFileAttribute() {
     const FC = useContext(FileContext);
     return FC.attribute ? FC.attribute : [];
 }
 
-export function useFileListContext() {
+export function useFileList() {
     const FC = useContext(FileContext);
     return FC.file ? FC.file : {};
 }
 
-export function useSetFileContext() {
+export function useSetFile() {
     return useContext(SetFileContext);
 }

@@ -1,13 +1,13 @@
 import {SmallSection} from "../../../commons/Section";
 import {Card} from "../../../commons/Card";
 import {Button} from "../../../commons/Button";
-import {useFileHospitalContext} from "../../../../contexts/FileContext";
+import {useFileHospital} from "../../../../contexts/FileContext";
 import {FileTable} from "./FileTable";
 import {useState} from "react";
 import DownloadModal from "./DownloadModal";
 
 export default function FileBox() {
-    const Hospital = useFileHospitalContext();
+    const Hospital = useFileHospital();
     const [active, setActive] = useState(false);
     return (
         <SmallSection>
