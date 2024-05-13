@@ -1,4 +1,5 @@
-import {createContext, useContext, useState} from "react";
+import {createContext, useContext, useReducer} from "react";
+import {fileReducer} from "./FileReducer";
 
 const initialState = {
     hospital: "",
@@ -7,35 +8,58 @@ const initialState = {
 };
 
 const FileContext = createContext(null);
-const SetFileContext = createContext(null);
+const FileDispatchContext = createContext(null);
 
 export function FileProvider({children}) {
-    const [fileList, setFileList] = useState(initialState);
-
+    const [fileList, dispatch] = useReducer(fileReducer, initialState);
     return (
         <FileContext.Provider value={fileList}>
-            <SetFileContext.Provider value={setFileList}>
+            <FileDispatchContext.Provider value={dispatch}>
                 {children}
-            </SetFileContext.Provider>
+            </FileDispatchContext.Provider>
         </FileContext.Provider>
     );
 }
 
 export function useFileHospital() {
-    const FC = useContext(FileContext);
-    return FC.hospital ? FC.hospital : "";
+    const data = useContext(FileContext);
+    return data.hospital ? data.hospital : "";
 }
 
 export function useFileAttribute() {
-    const FC = useContext(FileContext);
-    return FC.attribute ? FC.attribute : [];
+    const data = useContext(FileContext);
+    return data.attributes ? data.attributes : [];
 }
 
 export function useFileList() {
-    const FC = useContext(FileContext);
-    return FC.file ? FC.file : {};
+    const data = useContext(FileContext);
+    return data.files ? data.files : [];
 }
 
-export function useSetFile() {
-    return useContext(SetFileContext);
+export function useInitFile() {
+    const dispatch = useContext(FileDispatchContext);
+    return (fileList) => {
+        dispatch({type: "INIT_FILE_LIST", fileList: fileList});
+    }
+}
+
+export function useSelectFile() {
+    const dispatch = useContext(FileDispatchContext);
+    return (file_id) => {
+        dispatch({type: "SELECT_FILE", file_id: file_id});
+    }
+}
+
+export function useSelectAll() {
+    const dispatch = useContext(FileDispatchContext);
+    return () => {
+        dispatch({type: "SELECT_ALL"});
+    }
+}
+
+export function useUnselectAll() {
+    const dispatch = useContext(FileDispatchContext);
+    return () => {
+        dispatch({type: "UNSELECT_ALL"});
+    }
 }

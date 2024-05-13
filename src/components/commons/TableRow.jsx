@@ -1,16 +1,12 @@
-import {useState} from "react";
-
-export function TableRow({item, onClick=null}) {
-    const [selected, setSelected] = useState(false);
+export function TableRow({header,item,select,id}) {
     return (
         <tr
-            onClick={() => {
-                setSelected(!selected)
-                onClick && onClick()
+            onClick={()=>{
+                select(item[id]);
             }}
-            className={selected ? "is-selected" : ""}>
-            {item.map((d) => (
-                <td>{d}</td>
+            className={item["selected"] ? "is-selected" : ""}>
+            {header.map((h) => (
+                <td key={h}>{item[h]?item[h]:"null"}</td>
             ))}
         </tr>
     );
