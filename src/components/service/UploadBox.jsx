@@ -1,5 +1,5 @@
 import {InputFile} from "../commons/InputFile";
-import {Grid} from "../commons/Grid";
+import {Grid} from "../layout/Grid";
 
 
 export default function UploadBox() {
