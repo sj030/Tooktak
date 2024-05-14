@@ -18,7 +18,10 @@ mongoose.connect();
 const app = express();
 
 // CORS 미들웨어 활성화
-app.use(cors());
+app.use(cors({
+    origin: 'http://localhost:3000',
+    credentials: true
+}));
 // JSON 요청 파싱
 app.use(express.json());
 // URL 인코딩된 데이터 파싱
