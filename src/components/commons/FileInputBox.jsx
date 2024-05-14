@@ -1,4 +1,4 @@
-export function InputFile({color, label}) {
+export function FileInputBox({color, label}) {
     const c = {green: "is-primary", yellow: "is-warning", red: "is-danger", blue: "is-info"};
     return <div className={`file has-name is-boxed ${c[color]}`}>
         <label className="file-label">
