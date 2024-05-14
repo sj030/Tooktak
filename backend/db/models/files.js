@@ -1,6 +1,25 @@
 const { FileModel } = require('../schemas/files');
 
 class FileRepository {
+    static async findAllByQuery(query) {
+        return await FileModel.aggregate([
+            {
+                $lookup: {
+                    from: 'patients',
+                    localField: 'p_no',
+                    foreignField: 'id',
+                    as: 'patient'
+                }
+            },
+            {
+                $unwind: '$patient'                 // 배열 형태로 묶인 상태 해제
+            },
+            {
+                $match: query                 // 생성한 검색 쿼리 적용
+            }
+        ])
+    }
+
     static async findByFullInfo(body) {
         try {
             const { p_no, startAge, endAge, p_name, p_gender, startDate, endDate, f_name, f_extension } = body;
@@ -67,27 +86,8 @@ class FileRepository {
         }
     }
 
-    static async addFile(fileData) {
-        try {
-            const newFiles = await FileModel.create(fileData);
-            if (!newFiles) {
-                return JSON.stringify({
-                    status: 400,
-                    message: "Required Valid JSON"
-                });
-            }
-            else {
-                return JSON.stringify({
-                    status: 200,
-                    data: newFiles
-                });
-            }
-        } catch (error) {
-            return JSON.stringify({
-                status: 500,
-                message: error.message
-            });
-        }
+    static async insertMany(files) {
+        await FileModel.insertMany(files);
     }
 }
 
