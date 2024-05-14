@@ -5,6 +5,7 @@ const path = require("path");
 const { MetaTransferService } = require("../services/filetransferservice");
 const { PatientService } = require("../services/patientservice");
 const { FileService } = require("../services/fileservice");
+const { ServiceAttrService } = require("../services/serviceattrservice");
 
 // Multer 객체 생성 및 파일 업로드 미들웨어 설정 (TEST 용도입니다)
 const upload = MetaTransferService.initMulter();
@@ -16,15 +17,36 @@ router.post("/upload/data", uploadMiddleware, (req, res) => {
 });
 
 router.get("/download", (req, res) => {
-    
+
 });
 
 // 중복 필터 검색 용 API(기본형, 병원 추가예정)
-router.post('/search', FileService.searchFiles);
+router.post('/search', async (req, res) => {
+    try {
+        const result = await FileService.getAllMetaDataByQuery(ServiceAttrService.getServiceByName(req.body.name), req.body.attributes);
+        res.status(200).send(result);
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+});
 
 // 임시 DB 채우기 용 API(추후 삭제예정)
-router.post('/addPatients', PatientService.addPatient);
-router.post('/addFiles', FileService.addFile);
+router.post('/addPatients', async (req, res) => {
+    try {
+        await PatientService.addPatients(req.body);
+        res.status(200);
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+});
+router.post('/addFiles', async (req, res) => {
+    try {
+        await FileService.addFiles(req.body);
+        res.status(200);
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+});
 
 // Get the header of the CSV file (TEST)
 router.get("/get-csv-header/:hospital", (req, res) => {
