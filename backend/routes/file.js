@@ -16,9 +16,13 @@ router.post("/upload/data", uploadMiddleware, (req, res) => {
     res.json({ header: req.file });
 });
 
-router.get("/download", (req, res) => {
+router.post("/download", FileService.downloadZip);
 
-});
+// FTP 파일 발송 테스트 API
+//router.post("/ftpdownload", FileService.ftpSend);
+
+// Zip 파일 생성 테스트 API
+//router.post("/makeZipTest", FileService.makeZipFile);
 
 // 중복 필터 검색 용 API(기본형, 병원 추가예정)
 router.post('/search', async (req, res) => {
