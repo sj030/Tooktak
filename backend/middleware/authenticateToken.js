@@ -35,7 +35,7 @@ function authenticateToken(req, res, next) {
                     requestUrl: req.originalUrl,
                     ip: req.ip,
                 });
-                return res.status(401).json({ message: "Authentication Error" }); // 사용자가 데이터베이스에 없으면 인증 에러 메시지 반환
+                return res.status(404).json({ message: "Authentication Error" }); // 사용자가 데이터베이스에 없으면 인증 에러 메시지 반환
             }
             req.user = user; // req.user에 사용자 정보 저장
             next(); // 다음 미들웨어 함수로 이동
