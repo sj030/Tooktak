@@ -1,4 +1,8 @@
 const { FileRepository } = require("../db/models/files");
+const JSZip = require("jszip");
+const path = require("path");
+const fs = require("fs");
+const ftp = require("basic-ftp")
 
 /**
  * option에 따라 subQuery를 생성합니다.

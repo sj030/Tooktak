@@ -8,6 +8,7 @@
     "test": "jest --detectOpenHandles --forceExit"
   },
   "dependencies": {
+    "basic-ftp": "^5.0.5",
     "bcrypt": "^5.1.1",
     "cookie-parser": "~1.4.4",
     "cors": "^2.8.5",
@@ -18,6 +19,7 @@
     "express-session": "^1.18.0",
     "http-errors": "~1.6.3",
     "jsonwebtoken": "^9.0.2",
+    "jszip": "^3.10.1",
     "mongodb": "^6.5.0",
     "mongoose": "^8.3.3",
     "morgan": "~1.9.1",

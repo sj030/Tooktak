@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const fs = require("fs");
 const path = require("path");
-const { MetaTransferService } = require("../services/filetransferservice");
+const { MetaTransferService, DataTransferService } = require("../services/filetransferservice");
 const { PatientService } = require("../services/patientservice");
 const { FileService } = require("../services/fileservice");
 const { ServiceAttrService } = require("../services/serviceattrservice");
@@ -16,8 +16,14 @@ router.post("/upload/data", uploadMiddleware, (req, res) => {
     res.json({ header: req.file });
 });
 
-router.get("/download", (req, res) => {
-
+// ZIP 파일 생성 및 다운로드, 
+router.post("/download", async (req, res) => {
+    try{
+        await DataTransferService.downloadZip(req.body)
+        res.status(200).send('Zip file created and sended successfully')
+    }catch(error){
+        res.status(500).send(error.message);
+    }
 });
 
 // 중복 필터 검색 용 API(기본형, 병원 추가예정)
