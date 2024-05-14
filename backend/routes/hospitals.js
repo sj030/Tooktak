@@ -7,7 +7,7 @@ const { Literals } = require("../literal/literals");
 // 서비스를 추가합니다.
 router.post("/addservice", async (req, res) => {
     try {
-        await ServiceAttrService.addService(req.body);
+        await ServiceAttrService.addServices(req.body);
         res.status(200);
     } catch (error) {
         res.status(500).send(error.message);
@@ -16,7 +16,7 @@ router.post("/addservice", async (req, res) => {
 
 // 모든 서비스 이름을 가져옵니다. 
 router.get("/", async (req, res) => {
-    const result = await ServiceAttrService.getAllServiceWithAttributes();
+    const result = await ServiceAttrService.getAllServicesWithAttributes();
     if (!result) {
         res.status(400).send(Literals.NO_SERVICE);
     }
