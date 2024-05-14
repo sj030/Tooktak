@@ -1,5 +1,5 @@
 import {Table} from "../../commons/Table";
-import {Grid} from "../../commons/Grid";
+import {Grid} from "../../layout/Grid";
 import {DropBox} from "../../commons/DropBox";
 import RangeBox from "../../commons/RangeBox";
 import {TextBox} from "../../commons/TextBox";

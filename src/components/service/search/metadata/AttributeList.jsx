@@ -2,7 +2,7 @@ import {
     useAttributeDispatch,
     useMetadata,
 } from "../../../../contexts/MetadataContext";
-import {Grid} from "../../../commons/Grid";
+import {Grid} from "../../../layout/Grid";
 import {TextBox} from "../../../commons/TextBox";
 import RangeBox from "../../../commons/RangeBox";
 import {DropBox} from "../../../commons/DropBox";
