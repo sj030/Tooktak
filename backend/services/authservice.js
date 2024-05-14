@@ -49,7 +49,7 @@ class authService {
 
     // 액세스 토큰 갱신 함수
     static async refresh(req, res) {
-        const { username, refreshToken } = req.body; // 재인증 요청한 사용자 이름
+        const { refreshToken } = req.body; // 재인증 요청한 사용자 이름
         const result = await UserRepository.refreshAccessToken(refreshToken);
         const resultobj = JSON.parse(result);
         const ip = req.ip;
@@ -58,7 +58,6 @@ class authService {
             case 200:
                 // 토큰 갱신 성공 시 로그 기록
                 logger.info("Access token refreshed successfully", {
-                    username,
                     ip,
                     requestUrl: req.originalUrl,
                     f_name: null
@@ -69,7 +68,6 @@ class authService {
             case 403:
                 // 토큰 갱신 실패 시 로그 기록
                 logger.error("Invalid refresh token", {
-                    username,
                     ip,
                     requestUrl: req.originalUrl,
                     f_name: null,
@@ -80,7 +78,6 @@ class authService {
             case 500:
                 // 토큰 갱신 중 오류 발생 시 로그 기록
                 logger.error("Error refreshing access token", {
-                    username,
                     ip,
                     requestUrl: req.originalUrl,
                     error: resultobj.message,
