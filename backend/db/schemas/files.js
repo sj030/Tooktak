@@ -17,7 +17,7 @@ const fileSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    testDate: {
+    f_date: {
         type: String,
         required: true
     },
