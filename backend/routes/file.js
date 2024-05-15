@@ -29,7 +29,7 @@ router.post("/download", async (req, res) => {
 // 중복 필터 검색 용 API(기본형, 병원 추가예정)
 router.post("/search", async (req, res) => {
     try {
-        const result = await FileService.getAllMetaDataByQuery(ServiceAttrService.getServiceByName(req.body.name), req.body.attributes);
+        const result = await FileService.getAllMetaDataByQuery(await ServiceAttrService.getServiceByName(req.body.name), req.body.attributes);
         res.status(200).send(result);
     } catch (error) {
         res.status(500).send(error.message);
