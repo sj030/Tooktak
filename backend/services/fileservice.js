@@ -47,6 +47,7 @@ class FileService {
      */
     static async getAllMetaDataByQuery(serviceAttrs, query) {
         let searchQuery = {};
+        searchQuery["serviceName"] = serviceAttrs["serviceName"];
         for (const key in query) {
             const searchKey = standardFileAttrs.includes(key) ? key : "patient.attributes." + key;
             searchQuery[searchKey] = makeQueryWithAttr(serviceAttrs["attributes"], query[key], key);

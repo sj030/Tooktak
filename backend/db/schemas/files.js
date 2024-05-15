@@ -5,6 +5,10 @@ const mongoose = require("mongoose");
  * 병원 별로 구현 할 때 병원 정보도 추가시킬 예정
  */
 const fileSchema = new mongoose.Schema({
+    serviceName: {
+        type: String,
+        required: true
+    },
     f_name: {
         type: String,
         required: true
