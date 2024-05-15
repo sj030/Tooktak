@@ -1,32 +1,38 @@
-import React, { createContext, useContext, useState } from 'react';
-import { removeCookie } from '../services/config/cookies';
+import React, {createContext, useContext, useState} from 'react';
+import {useNavigate} from "react-router-dom";
 
-// Context 생성
-export const AuthContext = createContext(null);
+const ModeContext = createContext(null);
+const AuthContext = createContext(null);
 
-// Provider 컴포넌트
-export const AuthProvider = ({ children }) => {
-    const [isLoggedin, setIsLoggedin] = useState(false);
-    const [user, setUser] = useState(null);
-
-    const login = (userData) => {
-        setIsLoggedin(true);
-        setUser(userData);
-    };
-
-    const logout = () => {
-        setIsLoggedin(false);
-        setUser(null);
-        removeCookie('Authorization');
-        removeCookie('RefreshToken');
-    };
-
+export const AuthProvider = ({children}) => {
+    const [mode, setMode] = useState(null);
     return (
-        <AuthContext.Provider value={{ isLoggedin, user, login, logout }}>
-            {children}
-        </AuthContext.Provider>
+        <ModeContext.Provider value={mode}>
+            <AuthContext.Provider value={setMode}>
+                {children}
+            </AuthContext.Provider>
+        </ModeContext.Provider>
     );
 };
 
-// Hook to use auth context
-export const useAuth = () => useContext(AuthContext);
+export function useMode() {
+    return useContext(ModeContext);
+}
+
+export function useLogout() {
+    const setMode = useContext(AuthContext);
+    //여기서 logoutApi 사용
+    return () => {
+        console.log(1);
+        setMode(null);
+    };
+}
+
+export function useLogin() {
+    const navigate = useNavigate();
+    const setMode = useContext(AuthContext);
+    return (id, password) => {
+        setMode("admin");
+        navigate("/search");
+    };
+}
