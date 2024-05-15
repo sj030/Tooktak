@@ -17,9 +17,6 @@ export function MenuList({ children }) {
   return <ul className="menu-list ">{children}</ul>;
 }
 
-export function MenuItem({ path, name, onClick }) {
-  return <Link to={path} onClick={(e) => {
-    e.preventDefault(); // 기본 링크 동작 방지
-    onClick();
-  }}>{name}</Link>;
+export function MenuItem({ path, name,onClick}) {
+  return <Link to={path} onClick={onClick}>{name}</Link>;
 }

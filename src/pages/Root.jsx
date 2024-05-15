@@ -1,11 +1,17 @@
 import {Outlet} from "react-router-dom";
 import Navigation from "../components/service/Navigation";
-import Layout from "../components/layout/./Layout";
+import {useState} from "react";
+import {useMode} from "../contexts/AuthContext";
+import Layout from "../components/layout/Layout";
 
 export default function Root() {
-    return <Layout left={<Navigation/>} right={
-        <section className="hero has-background-light	 is-fullheight ">
-        <Outlet/>
-        </section>
-    } ratio={[3, 9]}/>;
+    const mode = useMode();
+    const [hideLeft, setHideLeft] = useState(false);
+    const toggleHideLeft = () => setHideLeft(!hideLeft);
+    return <Layout left={<Navigation/>}
+                   hideLeft={mode === null || hideLeft}
+                   toggleHideLeft={toggleHideLeft}
+                   right={<Outlet/>}
+                   ratio={[3, 9]}
+    />;
 }
