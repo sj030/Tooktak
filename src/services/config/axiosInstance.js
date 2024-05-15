@@ -4,7 +4,6 @@ import { setCookie, getCookie } from "./cookies";
 
 const baseURL = 'http://localhost:3001/'; // cors의 경우 서버에서 처리함
 
-// axios의 인스턴스 생성
 const axiosInstance = axios.create({
     baseURL: baseURL, // API의 기본 URL
     withCredentials: true,
