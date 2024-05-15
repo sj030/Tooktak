@@ -19,7 +19,7 @@ const app = express();
 
 // CORS 미들웨어 활성화
 app.use(cors({
-    origin: 'http://localhost:3000',
+    origin: "http://localhost:3000",
     credentials: true
 }));
 // JSON 요청 파싱

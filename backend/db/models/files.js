@@ -1,18 +1,18 @@
-const { FileModel } = require('../schemas/files');
+const { FileModel } = require("../schemas/files");
 
 class FileRepository {
     static async findAllByQuery(query) {
         return await FileModel.aggregate([
             {
                 $lookup: {
-                    from: 'patients',
-                    localField: 'p_no',
-                    foreignField: 'id',
-                    as: 'patient'
+                    from: "patients",
+                    localField: "p_no",
+                    foreignField: "id",
+                    as: "patient"
                 }
             },
             {
-                $unwind: '$patient'                 // 배열 형태로 묶인 상태 해제
+                $unwind: "$patient"                 // 배열 형태로 묶인 상태 해제
             },
             {
                 $match: query                 // 생성한 검색 쿼리 적용
@@ -52,14 +52,14 @@ class FileRepository {
             const validFiles = await Files.aggregate([
                 {
                     $lookup: {
-                        from: 'patients',
-                        localField: 'p_no',
-                        foreignField: 'p_no',
-                        as: 'patient'
+                        from: "patients",
+                        localField: "p_no",
+                        foreignField: "p_no",
+                        as: "patient"
                     }
                 },
                 {
-                    $unwind: '$patient'                 // 배열 형태로 묶인 상태 해제
+                    $unwind: "$patient"                 // 배열 형태로 묶인 상태 해제
                 },
                 {
                     $match: searchQuery                 // 생성한 검색 쿼리 적용

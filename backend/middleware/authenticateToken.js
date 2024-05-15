@@ -6,7 +6,7 @@ const logger = require("../config/logger"); // 로거 구성을 가져옴
 
 function authenticateToken(req, res, next) {
     const authHeader = req.headers.authorization; // 요청 헤더에서 'authorization' 값을 읽어옴
-    const token = authHeader && authHeader.split(' ')[1]; // 'Bearer [token]' 형식에서 토큰만 분리
+    const token = authHeader && authHeader.split(" ")[1]; // 'Bearer [token]' 형식에서 토큰만 분리
 
     if (!token) {
         logger.error("no token is provided.", {

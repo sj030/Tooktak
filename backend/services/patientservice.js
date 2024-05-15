@@ -1,4 +1,4 @@
-const { PatientRepository } = require('../db/models/patients');
+const { PatientRepository } = require("../db/models/patients");
 
 class PatientService {
     static async addPatients(patients) {

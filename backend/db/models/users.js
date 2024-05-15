@@ -1,7 +1,7 @@
 // bcrypt 모듈 불러오기
 const bcrypt = require("bcrypt");
 // jwt 모듈 불러오기
-const jwt = require('jsonwebtoken');
+const jwt = require("jsonwebtoken");
 // 로깅을 위한 winston 로거 구성 불러오기
 const { UserModel, saltRounds } = require("../schemas/users");
 const config = require("../../config/vars");
@@ -53,7 +53,7 @@ class UserRepository {
             });
         }
     }
-    
+
     // 사용자 로그인 처리
     static async login(userData) {
         try {
@@ -93,7 +93,7 @@ class UserRepository {
                 return JSON.stringify({
                     status: 200,
                     data: {
-                        accessToken: accessToken, 
+                        accessToken: accessToken,
                         refreshToken: refreshToken,
                         user: {
                             id: findUser._id,
@@ -130,7 +130,7 @@ class UserRepository {
             const newAccessToken = jwt.sign(
                 { id: user._id, username: user.username, role: user.role },
                 config.jwt.secret_key,
-                { expiresIn: config.jwt.access_expires}
+                { expiresIn: config.jwt.access_expires }
             );
 
             return JSON.stringify({ status: 200, data: { accessToken: newAccessToken } });

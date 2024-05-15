@@ -1,4 +1,4 @@
-const { PatientModel } = require('../schemas/patients');
+const { PatientModel } = require("../schemas/patients");
 
 class PatientRepository {
     static async insertMany(patients) {
