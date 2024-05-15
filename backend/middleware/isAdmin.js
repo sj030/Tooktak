@@ -2,7 +2,7 @@ const logger = require("../config/logger"); // 로거 구성을 가져옴
 
 function isAdmin(req, res, next) {
     // req.user가 문자열이면 JSON 객체로 변환
-    if (typeof req.user === 'string') {
+    if (typeof req.user === "string") {
         try {
             req.user = JSON.parse(req.user);
         } catch (error) {

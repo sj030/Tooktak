@@ -18,18 +18,18 @@ router.post("/upload/data", uploadMiddleware, (req, res) => {
 
 // ZIP 파일 생성 및 다운로드, 
 router.post("/download", async (req, res) => {
-    try{
+    try {
         await DataTransferService.downloadZip(req.body)
-        res.status(200).send('Zip file created and sended successfully')
-    }catch(error){
+        res.status(200).send("Zip file created and sended successfully")
+    } catch (error) {
         res.status(500).send(error.message);
     }
 });
 
 // 중복 필터 검색 용 API(기본형, 병원 추가예정)
-router.post('/search', async (req, res) => {
+router.post("/search", async (req, res) => {
     try {
-        const result = await FileService.getAllMetaDataByQuery(ServiceAttrService.getServiceByName(req.body.name), req.body.attributes);
+        const result = await FileService.getAllMetaDataByQuery(await ServiceAttrService.getServiceByName(req.body.name), req.body.attributes);
         res.status(200).send(result);
     } catch (error) {
         res.status(500).send(error.message);
@@ -37,7 +37,7 @@ router.post('/search', async (req, res) => {
 });
 
 // 임시 DB 채우기 용 API(추후 삭제예정)
-router.post('/addPatients', async (req, res) => {
+router.post("/addPatients", async (req, res) => {
     try {
         await PatientService.addPatients(req.body);
         res.status(200);
@@ -45,7 +45,7 @@ router.post('/addPatients', async (req, res) => {
         res.status(500).send(error.message);
     }
 });
-router.post('/addFiles', async (req, res) => {
+router.post("/addFiles", async (req, res) => {
     try {
         await FileService.addFiles(req.body);
         res.status(200);

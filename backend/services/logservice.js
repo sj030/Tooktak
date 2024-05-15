@@ -1,4 +1,4 @@
-const { LogRepository } = require('../db/models/log');
+const { LogRepository } = require("../db/models/log");
 const logger = require("../config/logger"); // 로거 설정 가져오기
 
 class LogService {
