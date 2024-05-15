@@ -11,6 +11,10 @@ const { ServiceAttrService } = require("../services/serviceattrservice");
 const upload = MetaTransferService.initMulter();
 const uploadMiddleware = upload.single("filekey"); // filekey는 클라이언트에서 전송한 파일의 키 값, single()은 하나의 파일만 업로드할 때 사용 (array()는 여러 파일 업로드)
 
+router.post("/upload/meta", async (req, res) => {     
+
+});
+
 router.post("/upload/data", uploadMiddleware, (req, res) => {
     console.log(req.file);
     res.json({ header: req.file });
