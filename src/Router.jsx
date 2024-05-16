@@ -13,7 +13,7 @@ const router = createBrowserRouter(
             <Route path="login" element={<Login/>} errorElement={<ErrorPage/>}/>
             <Route path="search" element={<Search/>} errorElement={<ErrorPage/>}/>
             <Route path="upload" element={<Upload/>} errorElement={<ErrorPage/>}/>
-            <Route path="admin" element={<Admin/>} errorElement={<ErrorPage/>}/>
+            <Route path="account" element={<Admin/>} errorElement={<ErrorPage/>}/>
             <Route path="log" element={<LogPage/>} errorElement={<ErrorPage/>}/>
         </Route>
     )
