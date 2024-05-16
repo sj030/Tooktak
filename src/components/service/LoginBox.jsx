@@ -1,5 +1,5 @@
-import {InputField} from "../commons/Input";
-import {Button} from "../commons/Button";
+import {IdInputField, PwInputField} from "../commons/Input";
+import {LoginButton} from "../commons/Button";
 import {useState} from "react";
 import {useLogin} from "../../contexts/AuthContext";
 import LoginLayout from "../layout/LoginLayout";
@@ -11,18 +11,20 @@ export function LoginBox() {
 
     return (
         <LoginLayout>
-            <InputField
+            <IdInputField
                 label="id"
                 value={id}
                 onChange={(e) => setId(e.target.value)}
+                placeholder="아이디를 입력하세요."
             />
-            <InputField
+            <PwInputField
                 label="password"
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                placeholder="비밀번호를 입력하세요."
             />
-            <Button onClick={(e) => {
+            <LoginButton onClick={(e) => {
                 e.preventDefault();
                 login(id, password);
             }} children={"login"}/>
