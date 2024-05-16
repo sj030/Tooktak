@@ -16,6 +16,15 @@ router.post("/upload/data", uploadMiddleware, (req, res) => {
     res.json({ header: req.file });
 });
 
+// SSE 엔드포인트 연결 설정, 다운로드 진행도(%) 확인
+router.get("/getDownloadProgress", (req, res) => {
+    try {
+        DataTransferService.getDownloadProgress(req, res)
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+});
+
 // ZIP 파일 생성 및 다운로드, 
 router.post("/download", async (req, res) => {
     try {
