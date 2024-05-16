@@ -52,7 +52,7 @@ class DataTransferService {
     static async downloadZip(body) {
         const { objectIDs, downloadFileRoot } = body; // 요청에서 ObjectID 리스트 가져오기
         const files = await FileModel.find({ _id: { $in: objectIDs } });
-        const filePaths = files.map(file => file.f_root);
+        const filePaths = files.map(file => file.f_path);
         //const { filePaths, downloadFileRoot } = body;           // 파일 루트 리스트 받았을 때 사용했었음
 
         const zip = new JSZip();
