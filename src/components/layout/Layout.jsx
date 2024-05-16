@@ -13,7 +13,6 @@ export default function Layout({left, right, ratio, hideLeft, toggleHideLeft}) {
             </section>
         </Column>
         <Column ratio={hideLeft ? 12 : ratio[1]}>
-
             <section className="hero has-background-light	 is-fullheight ">
                 {right}
             </section>
