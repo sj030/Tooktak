@@ -24,14 +24,7 @@ export async function loginApi(id, pw, onSuccess, onError) {
     }
 }
 
-export async function logoutApi(onSuccess, onError) {
-    try {
-        await axiosInstance.post("account/logout");
-        onSuccess();
+export async function logout() {
         removeCookie('Authorization');
         removeCookie('RefreshToken');
-    } catch (error) {
-        console.error('Error:', error);
-        onError("Logout failed: " + error.message);
-    }
 }
