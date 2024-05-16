@@ -67,6 +67,7 @@ html, body, .app, #root{
 }
 .table__wrapper {
     overflow-x: auto;
+    display: flex;
 }
 .table__wrapper th, .table__wrapper td {
     white-space: nowrap;  /* Ensures text stays on one line */
