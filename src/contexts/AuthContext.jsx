@@ -1,5 +1,6 @@
 import React, {createContext, useContext, useState} from 'react';
 import {useNavigate} from "react-router-dom";
+import {requestLoginApi} from "../services/auth";
 
 const ModeContext = createContext(null);
 const AuthContext = createContext(null);
@@ -32,6 +33,12 @@ export function useLogin() {
     const navigate = useNavigate();
     const setMode = useContext(AuthContext);
     return (id, password) => {
+        requestLoginApi(id, password).then((res) => {
+            res.json()
+        }).then((data) => {
+            setMode("user");
+            navigate("/search");
+        })
         setMode("admin");
         navigate("/search");
     };

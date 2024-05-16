@@ -1,6 +1,13 @@
 import axiosInstance from './config/axiosInstance';
 import {removeCookie, setCookie} from '../services/config/cookies';
 
+export async function requestLoginApi(id, pw) {
+    return axiosInstance.post("account/login", {
+        username: id,
+        password: pw,
+    });
+}
+
 export async function loginApi(id, pw, onSuccess, onError) {
     try {
         const response = await axiosInstance.post("account/login", {
