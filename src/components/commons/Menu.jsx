@@ -11,7 +11,7 @@ export function Menu({ children, logo }) {
   );
 }
 export function MenuLabel({ label }) {
-  return <p className="menu-label content has-background-success-light">{label}</p>;
+  return <p className="menu-label content">{label}</p>;
 }
 export function MenuList({ children }) {
   return <ul className="menu-list ">{children}</ul>;
