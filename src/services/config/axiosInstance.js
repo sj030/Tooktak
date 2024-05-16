@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { setCookie, getCookie } from "./cookies";
-
+import { useLogout } from '../../contexts/AuthContext';
 
 const baseURL = 'http://localhost:3001/'; // cors의 경우 서버에서 처리함
 
@@ -38,9 +38,11 @@ axiosInstance.interceptors.response.use(
                     return axiosInstance(error.config);
                 }
             } catch (refreshError) {
+                useLogout();
                 return Promise.reject(refreshError);
             }
         }
+        useLogout();
         return Promise.reject(error);
     }
 );
