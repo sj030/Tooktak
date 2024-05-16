@@ -32,8 +32,8 @@ axiosInstance.interceptors.response.use(
             const refreshtoken = getCookie("RefreshToken");
             try {
                 const res = await axiosInstance.post('account/refresh', { refreshToken: refreshtoken });
-                if (res.status === 200 && res.data.data.accessToken) {
-                    setCookie("Authorization", res.data.data.accessToken, {});
+                if (res.status === 200 && res.data.accessToken) {
+                    setCookie("Authorization", res.data.accessToken, {});
                     error.config.headers["Authorization"] = `Bearer ${getCookie("Authorization")}`;
                     return axiosInstance(error.config);
                 }
