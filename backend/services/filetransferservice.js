@@ -3,6 +3,7 @@ const fs = require("fs");
 const JSZip = require("jszip");
 const path = require("path");
 const ftp = require("basic-ftp")
+const { FileModel } = require("../db/schemas/files");
 
 const allowedFileTypes = ["xlsx"]; // 허용된 파일 확장자
 
@@ -44,6 +45,8 @@ class MetaTransferService {
         });
     }
 }
+
+const progressSubscribers = []; // 진행 상황을 구독하는 클라이언트들을 저장
 
 class DataTransferService {
     static async downloadZip(body) {
@@ -87,16 +90,69 @@ class DataTransferService {
 
         const remoteFileName = "output.zip";    // FTP 서버에 업로드되는 이름
 
+        // FTP 서버로의 업로드 진행 상황 추적
+        client.trackProgress(info => {
+            const progress = {
+                type: 'ftpUpload',
+                filename: remoteFileName,
+                transferred: info.bytesOverall,
+                total: info.bytesOverall,
+                percentage: (info.bytesOverall / info.bytesOverall) * 100
+            };
+            // if (progress.percentage % 1 === 0) { // 1퍼센트 증가할 때 마다 진행 상황 발송하도록
+            //     sendProgress(progress);
+            // }
+            sendProgress(progress);
+        });
+        
         // FTP 서버로 파일을 업로드
         await client.uploadFrom(stream, remoteFileName);
+
+        // FTP 서버에서 클라이언트로의 다운로드 진행 상황 추적
+        client.trackProgress(info => {
+            const progress = {
+                type: 'download',
+                filename: remoteFileName,
+                transferred: info.bytesOverall,
+                total: info.bytesOverall,
+                percentage: (info.bytesOverall / info.bytesOverall) * 100
+            };
+            // if (progress.percentage % 1 === 0) { // 1퍼센트 증가할 때 마다 진행 상황 발송하도록
+            //     sendProgress(progress);
+            // }
+            sendProgress(progress);
+        });
 
         // FTP 서버에서 클라이언트로 파일 다운로드
         await client.downloadTo(downloadFileRoot, remoteFileName);  // JSON에 있던 파일 경로 사용
 
         //console.log("파일을 성공적으로 다운로드했습니다.");
     }
+
+    static getDownloadProgress(req, res) {
+        res.setHeader('Content-Type', 'text/event-stream');
+        res.setHeader('Cache-Control', 'no-cache');
+        res.setHeader('Connection', 'keep-alive');
+
+        // 클라이언트를 구독자 목록에 추가
+        progressSubscribers.push(res);
+
+        // 클라이언트 연결이 종료될 때 구독자 목록에서 제거
+        req.on('close', () => {
+            const index = progressSubscribers.indexOf(res);
+            if (index !== -1) {
+                progressSubscribers.splice(index, 1);
+            }
+        });
+    }
 }
 
+// 진행 상황을 SSE를 통해 모든 구독자에게 전송
+function sendProgress(progress) {
+    progressSubscribers.forEach(sub => sub.write(`data: ${JSON.stringify(progress)}\n\n`));
+}
+
+// 다운로드 대상 파일 경로의 공통 폴더 루트 반환 함수
 function findCommonTopFolder(filePaths) {
     // 경로 리스트가 비어있으면 빈 문자열 반환
     if (filePaths.length === 0) return "";
