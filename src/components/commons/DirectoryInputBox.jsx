@@ -1,4 +1,4 @@
-export function FileInputBox({color, label, accept, onChange}) {
+export function DirectoryInputBox({color, label, accept, onChange}) {
     const c = {
         green: "is-primary",
         yellow: "is-warning",
@@ -13,6 +13,7 @@ export function FileInputBox({color, label, accept, onChange}) {
                     className="file-input"
                     type="file"
                     name="resume"
+                    webkitdirectory=""
                     accept={accept}
                     onChange={onChange}
                 />
