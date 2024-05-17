@@ -23,6 +23,10 @@ class FileRepository {
     static async insertMany(files) {
         await FileModel.insertMany(files);
     }
+
+    static async findByIds(ids) {
+        return await FileModel.find({ _id: { $in: ids } });
+    }
 }
 
 module.exports = { FileRepository };

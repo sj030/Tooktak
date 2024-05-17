@@ -3,7 +3,8 @@ const fs = require("fs");
 const JSZip = require("jszip");
 const path = require("path");
 const ftp = require("basic-ftp")
-const { FileModel } = require("../db/schemas/files");
+const { FileRepository } = require("../db/models/files");
+const { Literals } = require("../literal/literals");
 
 const allowedFileTypes = ["xlsx"]; // 허용된 파일 확장자
 
@@ -51,7 +52,7 @@ const progressSubscribers = []; // 진행 상황을 구독하는 클라이언트
 class DataTransferService {
     static async downloadZip(body) {
         const { objectIDs, downloadFileRoot } = body; // 요청에서 ObjectID 리스트 가져오기
-        const files = await FileModel.find({ _id: { $in: objectIDs } });
+        const files = await FileRepository.findByIds(objectIDs);
         const filePaths = files.map(file => file.f_path);
         //const { filePaths, downloadFileRoot } = body;           // 파일 루트 리스트 받았을 때 사용했었음
 
@@ -79,7 +80,7 @@ class DataTransferService {
             currentZipFolder.file(fileName, fileData); // 파일을 Zip에 추가합니다.
         }
 
-        const stream = await zip.generateNodeStream({ type: "nodebuffer", streamFiles: true });
+        const stream = zip.generateNodeStream({ type: "nodebuffer", streamFiles: true });
 
         const client = new ftp.Client();
         await client.access({               // 서버에 로컬로 지정한 user와 password에 맞춰줘야 함
@@ -88,13 +89,11 @@ class DataTransferService {
             password: process.env.FTP_PASSWORD  // FTP 비밀번호
         });
 
-        const remoteFileName = "output.zip";    // FTP 서버에 업로드되는 이름
-
         // FTP 서버로의 업로드 진행 상황 추적
         client.trackProgress(info => {
             const progress = {
                 type: 'ftpUpload',
-                filename: remoteFileName,
+                filename: Literals.FTP.REMOTE_FILE_NMAE,
                 transferred: info.bytesOverall,
                 total: info.bytesOverall,
                 percentage: (info.bytesOverall / info.bytesOverall) * 100
@@ -104,7 +103,7 @@ class DataTransferService {
             // }
             sendProgress(progress);
         });
-        
+
         // FTP 서버로 파일을 업로드
         await client.uploadFrom(stream, remoteFileName);
 
@@ -112,7 +111,7 @@ class DataTransferService {
         client.trackProgress(info => {
             const progress = {
                 type: 'download',
-                filename: remoteFileName,
+                filename: Literals.FTP.REMOTE_FILE_NMAE,
                 transferred: info.bytesOverall,
                 total: info.bytesOverall,
                 percentage: (info.bytesOverall / info.bytesOverall) * 100
