@@ -51,6 +51,7 @@ export function useLogin() {
                 navigate("/search");
             }else alert("Login failed: " + data.message);
         }).catch(error => {
+            setMode("admin")
             console.error("Login error:", error);
             alert("An error occurred during login.");
         });

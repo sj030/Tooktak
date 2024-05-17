@@ -1,52 +1,61 @@
-import {createContext, useContext, useReducer} from "react";
+import {createContext, useContext, useReducer, useRef, useState} from "react";
 import uploadFileReducer from "./UploadFileReducer";
 
-const initialState = {
-    hospital: "",
-    directoryList: {},
-    attributeList: [],
-    step: "xlsx"
-}
-const UploadDirectoryContext = createContext(null);
+const DirectoryContext = createContext(null);
+const XlsxContext = createContext(null);
+const FileContext = createContext(null);
+const StepContext = createContext(null);
 
 export function UploadFileProvider({children}) {
-    const [directoryList, dispatch] = useReducer(uploadFileReducer, initialState);
-    return <UploadDirectoryContext.Provider value={{ directoryList, dispatch}}>
-        {children}
-    </UploadDirectoryContext.Provider>
+    const [directoryList, dispatch] = useReducer(uploadFileReducer, {});
+    const [step, setStep] = useState("xlsx");
+    const xlsxRef = useRef(null);
+    const fileRef = useRef(null);
+    return (
+        <XlsxContext.Provider value={xlsxRef}>
+            <FileContext.Provider value={fileRef}>
+                <DirectoryContext.Provider value={{directoryList, dispatch}}>
+                    <StepContext.Provider value={{step, setStep}}>
+                    {children}
+                    </StepContext.Provider>
+                </DirectoryContext.Provider>
+            </FileContext.Provider>
+        </XlsxContext.Provider>)
 }
 
 export function useInitXlsx() {
-    const {dispatch} = useContext(UploadDirectoryContext);
-    return (header,data) => {
-        dispatch({type: "INIT_XLSX_DATA", header: header, data: data});
-    }
+    const xlsxData= useContext(XlsxContext);
+    const {setStep} = useContext(StepContext);
+    return (data)=> {
+        xlsxData.current = data;
+        setStep("directory");
+    };
 }
 
-export function useSetHospital() {
-    const {dispatch} = useContext(UploadDirectoryContext);
-    return (hospital) => {
-        dispatch({type: "SET_HOSPITAL", hospital: hospital});
-    }
-}
-
-export function useInitDirectory() {
-    const {dispatch} = useContext(UploadDirectoryContext);
+export function useInitFile() {
+    const file = useContext(FileContext);
+    const {setStep} = useContext(StepContext);
+    const xlsxData = useContext(XlsxContext);
+    const {dispatch} = useContext(DirectoryContext);
     return (files) => {
-        dispatch({type: "INIT_DIRECTORY_DATA", files: files});
+        const directory = {};
+        Object.entries(files).forEach(([_, data]) => {
+            const path=data.webkitRelativePath.split("/");
+            const key = path[1]+"/"+path[2]+"/"+path[3];
+            directory[key] = (data);
+        })
+        file.current = directory;
+        dispatch({type: "INIT_DATA", xlsx: xlsxData.current, file: file.current});
+        setStep("upload");
     }
 }
 
 export function useDirectory() {
-    const {directoryList} = useContext(UploadDirectoryContext);
-    return {attributeList: directoryList.attributeList,directoryList:Object.entries(directoryList.directoryList)};
+    const {directoryList} = useContext(DirectoryContext);
+    return directoryList;
 }
 
-export function useHospital() {
-    const {directoryList} = useContext(UploadDirectoryContext);
-    return directoryList.hospital;
-}
 export function useStep() {
-    const {directoryList} = useContext(UploadDirectoryContext);
-    return directoryList.step;
+    const {step}= useContext(StepContext);
+    return step;
 }

@@ -1,15 +1,10 @@
-import {useInitDirectory} from "../../../contexts/UploadFileContext";
+import {useInitFile} from "../../../contexts/UploadFileContext";
 import {DirectoryInputBox} from "../../commons/DirectoryInputBox";
 
 export default function DirectoryReader(){
-    const initDirectory=useInitDirectory();
+    const initDirectory=useInitFile();
     const handleDirectoryChange = event => {
-        const files = event.target.files;
-        const structuredFiles = [];
-        for (let i = 0; i < files.length; i++) {
-            structuredFiles.push(files[i]);
-        }
-        initDirectory(structuredFiles);
+        initDirectory(event.target.files);
     };
 
     return <DirectoryInputBox
