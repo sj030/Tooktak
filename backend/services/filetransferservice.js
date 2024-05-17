@@ -4,7 +4,7 @@ const JSZip = require("jszip");
 const path = require("path");
 const ftp = require("basic-ftp")
 
-const allowedFileTypes = ["xlsx"]; // 허용된 파일 확장자
+const allowedFileTypes = ["wav"]; // 허용된 파일 확장자
 
 /**
  * 파일 전송 서비스 클래스
@@ -34,7 +34,7 @@ class MetaTransferService {
                 callback(null, true);
             }
             else {
-                req.fileValidationError = "Only Excel files are allowed!";
+                req.fileValidationError = "Only wav files are allowed!";
                 callback(null, false);
             }
         }
