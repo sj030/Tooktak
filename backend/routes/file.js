@@ -12,12 +12,21 @@ const upload = MetaTransferService.initMulter();
 const uploadMiddleware = upload.single("filekey"); // filekey는 클라이언트에서 전송한 파일의 키 값, single()은 하나의 파일만 업로드할 때 사용 (array()는 여러 파일 업로드)
 
 router.post("/upload/meta", async (req, res) => {     
-
+    const { name, attributes } = req.body;
+    // new collection 생성
+    try {
+        const document = await ServiceAttrService.addServices({ name, attributes });
+        res.status(200).send("meta upload");
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
 });
 
 router.post("/upload/data", uploadMiddleware, (req, res) => {
-    console.log(req.file);
-    res.json({ header: req.file });
+    // .wav 파일 받음 -> uploads 파일에 올려둠 (Middle ware)
+    
+    // mongodb 에 추가 
+    
 });
 
 // ZIP 파일 생성 및 다운로드, 
