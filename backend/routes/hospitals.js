@@ -18,7 +18,7 @@ router.post("/addservice", async (req, res) => {
 router.get("/", async (req, res) => {
     const result = await ServiceAttrService.getAllServicesWithAttributes();
     if (!result) {
-        res.status(400).send(Literals.NO_SERVICE);
+        res.status(400).send(Literals.SERVICE.NO_SERVICE_ERROR);
     }
     else {
         res.status(200).send(result);
@@ -34,7 +34,7 @@ router.get("/:name/attribute", async (req, res) => {
     const name = req.params.name;
     const result = await ServiceAttrService.getServiceByName(name);
     if (!result) {
-        res.status(400).send(Literals.NO_SERVICE);
+        res.status(400).send(Literals.SERVICE.NO_SERVICE_ERROR);
     }
     else {
         res.status(200).send(result);
