@@ -24,9 +24,28 @@ router.post("/upload/meta", async (req, res) => {
 
 router.post("/upload/data", uploadMiddleware, (req, res) => {
     // .wav 파일 받음 -> uploads 파일에 올려둠 (Middle ware)
-    
-    // mongodb 에 추가 
-    
+    try {
+        const headerData = req.headers['custom-header'];;
+
+        if (!req.body) {
+            return res.status(400).json({ success: false });
+        }
+
+        console.log('File Info:', fileInfo);
+        console.log('Header Data:', headerData);
+
+        // try{
+        //     // db 객체 불러오기 find one
+        //     res.status(200).json({ success: true });
+        // }catch(err){
+        //     res.status(400).json({ sucess : false });
+        // }
+
+    } catch (error) {
+        console.error('Error processing upload:', error);
+        res.status(400).send('Internal Server Error');
+    }
+
 });
 
 // ZIP 파일 생성 및 다운로드, 
