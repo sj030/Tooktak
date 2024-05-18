@@ -1,6 +1,5 @@
 import axios from 'axios';
-import { setCookie, getCookie } from "./cookies";
-import { useLogout } from '../../contexts/AuthContext';
+import { getCookie } from "./cookies";
 
 const baseURL = 'http://localhost:3001/'; // cors의 경우 서버에서 처리함
 
@@ -21,31 +20,5 @@ axiosInstance.interceptors.request.use((config) => {
     console.log(config.headers["Authorization"]);
     return config;
 });
-
-axiosInstance.interceptors.response.use(
-    (response) => {
-        return response;
-    },
-    async (error) => {
-        if (error.config && !error.config._retry && error.response && error.response.status === 401) {
-            error.config._retry = true;
-            const refreshtoken = getCookie("RefreshToken");
-            try {
-                const res = await axiosInstance.post('account/refresh', { refreshToken: refreshtoken });
-                if (res.status === 200 && res.data.accessToken) {
-                    setCookie("Authorization", res.data.accessToken, {});
-                    error.config.headers["Authorization"] = `Bearer ${getCookie("Authorization")}`;
-                    return axiosInstance(error.config);
-                }
-            } catch (refreshError) {
-                useLogout();
-                return Promise.reject(refreshError);
-            }
-        }
-        useLogout();
-        return Promise.reject(error);
-    }
-);
-
 
 export default axiosInstance;

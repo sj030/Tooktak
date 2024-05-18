@@ -1,24 +1,34 @@
-import {createBrowserRouter, createRoutesFromElements, Route, RouterProvider,} from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Search from "./pages/SearchPage";
 import Admin from "./pages/AdminPage";
 import Login from "./pages/LoginPage";
 import Root from "./pages/Root";
-import ErrorPage from "./pages/ErrorPage";
 import Upload from "./pages/UploadPage";
 import LogPage from "./pages/LogPage";
+import {RefreshTokenProvider} from "./services/config/tokenRefresher";
+import { AuthProvider } from "./contexts/AuthContext";
 
-const router = createBrowserRouter(
-    createRoutesFromElements(
-        <Route path="/" element={<Root/>}>
-            <Route path="login" element={<Login/>} errorElement={<ErrorPage/>}/>
-            <Route path="search" element={<Search/>} errorElement={<ErrorPage/>}/>
-            <Route path="upload" element={<Upload/>} errorElement={<ErrorPage/>}/>
-            <Route path="account" element={<Admin/>} errorElement={<ErrorPage/>}/>
-            <Route path="log" element={<LogPage/>} errorElement={<ErrorPage/>}/>
-        </Route>
-    )
-);
+const Router = () => {
+    return (
+        <BrowserRouter>
+            <AuthProvider>
+                <RefreshTokenProvider>
+                    <Routes>
+                        <Route path="/" element={<Root />}>
+                            <Route path="login" element={<Login />} />
+                            <Route path="search" element={<Search />} />
+                            <Route path="upload" element={<Upload />} />
+                            <Route path="account" element={<Admin />} />
+                            <Route path="log" element={<LogPage />} />
+                        </Route>
+                    </Routes>
+                </RefreshTokenProvider>
+            </AuthProvider>
+        </BrowserRouter>
+    );
+};
 
-export default function Router() {
-    return <RouterProvider router={router}/>;
-}
+
+
+
+export default Router;

@@ -1,27 +1,34 @@
-import {Table} from "../../commons/Table";
-import {Grid} from "../../layout/Grid";
-import {DropBox} from "../../commons/DropBox";
+import { LTable } from "../../commons/LTable";
+import { Grid } from "../../layout/Grid";
+import { DropBox } from "../../commons/DropBox";
 import RangeBox from "../../commons/RangeBox";
-import {TextBox} from "../../commons/TextBox";
-
+import { TextBox } from "../../commons/TextBox";
+import { useLogs } from "../../../contexts/LogContext";
+import { useQueryParams, useSetDateRange } from "../../../contexts/Querycontext";
+import { useUpdateQueryParams } from "../../../contexts/Querycontext";
 export function LogBox() {
-    return <>
-        <Grid min={7}>
-            <DropBox label={"이름"} options={[]}/>
-            <DropBox label={"소속"} options={[]}/>
-            <RangeBox label={"시간"}/>
-            <DropBox label={"요청 로그"} options={[]}/>
-            <TextBox label={"ip"}/>
-            <TextBox label={"file_id"}/>
-        </Grid>
-        <Table
-            header={["이름", "id", "소속", "시간", "요청 로그", "ip", "file_id"]}
-            items={[
-                ["김철수", "kim", "개발팀", "2021-09-01 12:00:00", "로그인", "132.15.51.64", "1"],
-                ["김철수", "kim", "개발팀", "2021-09-01 12:00:00", "파일 업로드", "192.168.0.14", "2"],
-                ["김철수", "kim", "개발팀", "2021-09-01 12:00:00", "파일 삭제", "164.142.2.41", "3"],
-                ["김철수", "kim", "개발팀", "2021-09-01 12:00:00", "로그아웃", "142.143.1.42", "4"],
-            ]}
-        />
-    </>;
+    const logsObject = useLogs();
+    const logs = logsObject.logs || [];
+    const { queryParams } = useQueryParams();
+    const updateQueryParams = useUpdateQueryParams();
+    const setDateRange = useSetDateRange();
+    const items = Array.isArray(logs) ? logs.map(log => [
+        log.timestamp, log.level, log.message, log.meta?.username, log.meta?.ip, log.meta?.requestUrl, log.meta?.f_name, log.meta?.error
+    ]) : [];
+
+    return (
+        <>
+            <Grid min={7}>
+                <TextBox label={"username"} placeholder="홍길동" field={"username"} value={queryParams.username} setValue={(value)=>updateQueryParams('username', value)}/>
+                <DropBox label={"role"} options={["user", "admin"]} field={"role"} value={queryParams.role} setValue={(value)=>updateQueryParams('role', value)}/>
+                <TextBox label={"ip"} placeholder="192.168.0.1" field={"ip"} value={queryParams.ip} setValue={(value)=>updateQueryParams('ip', value)}/>
+                <TextBox label={"f_name"} placeholder="홍길동.txt" field={"f_name"} value={queryParams.f_name} setValue={(value)=>updateQueryParams('f_name', value)}/>
+                <RangeBox label={"date"} placeholder1={"YYYY-MM-DD"} placeholder2={"YYYY-MM-DD"} field={"date"} start={queryParams.date.split('_to_')[0]} end={queryParams.date.split('_to_')[1]} setStart={(start)=>setDateRange(start, queryParams.date.split('_to_')[0]) } setEnd={(end)=>setDateRange(queryParams.date.split('_to_')[1], end)}/>
+            </Grid>
+            <LTable
+                header={["timestamp", "level", "message", "username", "ip", "requestUrl", "f_name", "error"]}
+                items={items}
+            />
+        </>
+    );
 }
