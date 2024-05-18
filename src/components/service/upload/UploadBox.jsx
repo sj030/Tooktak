@@ -1,6 +1,6 @@
 import {useStep} from "../../../contexts/UploadFileContext";
 import XlsxReader from "./XlsxReader";
-import UploadTable from "./UploadTable";
+import DirectoryBox from "./DirectoryBox";
 import DirectoryReader from "./DirectoryReader";
 
 
@@ -12,7 +12,7 @@ export default function UploadBox() {
         case "directory":
             return <DirectoryReader/>;
         case "upload":
-            return <UploadTable/>
+            return <DirectoryBox/>
         default:
             return null;
     }

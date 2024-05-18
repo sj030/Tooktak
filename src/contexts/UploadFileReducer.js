@@ -1,41 +1,24 @@
-import {parseAndFormatDate} from "../utility/date";
-
 export default function uploadFileReducer(state, action) {
     switch (action.type) {
-        case "INIT_XLSX_DATA":
+        case "INIT_DATA":
             const directoryList = {};
-            action.data.forEach((data) => {
-                const key = parseAndFormatDate(data["검사일자"]) + "/" + data["환자명"];
-                directoryList[key] = ({...data, files: [], status: "unset", file_num: 0, finish_num: 0});
-            })
-            directoryList["untracked"] = {files: [], status: "unset", file_num: 0, finish_num: 0};
-            return {
-                ...state,
-                step: "directory",
-                attributeList: ["files", "file_num", "finish_num", ...action.header],
-                directoryList: directoryList
-            }
-        case "INIT_DIRECTORY_DATA":
-            const directory = {...state.directoryList};
-            action.files.forEach((file) => {
-                const path = file.webkitRelativePath.split("/");
-                const key = path[1] + "/" + path[2];
-                if (directory[key] === undefined) {
-                    directory["untracked"].files.push(file);
-                    directory["untracked"].file_num++;
-                    directory["untracked"].status = "ready";
+            // 1. xlsx 파일의 데이터를 읽어서 attributeList와 directoryList를 만든다.
+            Object.entries(action.xlsx).forEach(([key, value]) => {
+                directoryList[key] = {attributes: value, state: "xlsxOnly", files: {}};
+            });
+            directoryList["no_xlsx_data"] = {state: "fileOnly", files: {}};
+            //2. file의 데이터를 읽어서 directoryList에 추가한다.
+            Object.entries(action.file).forEach(([key, value]) => {
+                const path = key.split("/");
+                const dirPath = path[0] + "/" + path[1];
+                if (directoryList[dirPath]) {
+                    directoryList[dirPath].files[key] = value;
+                    directoryList[dirPath].state = "ready";
                 } else {
-                    directory[key].files.push(file);
-                    directory[key].file_num++;
-                    directory[key].status = "ready";
+                    directoryList["no_xlsx_data"].files[key] = value;
                 }
-            })
-            console.log(directory);
-            return {
-                ...state,
-                step: "upload",
-                directoryList: directory
-            }
+            });
+            return directoryList;
         default:
             return state;
     }
