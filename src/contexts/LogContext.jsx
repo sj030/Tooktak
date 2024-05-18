@@ -9,7 +9,6 @@ const LogContext = createContext({
     logsCount: 0,
 });
 
-
 export const LogProvider = ({ children }) => {
     const [logs, setLogs] = useState([]);
     const { queryParams } = useQueryParams();

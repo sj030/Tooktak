@@ -11,6 +11,8 @@ export const QueryProvider = ({ children }) => {
         date: "",
         page: 1 
     });
+    const [startDate, setStartDate] = useState("");
+    const [endDate, setEndDate] = useState("");
 
     const updateQueryParams = useCallback((field, value) => {
         setQueryParams(prev => ({
@@ -28,7 +30,7 @@ export const QueryProvider = ({ children }) => {
     }, []);
 
     return (
-        <QueryContext.Provider value={{ queryParams, setQueryParams, setDateRange, updateQueryParams}}>
+        <QueryContext.Provider value={{ queryParams, setQueryParams, setDateRange, updateQueryParams, startDate, setStartDate, endDate, setEndDate}}>
             {children}
         </QueryContext.Provider>
     );
