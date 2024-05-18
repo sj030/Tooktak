@@ -1,5 +1,6 @@
-const { LogRepository } = require('../db/models/log');
+const { LogRepository } = require("../db/models/log");
 const logger = require("../config/logger"); // 로거 설정 가져오기
+const { Literals } = require("../literal/literals");
 
 class LogService {
     // 로그 조회 요청 처리 함수
@@ -11,7 +12,7 @@ class LogService {
         switch (resultobj.status) {
             case 200:
                 // 로그 조회 성공 시 로깅 및 응답 전송
-                logger.info("Log fetch successful", {
+                logger.info(Literals.LOG.FETCH_SUCCESS, {
                     username: req.user.data.username,
                     ip: req.ip,
                     role: req.user.data.role,
@@ -22,7 +23,7 @@ class LogService {
                 break;
             case 400:
                 // 쿼리 매칭 실패 시 로깅 및 400 에러 응답
-                logger.error("No Log matched", {
+                logger.error(Literals.LOG.NO_MATCH, {
                     username: req.user.data.username,
                     ip: req.ip,
                     role: req.user.data.role,
@@ -34,7 +35,7 @@ class LogService {
                 break;
             case 500:
                 // 서버 오류 시 로깅 및 500 에러 응답
-                logger.error("Server error during log fetch", {
+                logger.error(Literals.LOG.SERVER_ERROR, {
                     username: req.user.data.username,
                     ip: req.ip,
                     role: req.user.data.role,

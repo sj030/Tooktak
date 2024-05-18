@@ -1,10 +1,11 @@
 // bcrypt 모듈 불러오기
 const bcrypt = require("bcrypt");
 // jwt 모듈 불러오기
-const jwt = require('jsonwebtoken');
+const jwt = require("jsonwebtoken");
 // 로깅을 위한 winston 로거 구성 불러오기
 const { UserModel, saltRounds } = require("../schemas/users");
 const config = require("../../config/vars");
+const { Literals } = require("../../literal/literals");
 
 class UserRepository {
     /**
@@ -38,7 +39,7 @@ class UserRepository {
             if (!user) {
                 return JSON.stringify({
                     status: 404,
-                    message: "User not found."
+                    message: Literals.ACCOUNT.NOT_FOUND
                 });
             } else {
                 return JSON.stringify({
@@ -49,11 +50,11 @@ class UserRepository {
         } catch (err) {
             return JSON.stringify({
                 status: 500,
-                message: "Server error: " + err.message
+                message: Literals.SERVER_ERROR + err.message
             });
         }
     }
-    
+
     // 사용자 로그인 처리
     static async login(userData) {
         try {
@@ -62,7 +63,7 @@ class UserRepository {
                 console.error(`Login failed: Authentication failed. Invalid user or password: ${userData.username}`);
                 return JSON.stringify({
                     status: 401,
-                    message: "Authentication failed. Invalid user or password."
+                    message: Literals.ACCOUNT.AUTHENTICATION_ERROR
                 });
             } else {
                 // Access token 생성
@@ -93,7 +94,7 @@ class UserRepository {
                 return JSON.stringify({
                     status: 200,
                     data: {
-                        accessToken: accessToken, 
+                        accessToken: accessToken,
                         refreshToken: refreshToken,
                         user: {
                             id: findUser._id,
@@ -101,7 +102,7 @@ class UserRepository {
                             role: findUser.role
                         }
                     },
-                    message: "Authentication successful."
+                    message: Literals.ACCOUNT.AUTHENTICATION_SUCCESS
                 });
             }
         } catch (error) {
@@ -117,30 +118,30 @@ class UserRepository {
     static async refreshAccessToken(refreshToken) {
         try {
             if (!refreshToken) {
-                return JSON.stringify({ status: 401, message: "Refresh Token is required" });
+                return JSON.stringify({ status: 401, message: Literals.ACCOUNT.REFRESH_REQUIRED });
             }
 
             let decoded = jwt.verify(refreshToken, config.jwt.refresh_secret_key);
             const user = await UserModel.findById(decoded.id);
 
             if (!user || user.refreshToken !== refreshToken) {
-                return JSON.stringify({ status: 403, message: "Invalid Refresh Token" });
+                return JSON.stringify({ status: 403, message: Literals.ACCOUNT.INVALID_REFRESH_TOKEN });
             }
 
             const newAccessToken = jwt.sign(
                 { id: user._id, username: user.username, role: user.role },
                 config.jwt.secret_key,
-                { expiresIn: config.jwt.access_expires}
+                { expiresIn: config.jwt.access_expires }
             );
 
             return JSON.stringify({ status: 200, data: { accessToken: newAccessToken } });
 
         } catch (err) {
             if (err.name === "JsonWebTokenError" || err.name === "TokenExpiredError") {
-                return JSON.stringify({ status: 403, message: "Invalid Refresh Token" });
+                return JSON.stringify({ status: 403, message: Literals.ACCOUNT.INVALID_REFRESH_TOKEN });
             } else {
                 console.error("Error in refreshing token: ", err);
-                return JSON.stringify({ status: 500, message: "Internal server error" });
+                return JSON.stringify({ status: 500, message: Literals.ACCOUNT.INTERNAL_SERVER_ERROR });
             }
         }
     }
@@ -153,7 +154,7 @@ class UserRepository {
             if (existingUser) {
                 return JSON.stringify({
                     status: 409,
-                    message: "User already exists with the same username"
+                    message: Literals.ACCOUNT.CREATE_ERROR_EXISTS
                 });
             }
 
@@ -165,7 +166,7 @@ class UserRepository {
             if (!newUser) {
                 return JSON.stringify({
                     status: 400,
-                    message: "Failed to create new user"
+                    message: Literals.ACCOUNT.CREATE_ERROR
                 });
             } else {
                 return JSON.stringify({
@@ -188,20 +189,20 @@ class UserRepository {
             if (!user) {
                 return JSON.stringify({
                     status: 404,
-                    message: "User not found."
+                    message: Literals.ACCOUNT.NOT_FOUND
                 });
             } else {
                 console.log(`User ${param} deleted successfully.`);
                 return JSON.stringify({
                     status: 200,
-                    message: "User deleted successfully."
+                    message: Literals.ACCOUNT.DELETE_SUCCESS
                 });
             }
         } catch (error) {
             console.error(`Delete error for user ${param}: ${error.message}`);
             return JSON.stringify({
                 status: 500,
-                message: "Server error: " + error.message
+                message: Literals.SERVER_ERROR + error.message
             });
         }
     }
@@ -217,13 +218,13 @@ class UserRepository {
             return JSON.stringify({
                 status: 200,
                 data: users,
-                message: "Users fetched successfully."
+                message: Literals.ACCOUNT.FETCH_SUCCESS
             });
         } catch (error) {
             console.error("Error fetching users: ", error);
             return JSON.stringify({
                 status: 500,
-                message: "Server error: " + error.message
+                message: Literals.SERVER_ERROR + error.message
             });
         }
     }

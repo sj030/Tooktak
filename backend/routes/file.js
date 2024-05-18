@@ -2,9 +2,11 @@ const express = require("express");
 const router = express.Router();
 const fs = require("fs");
 const path = require("path");
-const { MetaTransferService } = require("../services/filetransferservice");
+const { MetaTransferService, DataTransferService } = require("../services/filetransferservice");
 const { PatientService } = require("../services/patientservice");
 const { FileService } = require("../services/fileservice");
+const { ServiceAttrService } = require("../services/serviceattrservice");
+const { Literals } = require("../literal/literals");
 
 // Multer 객체 생성 및 파일 업로드 미들웨어 설정 (TEST 용도입니다)
 const upload = MetaTransferService.initMulter();
@@ -15,25 +17,52 @@ router.post("/upload/data", uploadMiddleware, (req, res) => {
     res.json({ header: req.file });
 });
 
-router.get("/download", (req, res) => {
-    
+// SSE 엔드포인트 연결 설정, 다운로드 진행도(%) 확인
+router.get("/getDownloadProgress", (req, res) => {
+    try {
+        DataTransferService.getDownloadProgress(req, res)
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+});
+
+// ZIP 파일 생성 및 다운로드, 
+router.post("/download", async (req, res) => {
+    try {
+        await DataTransferService.downloadZip(req.body)
+        res.status(200).send(Literals.FTP.ZIP_SUCCESS);
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
 });
 
 // 중복 필터 검색 용 API(기본형, 병원 추가예정)
-router.post('/search', FileService.searchFiles);
+router.post("/search", async (req, res) => {
+    try {
+        const result = await FileService.getAllMetaDataByQuery(await ServiceAttrService.getServiceByName(req.body.name), req.body.attributes);
+        res.status(200).send(result);
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+});
 
 // 임시 DB 채우기 용 API(추후 삭제예정)
-router.post('/addPatients', PatientService.addPatient);
-router.post('/addFiles', FileService.addFile);
+router.post("/addPatients", async (req, res) => {
+    try {
+        await PatientService.addPatients(req.body);
+        res.status(200);
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+});
 
-// Get the header of the CSV file (TEST)
-router.get("/get-csv-header/:hospital", (req, res) => {
-    var FILE_NAME = `${req.params.hospital}.csv`;
-    var filePath = path.join(__dirname, "..", "public", "csv", FILE_NAME);
-    var file = fs.readFileSync(filePath, "utf-8");
-    var lines = file.split("\r\n" || "\n" || "\r");
-    var header = lines[0].split(", ").map((item) => item.replace(/"/g, ""));
-    res.json({ header: header });
+router.post("/addFiles", async (req, res) => {
+    try {
+        await FileService.addFiles(req.body);
+        res.status(200);
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
 });
 
 module.exports = router;

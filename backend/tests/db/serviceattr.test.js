@@ -126,7 +126,7 @@ afterAll(async () => {
     }
 });
 
-describe("addservice'", () => {
+describe("addservice", () => {
     afterEach(async () => {
         await ServiceAttrModel.deleteMany({});
     });
