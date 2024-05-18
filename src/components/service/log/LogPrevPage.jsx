@@ -3,8 +3,8 @@ import { useQueryParams } from "../../../contexts/Querycontext";
 import { useLogs } from "../../../contexts/LogContext";
 
 export function LogPrevPage() {
-    const params = useQueryParams();
-    const pageNum = params.queryParams.page;
+    const { queryParams } = useQueryParams();
+    const pageNum = queryParams.page;
     const { updateAndFetchLogs } = useLogs();
 
     const handlePrevPage = (e) => {

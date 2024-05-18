@@ -3,19 +3,19 @@ import { useQueryParams, useSetDateRange } from "../../../contexts/Querycontext"
 import { useSyncQueryParams } from "../../../services/log";
 import { useLogs } from "../../../contexts/LogContext";
 export function LogSearch() {
-    const params  = useQueryParams();
-    const pageNum = params.queryParams.page;
+    const { queryParams, startDate, endDate } = useQueryParams();
     const syncQueryParams = useSyncQueryParams();
+    const { fetchLogs } = useLogs();
     const setDateRange = useSetDateRange();
-    const { fetchLogs, start, end } = useLogs();
 
-    console.log(pageNum);
     const handleSearch = (e) => {
         e.preventDefault();
-        if(start && end){
-            setDateRange(start, end);
+        if (startDate && endDate) {
+            setDateRange(startDate, endDate);
+            syncQueryParams({ ...queryParams, date: `${startDate}_to_${endDate}` });
+        } else {
+            syncQueryParams(queryParams);
         }
-        syncQueryParams(params);
         fetchLogs();
     };
     return (

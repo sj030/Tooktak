@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
+import React, { createContext, useContext, useState, useCallback } from 'react';
 import { requestLogApi } from '../services/log';
 import { useQueryParams, useUpdateQueryParams } from './Querycontext';
 
@@ -35,10 +35,8 @@ export const LogProvider = ({ children }) => {
     }, [queryParams]);
 
     const updateAndFetchLogs = useCallback((field, value) => {
-        updateQueryParams(field, value);
-        setTimeout(() => {
-            fetchLogs();
-        }, 0); 
+        updateQueryParams(field, value);    
+        fetchLogs();
     }, [fetchLogs, updateQueryParams]);
 
     return (
@@ -55,4 +53,3 @@ export function useLogs() {
     }
     return context;  // 객체를 반환, { logs, setLogs }
 }
-
