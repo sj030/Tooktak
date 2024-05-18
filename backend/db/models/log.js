@@ -2,7 +2,7 @@ const { LogModel } = require("../schemas/log");
 
 class LogRepository {
 
-    static async getLogs(queryParams, page, limit = 10) {
+    static async getLogs(queryParams, page, limit = 5) {
         const { username, role, ip, f_name, date } = queryParams;
         const filter = {};
         const skip = (page - 1) * limit;  // 페이지 계산을 위해 건너뛸 아이템 수
@@ -27,7 +27,7 @@ class LogRepository {
             // 로그 데이터가 없을 경우
             if (logs.length === 0) {
                 return JSON.stringify({
-                    status: 400,
+                    status: 204,
                     message: "No logs matched the query."
                 });
             }
