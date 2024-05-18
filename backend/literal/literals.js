@@ -1,6 +1,11 @@
 const Literals = {
     SERVICE: {
+        ADD_SERVICE_SUCCESS: "Service added successfully",
         NO_SERVICE_ERROR: "No Service Found",
+    },
+    FILE: {
+        ADD_FILE_SUCCESS: "File added successfully",
+        ADD_PATIENT_SUCCESS: "Patient added successfully",
     },
     FTP: { // 다운로드 
         REMOTE_FILE_NMAE: "output.zip", // FTP 서버에 업로드되는 이름
