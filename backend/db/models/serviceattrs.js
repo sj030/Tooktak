@@ -14,7 +14,7 @@ class ServiceAttrRepository {
      * @returns {*} 이름이 `name`인 서비스의 속성을 가져옵니다.
      */
     static async findByName(name) {
-        return await ServiceAttrModel.findOne({ serviceName: name });
+        return await ServiceAttrModel.findOne({ name: name });
     }
 
     /**
