@@ -29,8 +29,16 @@ export const QueryProvider = ({ children }) => {
         }));
     }, []);
 
+    const setStart = useCallback((startDate) => {
+        setStartDate(startDate);
+    }, []);
+
+    const setEnd = useCallback((endDate) => {
+        setEndDate(endDate);
+    }, []);
+    
     return (
-        <QueryContext.Provider value={{ queryParams, setQueryParams, setDateRange, updateQueryParams, startDate, setStartDate, endDate, setEndDate}}>
+        <QueryContext.Provider value={{ queryParams, setQueryParams, setDateRange, updateQueryParams, startDate, setStart, endDate, setEnd}}>
             {children}
         </QueryContext.Provider>
     );
@@ -52,6 +60,22 @@ export function useUpdateQueryParams() {
     return context.updateQueryParams;
 };
 
+export function useSetStart() {
+    const context = useContext(QueryContext);
+    if (!context) {
+        throw new Error("useUpdateQueryParams must be used within a QueryProvider");
+    }
+    return context.setStart;
+};
+
+
+export function useSetEnd() {
+    const context = useContext(QueryContext);
+    if (!context) {
+        throw new Error("useUpdateQueryParams must be used within a QueryProvider");
+    }
+    return context.setEnd;
+};
 export function useSetDateRange() {
     const context = useContext(QueryContext);
     if (!context) {
