@@ -8,7 +8,7 @@ const cors = require("cors");
 // 라우터
 const accountRouter = require("./routes/account");
 const fileRouter = require("./routes/file");
-const hospitalRouter = require("./routes/hospitals");
+const hospitalRouter = require("./routes/service");
 // 로깅
 const mongoose = require("./config/mongoose");
 const logger = require("./config/logger");
@@ -35,7 +35,7 @@ app.use(express.static(path.join(__dirname, "uploads")));
 // 라우트 핸들러 설정
 app.use("/account", accountRouter);
 app.use("/file", fileRouter);
-app.use("/hospitals", hospitalRouter);
+app.use("/service", hospitalRouter);
 
 // 404 에러 핸들링
 app.use(function (req, res, next) {
