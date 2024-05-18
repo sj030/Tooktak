@@ -2,7 +2,6 @@ import React from 'react';
 import { LTableRow } from "./LTableRow";
 
 export function LTable({ header, items, select, id }) {
-    console.log("LTable items:", items); // 디버깅을 위한 콘솔 로그 추가
 
     return (
         <div className={"table__wrapper"}>
