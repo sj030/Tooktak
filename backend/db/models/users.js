@@ -16,7 +16,7 @@ class UserRepository {
         try {
             const user = await UserModel.findOne({ username: config.admin.id });
             if (!user) {
-                const hash = await bcrypt.hash(config.admin.password, saltRounds);
+                const hash = bcrypt.hash(config.admin.password, saltRounds);
                 const newUser = new UserModel({
                     username: config.admin.id,
                     password: hash,
@@ -170,7 +170,7 @@ class UserRepository {
                 });
             } else {
                 return JSON.stringify({
-                    status: 200,
+                    status: 201,
                     data: newUser
                 });
             }
@@ -208,16 +208,20 @@ class UserRepository {
     }
 
     // 사용자 목록 조회
-    static async listUsers(page, limit = 5) {
+    static async listUsers(page, limit = 5) { // 한 번에 10개씩 보여주도록 수정
         const skip = (page - 1) * limit; // 페이지 계산을 위해 건너뛸 아이템 수
         try {
             const users = await UserModel.find({ username: { $ne: config.admin.id } })
                 .skip(skip)
                 .limit(limit)
                 .exec();
+            const totalUsers = await UserModel.countDocuments({ username: { $ne: config.admin.id } });
             return JSON.stringify({
                 status: 200,
                 data: users,
+                total_count: totalUsers,
+                items_per_page: limit,
+                current_page: page,
                 message: Literals.ACCOUNT.FETCH_SUCCESS
             });
         } catch (error) {
@@ -228,6 +232,7 @@ class UserRepository {
             });
         }
     }
+
 }
 
 // UserRepository 클래스 외부 공개
