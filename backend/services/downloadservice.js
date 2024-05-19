@@ -7,9 +7,10 @@ const { Literals } = require("../literal/literals");
 
 let subscriber = null;
 const ftpInfo = {
-    host: process.env.FTP_HOST,         // FTP 호스트
-    user: process.env.FTP_USER,         // FTP 사용자명
-    password: process.env.FTP_PASSWORD  // FTP 비밀번호
+    host: process.env.FTP_HOST,
+    user: process.env.FTP_USER,
+    password: process.env.FTP_PASSWORD,
+    uploadedFilename: Literals.FTP.REMOTE_FILE_NAME
 };
 
 async function getFilepathsFromBody(body){
@@ -92,12 +93,15 @@ async function uploadAndTrack(client, stream){
 }
 
 class DownloadService {
-    static async DownloadZip(body){
+    static async ftpServerUpload(body){
         //const { filePaths } = body;
         const filePaths = await getFilepathsFromBody(body);
         const stream = buildStream(filePaths);
         const client = await connectToFtp();
         await uploadAndTrack(client, stream);
+    }
+
+    static getFTPInfo(){
         return ftpInfo;
     }
 
