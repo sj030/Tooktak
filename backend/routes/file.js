@@ -3,6 +3,7 @@ const router = express.Router();
 const fs = require("fs");
 const path = require("path");
 const { MetaTransferService, DataTransferService } = require("../services/filetransferservice");
+const { DownloadService } = require("../services/downloadservice");
 const { PatientService } = require("../services/patientservice");
 const { FileService } = require("../services/fileservice");
 const { ServiceAttrService } = require("../services/serviceattrservice");
@@ -20,9 +21,9 @@ router.post("/upload/data", uploadMiddleware, (req, res) => {
 
 // ZIP 파일 생성 및 다운로드, 
 router.post("/download", async (req, res) => {
-    await DataTransferService.downloadZip(req.body)
-        .then(() => {
-            res.status(200).send(Literals.FTP.ZIP_SUCCESS);
+    DownloadService.DownloadZip(req.body)
+        .then((ftpInfo) => {
+            res.status(200).send(ftpInfo);
         })
         .catch((error) => {
             res.status(500).send(error.message);
@@ -31,7 +32,7 @@ router.post("/download", async (req, res) => {
 
 // SSE 엔드포인트 연결 설정, 다운로드 진행도(%) 확인
 router.get("/download/progress", (req, res) => {
-    DataTransferService.getDownloadProgress(req, res)
+    DownloadService.sendDownloadProgress(req, res)
         .catch((error) => {
             res.status(500).send(error.message);
         });
