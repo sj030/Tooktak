@@ -1,4 +1,4 @@
-export function Button({ children, onClick, color="green"}) {
+export function Button({ children, onClick, color="green", className}) {
   // Define a mapping from color props to CSS classes
   const colorClasses = {
     green: "is-success",
@@ -8,7 +8,7 @@ export function Button({ children, onClick, color="green"}) {
   };
 
   // Use the color prop to get the corresponding class, defaulting to 'is-success' if not found
-  const buttonClass = `button ${colorClasses[color] || "is-success"}`;
+  const buttonClass = `button ${colorClasses[color] || "is-success"} ${className}`;
   return (
       <button className={buttonClass} onClick={onClick}>
         {children}
