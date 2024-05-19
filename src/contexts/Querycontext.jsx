@@ -38,7 +38,7 @@ export const QueryProvider = ({ children }) => {
     }, []);
     
     return (
-        <QueryContext.Provider value={{ queryParams, setQueryParams, setDateRange, updateQueryParams, startDate, setStart, endDate, setEnd}}>
+        <QueryContext.Provider value={{ queryParams, setQueryParams, setDateRange, updateQueryParams, startDate, setStart, endDate, setEnd }}>
             {children}
         </QueryContext.Provider>
     );
@@ -68,7 +68,6 @@ export function useSetStart() {
     return context.setStart;
 };
 
-
 export function useSetEnd() {
     const context = useContext(QueryContext);
     if (!context) {
@@ -76,6 +75,7 @@ export function useSetEnd() {
     }
     return context.setEnd;
 };
+
 export function useSetDateRange() {
     const context = useContext(QueryContext);
     if (!context) {

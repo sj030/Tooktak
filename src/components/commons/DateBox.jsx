@@ -18,8 +18,7 @@ export default function DateBox({label, setStart, setEnd, start, end }) {
                 <input className="input" type="date" value={end} 
                        onChange={(e) => {
                            setEnd(e.target.value)
-                       }}/>
-                
+                       }}/><p className="mx-1"/>
             </div>
         </div>
     </div>);
