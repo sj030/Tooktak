@@ -20,6 +20,25 @@ class FileRepository {
         ]);
     }
 
+    static async findNthPageByQuery(query, page, limit) {
+        return await FileModel.aggregate([
+            {
+                $lookup: {
+                    from: "patients",
+                    localField: "p_no",
+                    foreignField: "id",
+                    as: "patient"
+                }
+            },
+            {
+                $unwind: "$patient"
+            },
+            {
+                $match: query
+            }
+        ]).skip((page - 1) * limit).limit(limit);
+    }
+
     static async insertMany(files) {
         await FileModel.insertMany(files);
     }

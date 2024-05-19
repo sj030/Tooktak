@@ -37,6 +37,16 @@ function makeQueryWithAttr(serviceAttrs, query, key) {
     return {};
 }
 
+function getSearchQuery(serviceAttrs, query) {
+    let searchQuery = {};
+    searchQuery["serviceName"] = serviceAttrs["serviceName"];
+    for (const key in query) {
+        const searchKey = standardFileAttrs.includes(key) ? key : "patient.attributes." + key;
+        searchQuery[searchKey] = makeQueryWithAttr(serviceAttrs["attributes"], query[key], key);
+    }
+    return searchQuery;
+}
+
 class FileService {
     /**
      * 파일을 검색합니다.
@@ -46,13 +56,11 @@ class FileService {
      * @returns {Array} query에 해당하는 파일들을 반환합니다.
      */
     static async getAllMetaDataByQuery(serviceAttrs, query) {
-        let searchQuery = {};
-        searchQuery["serviceName"] = serviceAttrs["serviceName"];
-        for (const key in query) {
-            const searchKey = standardFileAttrs.includes(key) ? key : "patient.attributes." + key;
-            searchQuery[searchKey] = makeQueryWithAttr(serviceAttrs["attributes"], query[key], key);
-        }
-        return await FileRepository.findAllByQuery(searchQuery);
+        return await FileRepository.findAllByQuery(getSearchQuery(serviceAttrs, query));
+    }
+
+    static async getNthPageMetaDataByQuery(serviceAttrs, query, page, limit) {
+        return await FileRepository.findNthPageByQuery(getSearchQuery(serviceAttrs, query), page, limit);
     }
 
     static async addFiles(files) {

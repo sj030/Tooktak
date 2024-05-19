@@ -39,6 +39,10 @@ router.get("/download/progress", (req, res) => {
 
 // 중복 필터 검색 용 API(기본형, 병원 추가예정)
 router.post("/search", async (req, res) => {
+    // FileService.getNthPageByQuery(serviceAttrs, query, page, limit) 사용 시 페이징 처리
+    const page = req.query.page ? parseInt(req.query.page) : 1;
+    const limit = req.query.limit ? parseInt(req.query.limit) : 10; // 기본으로 출력하는 개수
+
     await FileService.getAllMetaDataByQuery(await ServiceAttrService.getServiceByName(req.body.name), req.body.attributes)
         .then((result) => {
             res.status(200).send(result);
