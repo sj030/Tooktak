@@ -21,7 +21,10 @@ router.post("/upload/data", uploadMiddleware, (req, res) => {
 
 // ZIP 파일 생성 및 다운로드, 
 router.post("/download", async (req, res) => {
-    DownloadService.DownloadZip(req.body)
+    DownloadService.ftpServerUpload(req.body)
+        .then(() => {
+            return DownloadService.getFTPInfo();
+        })
         .then((ftpInfo) => {
             res.status(200).send(ftpInfo);
         })
