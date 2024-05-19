@@ -8,7 +8,7 @@ const Literals = {
         ADD_PATIENT_SUCCESS: "Patient added successfully",
     },
     FTP: { // 다운로드 
-        REMOTE_FILE_NMAE: "output.zip", // FTP 서버에 업로드되는 이름
+        REMOTE_FILE_NAME: "output.zip", // FTP 서버에 업로드되는 이름
         ZIP_SUCCESS: "Zip file created and sended successfully",
     },
     LOG: {
