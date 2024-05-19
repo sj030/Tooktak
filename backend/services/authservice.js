@@ -97,15 +97,15 @@ class authService {
         const ip = req.ip;
 
         switch (resultobj.status) {
-            case 200:
+            case 201:
                 // 사용자 생성 성공 시 로그 기록
                 logger.info("User created successfully", {
-                    username: authUsername, 
+                    username: authUsername,
                     ip,
                     requestUrl: req.originalUrl,
                     f_name: null,
                 });
-                res.status(200).send(resultobj.data);
+                res.status(201).send(resultobj.data);
                 break;
             case 409:
                 // 사용자 이미 존재 시 로그 기록
@@ -187,17 +187,15 @@ class authService {
 
         switch (resultobj.status) {
             case 200:
-                // 사용자 목록 조회 성공 시 로그 기록
                 logger.info("Users listed successfully", {
                     username: authUsername,
                     ip,
                     requestUrl: req.originalUrl,
                     f_name: null,
                 });
-                res.status(200).json(resultobj.data);
+                res.status(200).json(resultobj);
                 break;
             case 500:
-                // 사용자 목록 조회 중 오류 발생 시 로그 기록
                 logger.error("Error listing users", {
                     username: authUsername,
                     ip,
