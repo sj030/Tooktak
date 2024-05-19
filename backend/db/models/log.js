@@ -20,6 +20,7 @@ class LogRepository {
         }
 
         try {
+            const totalLogs = await LogModel.countDocuments(filter); // 총 항목 수 계산
             const logs = await LogModel.find(filter)
                 .skip(skip)
                 .limit(limit)
@@ -28,12 +29,19 @@ class LogRepository {
             if (logs.length === 0) {
                 return JSON.stringify({
                     status: 204,
+                    total_count: totalLogs,
+                    items_per_page: limit,
+                    current_page: page,
+                    data: [],
                     message: "No logs matched the query."
                 });
             }
             // 로그 데이터 반환
             return JSON.stringify({
                 status: 200,
+                total_count: totalLogs,
+                items_per_page: limit,
+                current_page: page,
                 data: logs,
                 message: "Logs fetched successfully."
             });
