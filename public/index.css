@@ -72,3 +72,10 @@ html, body, .app, #root{
 .table__wrapper th, .table__wrapper td {
     white-space: nowrap;  /* Ensures text stays on one line */
 }
+
+.pagination button.active {
+    background-color: #276749;
+    color: white; /* 글자 색 */
+    font-weight: bold;
+    border-radius: 10px;
+}

@@ -2,8 +2,8 @@ import axiosInstance from './config/axiosInstance';
 import { useUpdateQueryParams } from '../contexts/Querycontext';
 import { useCallback } from 'react';
 
-export async function requestLogApi(queryParams) {
-    return axiosInstance.get("account/log", { params: queryParams });
+export async function requestLogApi(params) {
+    return axiosInstance.get("account/log", { params: params });
 }
 
 export function useSyncQueryParams() {

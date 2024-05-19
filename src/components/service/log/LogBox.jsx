@@ -1,11 +1,15 @@
 import { LTable } from "../../commons/LTable";
 import { Grid } from "../../layout/Grid";
 import { DropBox } from "../../commons/DropBox";
+import { Button } from "../../commons/Button";
 import DateBox from "../../commons/DateBox";
 import { TextBox } from "../../commons/TextBox";
 import { useLogs } from "../../../contexts/LogContext";
-import { useQueryParams, useSetEnd, useSetStart } from "../../../contexts/Querycontext";
+import { useQueryParams, useSetEnd, useSetStart, useSetDateRange } from "../../../contexts/Querycontext";
 import { useUpdateQueryParams } from "../../../contexts/Querycontext";
+import { useSyncQueryParams } from "../../../services/log";
+import { LogPagination } from "./LogPagination";
+
 export function LogBox() {
     const logsObject = useLogs();
     const logs = logsObject.logs || [];
@@ -13,11 +17,13 @@ export function LogBox() {
     const updateQueryParams = useUpdateQueryParams();
     const setStartDate = useSetStart();
     const setEndDate = useSetEnd();
+    const syncQueryParams = useSyncQueryParams();
+    const setDateRange = useSetDateRange();
+
     const items = Array.isArray(logs) ? logs.map(log => [
         log.timestamp, log.level, log.message, log.meta?.username, log.meta?.ip, log.meta?.requestUrl, log.meta?.f_name, log.meta?.error
     ]) : [];
 
-    console.log(queryParams);
     return (
         <>
             <DateBox
@@ -51,12 +57,20 @@ export function LogBox() {
                     value={queryParams.f_name}
                     setValue={(value) => updateQueryParams('f_name', value)} />
             </Grid>
-
-
+            <Button color="purple" className="is-normal mx-2 columns" children={"apply"} onClick={(e) => {
+                e.preventDefault();
+                if (startDate && endDate) {
+                    setDateRange(startDate, endDate);
+                    syncQueryParams({ ...queryParams, date: `${startDate}_to_${endDate}` });
+                } else {
+                    syncQueryParams(queryParams);
+                }
+            }}></Button>
             <LTable
                 header={["timestamp", "level", "message", "username", "ip", "requestUrl", "f_name", "error"]}
                 items={items}
             />
+            <LogPagination />
         </>
     );
 }
