@@ -19,7 +19,12 @@ class LogService {
                     requestUrl: req.originalUrl,
                     f_name: null
                 });
-                res.status(200).json(resultobj.data);
+                res.status(200).json({
+                    total_count: resultobj.total_count,
+                    items_per_page: resultobj.items_per_page,
+                    current_page: resultobj.current_page,
+                    data: resultobj.data
+                });
                 break;
             case 400:
                 // 쿼리 매칭 실패 시 로깅 및 400 에러 응답

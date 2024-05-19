@@ -15,9 +15,9 @@ router.delete("/:username", authenticateToken, isAdmin, authService.deleteUser);
 router.get("", authenticateToken, isAdmin, authService.listUsers);
 
 
-router.get("/admin", authenticateToken, isAdmin, (req, res) => {
-    return res.status(200).send({ message: "admin access" });
-}); // 관리자 페이지를 막기 위함
+// router.get("/admin", authenticateToken, isAdmin, (req, res) => {
+//     return res.status(200).send({ message: "admin access" });
+// }); // 관리자 페이지를 막기 위함
 
 // router.post("/reset", authenticateToken, (req, res) => {
 // }); -> 환경변수로 관리자 ID, PW 관리
