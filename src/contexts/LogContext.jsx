@@ -28,6 +28,7 @@ export const LogProvider = ({ children }) => {
                 setLogs([]);
                 setLogsCount(0);
                 setTotalPages(0);
+                setCurrentPage(1);
             } else if (res.status === 200) {
                 setLogs(res.data.data);
                 setLogsCount(res.data.total_count);
@@ -38,6 +39,7 @@ export const LogProvider = ({ children }) => {
             setLogs([]);
             setLogsCount(0);
             setTotalPages(0);
+            setCurrentPage(1);
         }
     }, [queryParams]);
 

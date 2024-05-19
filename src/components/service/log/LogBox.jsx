@@ -70,7 +70,7 @@ export function LogBox() {
                 header={["timestamp", "level", "message", "username", "ip", "requestUrl", "f_name", "error"]}
                 items={items}
             />
-            <LogPagination />
+            {logs.length > 0 && <LogPagination />}
         </>
     );
 }
