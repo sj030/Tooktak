@@ -1,6 +1,6 @@
 import {useState} from "react";
 
-export function DropBox({label, options, value, setValue}) {
+export function DropBox({label, options, value, setValue, placeholder = "전체선택"}) {
     const [active, setActive] = useState(false);
     return (<div className={"box is-primary "}>
         <div className={"level"}>
@@ -17,7 +17,7 @@ export function DropBox({label, options, value, setValue}) {
                             setActive(!active)
                         }}
                     >
-                        <span>{value || "      "}</span>
+                        <span>{value || placeholder}</span>
                         <span className="icon is-small">
             <i className="fas fa-angle-down" aria-hidden="true"></i>
           </span>
