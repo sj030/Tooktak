@@ -1,17 +1,10 @@
-// bcrypt 모듈 불러오기
 const bcrypt = require("bcrypt");
-// jwt 모듈 불러오기
 const jwt = require("jsonwebtoken");
-// 로깅을 위한 winston 로거 구성 불러오기
 const { UserModel, saltRounds } = require("../schemas/users");
 const config = require("../../config/vars");
 const { Literals } = require("../../literal/literals");
 
 class UserRepository {
-    /**
-     * 관리자 사용자 확인 및 생성 함수. 설정된 관리자 ID로 사용자 검색,
-     * 없으면 새 관리자 생성
-     */
     static async ensureAdminUser() {
         try {
             const user = await UserModel.findOne({ username: config.admin.id });
@@ -32,7 +25,6 @@ class UserRepository {
         }
     }
 
-    // 사용자 ID로 찾기, 없으면 404 반환
     static async findById(id) {
         try {
             const user = await UserModel.findById(id);
@@ -55,7 +47,6 @@ class UserRepository {
         }
     }
 
-    // 사용자 로그인 처리
     static async login(userData) {
         try {
             const findUser = await UserModel.findOne({ username: userData.username });
@@ -66,19 +57,17 @@ class UserRepository {
                     message: Literals.ACCOUNT.AUTHENTICATION_ERROR
                 });
             } else {
-                // Access token 생성
                 const accessToken = jwt.sign(
                     {
-                        id: findUser._id, // MongoDB에서 사용자의 고유 ID
+                        id: findUser._id,
                         username: findUser.username,
                         role: findUser.role
                     },
-                    config.jwt.secret_key, // 비밀키
+                    config.jwt.secret_key,
                     {
-                        expiresIn: config.jwt.access_expires // 토큰 유효 기간
+                        expiresIn: config.jwt.access_expires
                     }
                 );
-                // Refresh token 생성
                 const refreshToken = jwt.sign(
                     {
                         id: findUser._id
@@ -114,7 +103,6 @@ class UserRepository {
         }
     }
 
-    // Refresh Token으로 새 Access Token 발급
     static async refreshAccessToken(refreshToken) {
         try {
             if (!refreshToken) {
@@ -146,11 +134,9 @@ class UserRepository {
         }
     }
 
-    // 새 사용자 추가
     static async addUser(userData) {
         try {
-
-            const existingUser = await UserModel.findOne({ username: userData.username })
+            const existingUser = await UserModel.findOne({ username: userData.username });
             if (existingUser) {
                 return JSON.stringify({
                     status: 409,
@@ -158,17 +144,11 @@ class UserRepository {
                 });
             }
 
-            // 비밀번호 암호화
             const hashedPassword = await bcrypt.hash(userData.password, saltRounds);
             userData.password = hashedPassword;
 
             const newUser = await UserModel.create(userData);
-            if (!newUser) {
-                return JSON.stringify({
-                    status: 400,
-                    message: Literals.ACCOUNT.CREATE_ERROR
-                });
-            } else {
+            if (newUser) {
                 return JSON.stringify({
                     status: 201,
                     data: newUser
@@ -182,7 +162,6 @@ class UserRepository {
         }
     }
 
-    // 사용자 삭제
     static async deleteUser(param) {
         try {
             const user = await UserModel.findOneAndDelete({ username: param });
@@ -207,9 +186,8 @@ class UserRepository {
         }
     }
 
-    // 사용자 목록 조회
-    static async listUsers(page, limit = 5) { // 한 번에 10개씩 보여주도록 수정
-        const skip = (page - 1) * limit; // 페이지 계산을 위해 건너뛸 아이템 수
+    static async listUsers(page, limit = 5) {
+        const skip = (page - 1) * limit;
         try {
             const users = await UserModel.find({ username: { $ne: config.admin.id } })
                 .skip(skip)
@@ -232,8 +210,6 @@ class UserRepository {
             });
         }
     }
-
 }
 
-// UserRepository 클래스 외부 공개
 module.exports = { UserRepository };
