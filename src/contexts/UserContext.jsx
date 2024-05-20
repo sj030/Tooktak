@@ -1,11 +1,11 @@
 import React, { createContext, useContext, useState, useCallback } from 'react';
-import axiosInstance from '../services/config/axiosInstance';
 import { toast } from 'react-toastify';
+import { RequestFetchUsersApi, RequestCreateUserApi, RequestDeleteUserApi } from '../services/user';
 
 const UserContext = createContext({
     users: [],
     totalUsers: 0,
-    itemsPerPage: 5,  // 변경: 한 번에 5명씩 보여줌
+    itemsPerPage: 5,
     currentPage: 1,
     fetchUsers: () => {},
     handlePageClick: () => {},
@@ -18,13 +18,13 @@ const UserContext = createContext({
 export const UserProvider = ({ children }) => {
     const [users, setUsers] = useState([]);
     const [totalUsers, setTotalUsers] = useState(0);
-    const [itemsPerPage, setItemsPerPage] = useState(5);  // 변경: 한 번에 5명씩 보여줌
+    const [itemsPerPage, setItemsPerPage] = useState(5);
     const [currentPage, setCurrentPage] = useState(1);
     const [selectedUser, setSelectedUser] = useState(null);
 
     const fetchUsers = useCallback(async (page = 1) => {
         try {
-            const res = await axiosInstance.get('/account', { params: { page } });
+            const res = await RequestFetchUsersApi(page);
             if (res.status === 200) {
                 setUsers(res.data.data);
                 setTotalUsers(res.data.total_count);
@@ -38,16 +38,23 @@ export const UserProvider = ({ children }) => {
 
     const handleAddUser = useCallback(async (username, password) => {
         try {
-            const response = await axiosInstance.post('/account/add', { username, password });
-            if (response.status === 201) {
+            const response = await RequestCreateUserApi(username, password);
+            if (response && response.status === 201) {
                 toast.success("계정 생성 완료");
                 fetchUsers(1);
             }
         } catch (error) {
-            if (error.response && error.response.status === 409) {
-                toast.error("계정 생성 오류 (중복된 아이디)");
+            console.error("Error during user creation:", error.response ? error.response.data : error.message);
+            if (error.response) {
+                if (error.response.status === 409) {
+                    toast.error("계정 생성 오류 (중복된 아이디)");
+                } else if (error.response.status === 400) {
+                    toast.error("잘못된 요청");
+                } else {
+                    toast.error("서버 에러");
+                }
             } else {
-                toast.error("서버 에러");
+                toast.error("네트워크 에러");
             }
         }
     }, [fetchUsers]);
@@ -55,7 +62,7 @@ export const UserProvider = ({ children }) => {
     const handleDeleteUser = useCallback(async () => {
         if (selectedUser) {
             try {
-                await axiosInstance.delete(`/account/${selectedUser.username}`);
+                await RequestDeleteUserApi(selectedUser.username); // selectedUser 전달
                 toast.success("계정 삭제 완료");
                 fetchUsers(currentPage);
                 setSelectedUser(null);
@@ -71,15 +78,15 @@ export const UserProvider = ({ children }) => {
 
     return (
         <UserContext.Provider value={{
-            users, 
-            totalUsers, 
-            itemsPerPage, 
-            currentPage, 
-            fetchUsers, 
-            handlePageClick, 
-            handleAddUser, 
-            handleDeleteUser, 
-            selectedUser, 
+            users,
+            totalUsers,
+            itemsPerPage,
+            currentPage,
+            fetchUsers,
+            handlePageClick,
+            handleAddUser,
+            handleDeleteUser,
+            selectedUser,
             setSelectedUser
         }}>
             {children}
