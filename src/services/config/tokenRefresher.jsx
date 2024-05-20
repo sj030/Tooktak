@@ -26,9 +26,7 @@ function TokenRefresher() {
                         logout();
                         return Promise.reject(refreshError);
                     }
-                }
-                logout();
-                return Promise.reject(error);
+                }return Promise.reject(error);
             }
         );
         return () => {
