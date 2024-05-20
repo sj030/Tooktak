@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const config = require("../config/vars");
-const { UserRepository } = require("../db/models/users");
+const { UserService } = require("../services/usersService");
 const logger = require("../config/logger"); // 로거 구성을 가져옴
 const { Literals } = require("../literal/literals");
 
@@ -29,7 +29,7 @@ function authenticateToken(req, res, next) {
         }
 
         try {
-            const user = await UserRepository.findById(decoded.id); // 토큰에 저장된 ID로 사용자 조회
+            const user = await UserService.findById(decoded.id); // 토큰에 저장된 ID로 사용자 조회
             if (!user) {
                 logger.error(Literals.LOG.NO_USER, {
                     f_name: null,
