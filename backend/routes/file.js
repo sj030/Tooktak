@@ -8,6 +8,8 @@ const { PatientService } = require("../services/patientservice");
 const { FileService } = require("../services/fileservice");
 const { ServiceAttrService } = require("../services/serviceattrservice");
 const { Literals } = require("../literal/literals");
+const logger = require("../config/logger");
+
 
 // Multer 객체 생성 및 파일 업로드 미들웨어 설정 (TEST 용도입니다)
 const upload = MetaTransferService.initMulter();
@@ -26,9 +28,24 @@ router.post("/download", async (req, res) => {
             return DownloadService.getFTPInfo();
         })
         .then((ftpInfo) => {
+            logger.info("성공메시지 알아서 적어주세요~",{ // authservice나 logservice에 적은거 참고해주세요
+                // username: 나중에 미들웨어 넣으면 로그인한 유저 이름 넣어주세요
+                ip: req.ip,
+                // role: 나중에 미들웨어 넣으면 로그인한 유저 role 넣어주세요
+                requestUrl: req.originalUrl,
+                // f_name: 생성된 zip 파일 이름 넣어주세요
+            });
             res.status(200).send(ftpInfo);
         })
         .catch((error) => {
+            logger.error("에러메시지 알아서 적어주세요~",{ // authservice나 logservice에 적은거 참고해주세요
+                // username: 나중에 미들웨어 넣으면 로그인한 유저 이름 넣어주세요
+                ip: req.ip,
+                // role: 나중에 미들웨어 넣으면 로그인한 유저 role 넣어주세요
+                requestUrl: req.originalUrl,
+                // f_name: zip 파일 이름 넣어주세요
+                error: error.message  
+            });
             res.status(500).send(error.message);
         });
 });
@@ -37,6 +54,14 @@ router.post("/download", async (req, res) => {
 router.get("/download/progress", (req, res) => {
     DownloadService.sendDownloadProgress(req, res)
         .catch((error) => {
+            logger.error("에러메시지 알아서 적어주세요~",{ // authservice나 logservice에 적은거 참고해주세요
+                // username: 나중에 미들웨어 넣으면 로그인한 유저 이름 넣어주세요
+                ip: req.ip,
+                // role: 나중에 미들웨어 넣으면 로그인한 유저 role 넣어주세요
+                requestUrl: req.originalUrl,
+                // f_name: 다운로드 되는 파일 이름 넣을 수 있으면 넣고, 아니면 null 써주세요
+                error: error.message  
+            });
             res.status(500).send(error.message);
         });
 });
@@ -49,9 +74,24 @@ router.post("/search", async (req, res) => {
 
     await FileService.getAllMetaDataByQuery(await ServiceAttrService.getServiceByName(req.body.name), req.body.attributes)
         .then((result) => {
+            logger.info("성공메시지 알아서 적어주세요~",{ // authservice나 logservice에 적은거 참고해주세요
+                // username: 나중에 미들웨어 넣으면 로그인한 유저 이름 넣어주세요
+                ip: req.ip,
+                // role: 나중에 미들웨어 넣으면 로그인한 유저 role 넣어주세요
+                requestUrl: req.originalUrl,
+                f_name: req.body.name + " " + req.body.attributes.f_name
+            });
             res.status(200).send(result);
         })
         .catch((error) => {
+            logger.error("에러메시지 알아서 적어주세요~",{ // authservice나 logservice에 적은거 참고해주세요
+                // username: 나중에 미들웨어 넣으면 로그인한 유저 이름 넣어주세요
+                ip: req.ip,
+                // role: 나중에 미들웨어 넣으면 로그인한 유저 role 넣어주세요
+                requestUrl: req.originalUrl,
+                f_name: req.body.name + " " + req.body.attributes.f_name,
+                error: error.message  
+            });
             res.status(500).send(error.message);
         });
 });
@@ -60,9 +100,24 @@ router.post("/search", async (req, res) => {
 router.post("/patients", async (req, res) => {
     await PatientService.addPatients(req.body)
         .then(() => {
+            logger.info("성공메시지 알아서 적어주세요~",{ // authservice나 logservice에 적은거 참고해주세요
+                // username: 나중에 미들웨어 넣으면 로그인한 유저 이름 넣어주세요
+                ip: req.ip,
+                // role: 나중에 미들웨어 넣으면 로그인한 유저 role 넣어주세요
+                requestUrl: req.originalUrl,
+                // f_name: 관련되거나 필요한 파일 이름 있으면 넣어주시고 아니면 null 적어주세요
+            });
             res.status(200).send(Literals.FILE.ADD_PATIENT_SUCCESS);
         })
         .catch((error) => {
+            logger.error("에러메시지 알아서 적어주세요~",{ // authservice나 logservice에 적은거 참고해주세요
+                // username: 나중에 미들웨어 넣으면 로그인한 유저 이름 넣어주세요
+                ip: req.ip,
+                // role: 나중에 미들웨어 넣으면 로그인한 유저 role 넣어주세요
+                requestUrl: req.originalUrl,
+                // f_name: 관련되거나 필요한 파일 이름 있으면 넣어주시고 아니면 null 적어주세요
+                error: error.message
+            });
             res.status(500).send(error.message);
         });
 });
@@ -71,9 +126,24 @@ router.post("/patients", async (req, res) => {
 router.post("/", async (req, res) => {
     await FileService.addFiles(req.body)
         .then(() => {
+            logger.info("성공메시지 알아서 적어주세요~",{ // authservice나 logservice에 적은거 참고해주세요
+                // username: 나중에 미들웨어 넣으면 로그인한 유저 이름 넣어주세요
+                ip: req.ip,
+                // role: 나중에 미들웨어 넣으면 로그인한 유저 role 넣어주세요
+                requestUrl: req.originalUrl,
+                f_name: req.body.serviceName+ " " + req.body.f_name + " " + req.body.f_extension + " patientNo: " + req.body.patientNo
+            });
             res.status(200).send(Literals.FILE.ADD_FILE_SUCCESS);
         })
         .catch((error) => {
+            logger.error("에러메시지 알아서 적어주세요~",{ // authservice나 logservice에 적은거 참고해주세요
+                // username: 나중에 미들웨어 넣으면 로그인한 유저 이름 넣어주세요
+                ip: req.ip,
+                // role: 나중에 미들웨어 넣으면 로그인한 유저 role 넣어주세요
+                requestUrl: req.originalUrl,
+                f_name: req.body.serviceName+ " " + req.body.f_name + " " + req.body.f_extension + " patientNo: " + req.body.patientNo,
+                error: error.message
+            });
             res.status(500).send(error.message);
         });
 });
