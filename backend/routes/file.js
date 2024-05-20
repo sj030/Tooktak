@@ -11,41 +11,20 @@ const { ServiceAttrService } = require("../services/serviceattrservice");
 const upload = MetaTransferService.initMulter();
 const uploadMiddleware = upload.single("filekey"); // filekey는 클라이언트에서 전송한 파일의 키 값, single()은 하나의 파일만 업로드할 때 사용 (array()는 여러 파일 업로드)
 
-router.post("/upload/meta", async (req, res) => {     
-    const { name, attributes } = req.body;
-    // new collection 생성
-    try {
-        const document = await ServiceAttrService.addServices({ name, attributes });
-        res.status(200).send("meta upload");
-    } catch (error) {
-        res.status(500).send(error.message);
-    }
-});
-
-router.post("/upload/data", uploadMiddleware, (req, res) => {
+router.post("/upload/data", uploadMiddleware, async (req, res) => {
     // .wav 파일 받음 -> uploads 파일에 올려둠 (Middle ware)
     try {
-        const headerData = req.headers['custom-header'];;
+        const { name, attributes } = req.header;
+        const document = await ServiceAttrService.addServices({ name, attributes });
 
         if (!req.body) {
             return res.status(400).json({ success: false });
         }
 
-        console.log('File Info:', fileInfo);
-        console.log('Header Data:', headerData);
-
-        // try{
-        //     // db 객체 불러오기 find one
-        //     res.status(200).json({ success: true });
-        // }catch(err){
-        //     res.status(400).json({ sucess : false });
-        // }
-
     } catch (error) {
         console.error('Error processing upload:', error);
         res.status(400).send('Internal Server Error');
     }
-
 });
 
 // ZIP 파일 생성 및 다운로드, 
