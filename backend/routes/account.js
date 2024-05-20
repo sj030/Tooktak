@@ -1,9 +1,9 @@
 const express = require("express");
 const router = express.Router();
-const { authService } = require("../services/authservice");
+const { AuthController } = require("../controller/authController");
 const authenticateToken = require("../middleware/authenticateToken");
 const isAdmin = require("../middleware/isAdmin");
-const { LogService } = require("../services/logservice");
+const { LogController } = require("../controller/logController");
 
 /**
  * @function 로그인 엔드포인트
@@ -14,7 +14,7 @@ const { LogService } = require("../services/logservice");
  * @returns {object} 401 - 인증 실패 시 에러 메시지 반환
  * @returns {object} 500 - 서버 오류 시 에러 메시지 반환
  */
-router.post("/login", authService.login);
+router.post("/login", AuthController.login);
 
 /**
  * @function 액세스 토큰 갱신 엔드포인트
@@ -26,7 +26,7 @@ router.post("/login", authService.login);
  * @returns {object} 403 - 리프레시 토큰이 만료되었을 때 에러 메시지 반환
  * @returns {object} 500 - 서버 오류 시 에러 메시지 반환
  */
-router.post("/refresh", authService.refresh);
+router.post("/refresh", AuthController.refresh);
 
 /**
  * @function 사용자 추가 엔드포인트
@@ -39,7 +39,7 @@ router.post("/refresh", authService.refresh);
  * @returns {object} 409 - 사용자 이미 존재 시 에러 메시지 반환
  * @returns {object} 500 - 서버 오류 시 에러 메시지 반환
  */
-router.post("/add", authenticateToken, isAdmin, authService.createUser);
+router.post("/add", authenticateToken, isAdmin, AuthController.createUser);
 
 /**
  * @function 사용자 삭제 엔드포인트
@@ -51,7 +51,7 @@ router.post("/add", authenticateToken, isAdmin, authService.createUser);
  * @returns {object} 404 - 사용자 찾을 수 없을 때 에러 메시지 반환
  * @returns {object} 500 - 서버 오류 시 에러 메시지 반환
  */
-router.delete("/:username", authenticateToken, isAdmin, authService.deleteUser);
+router.delete("/:username", authenticateToken, isAdmin, AuthController.deleteUser);
 
 /**
  * @function 사용자 목록 조회 엔드포인트
@@ -62,7 +62,7 @@ router.delete("/:username", authenticateToken, isAdmin, authService.deleteUser);
  * @returns {object} 200 - 사용자 목록 조회 성공 시 사용자 목록 반환
  * @returns {object} 500 - 서버 오류 시 에러 메시지 반환
  */
-router.get("", authenticateToken, isAdmin, authService.listUsers);
+router.get("", authenticateToken, isAdmin, AuthController.listUsers);
 
 /**
  * @function 로그 조회 엔드포인트
@@ -74,6 +74,6 @@ router.get("", authenticateToken, isAdmin, authService.listUsers);
  * @returns {object} 400 - 쿼리 매칭 실패 시 에러 메시지 반환
  * @returns {object} 500 - 서버 오류 시 에러 메시지 반환
  */
-router.get("/log", authenticateToken, isAdmin, LogService.fetchLogs);
+router.get("/log", authenticateToken, isAdmin, LogController.fetchLogs);
 
 module.exports = router;

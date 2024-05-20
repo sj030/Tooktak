@@ -1,11 +1,11 @@
-const { UserRepository } = require("../db/models/users");
+const { UserService } = require("../services/usersService");
 const logger = require("../config/logger");
 
-class authService {
+class AuthController {
     static async login(req, res) {
         const userData = req.body;
         const ip = req.ip;
-        const result = await UserRepository.login(userData);
+        const result = await UserService.login(userData);
         const resultobj = JSON.parse(result);
 
         switch (resultobj.status) {
@@ -44,7 +44,7 @@ class authService {
 
     static async refresh(req, res) {
         const { refreshToken } = req.body;
-        const result = await UserRepository.refreshAccessToken(refreshToken);
+        const result = await UserService.refreshAccessToken(refreshToken);
         const resultobj = JSON.parse(result);
         const ip = req.ip;
 
@@ -87,7 +87,7 @@ class authService {
         }
 
         const authUsername = req.user.data.username;
-        const result = await UserRepository.addUser({ username, password });
+        const result = await UserService.addUser({ username, password });
         const resultobj = JSON.parse(result);
         const ip = req.ip;
 
@@ -128,7 +128,7 @@ class authService {
     static async deleteUser(req, res) {
         const username = req.params.username;
         const authUsername = req.user.data.username;
-        const result = await UserRepository.deleteUser(username);
+        const result = await UserService.deleteUser(username);
         const resultobj = JSON.parse(result);
         const ip = req.ip;
 
@@ -168,7 +168,7 @@ class authService {
     static async listUsers(req, res) {
         const page = parseInt(req.query.page) || 1;
         const authUsername = req.user.data.username;
-        const result = await UserRepository.listUsers(page);
+        const result = await UserService.listUsers(page);
         const resultobj = JSON.parse(result);
         const ip = req.ip;
 
@@ -196,4 +196,4 @@ class authService {
     }
 }
 
-module.exports = { authService };
+module.exports = { AuthController };

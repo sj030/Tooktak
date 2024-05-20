@@ -1,55 +1,55 @@
-const { LogRepository } = require("../db/models/log");
-const logger = require("../config/logger"); // 로거 설정 가져오기
-const { Literals } = require("../literal/literals");
+const { LogModel } = require("../db/schemas/log");
 
 class LogService {
-    // 로그 조회 요청 처리 함수
-    static async fetchLogs(req, res) {
-        const result = await LogRepository.getLogs(req.query, parseInt(req.query.page));
-        const resultobj = JSON.parse(result);
+    static async getLogs(queryParams, page, limit = 5) {
+        const { username, role, ip, f_name, date } = queryParams;
+        const filter = {};
+        const skip = (page - 1) * limit;  // 페이지 계산을 위해 건너뛸 아이템 수
 
-        // 결과 상태에 따른 처리
-        switch (resultobj.status) {
-            case 200:
-                // 로그 조회 성공 시 로깅 및 응답 전송
-                logger.info(Literals.LOG.FETCH_SUCCESS, {
-                    username: req.user.data.username,
-                    ip: req.ip,
-                    role: req.user.data.role,
-                    requestUrl: req.originalUrl,
-                    f_name: null
+        // 필터 설정
+        if (username) filter["meta.username"] = username;
+        if (role) filter["meta.role"] = role;
+        if (ip) filter["meta.ip"] = ip;
+        if (f_name) filter["meta.f_name"] = f_name;
+
+        // 날짜 범위 필터
+        if (date) {
+            const [startDate, endDate] = date.split("_to_").map(d => new Date(d));
+            filter.timestamp = { $gte: startDate, $lte: endDate };
+        }
+
+        try {
+            const totalLogs = await LogModel.countDocuments(filter); // 총 항목 수 계산
+            const logs = await LogModel.find(filter)
+                .skip(skip)
+                .limit(limit)
+                .exec();
+            // 로그 데이터가 없을 경우
+            if (logs.length === 0) {
+                return JSON.stringify({
+                    status: 204,
+                    total_count: totalLogs,
+                    items_per_page: limit,
+                    current_page: page,
+                    data: [],
+                    message: "No logs matched the query."
                 });
-                res.status(200).json({
-                    total_count: resultobj.total_count,
-                    items_per_page: resultobj.items_per_page,
-                    current_page: resultobj.current_page,
-                    data: resultobj.data
-                });
-                break;
-            case 400:
-                // 쿼리 매칭 실패 시 로깅 및 400 에러 응답
-                logger.error(Literals.LOG.NO_MATCH, {
-                    username: req.user.data.username,
-                    ip: req.ip,
-                    role: req.user.data.role,
-                    requestUrl: req.originalUrl,
-                    f_name: null,
-                    error: resultobj.message,
-                });
-                res.status(400).json({ message: resultobj.message });
-                break;
-            case 500:
-                // 서버 오류 시 로깅 및 500 에러 응답
-                logger.error(Literals.LOG.SERVER_ERROR, {
-                    username: req.user.data.username,
-                    ip: req.ip,
-                    role: req.user.data.role,
-                    requestUrl: req.originalUrl,
-                    f_name: null,
-                    error: resultobj.message,
-                });
-                res.status(500).json({ message: resultobj.message });
-                break;
+            }
+            // 로그 데이터 반환
+            return JSON.stringify({
+                status: 200,
+                total_count: totalLogs,
+                items_per_page: limit,
+                current_page: page,
+                data: logs,
+                message: "Logs fetched successfully."
+            });
+        } catch (error) {
+            console.error("Error fetching logs: ", error);
+            return JSON.stringify({
+                status: 500,
+                message: "Server error: " + error.message
+            });
         }
     }
 }

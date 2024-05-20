@@ -1,10 +1,10 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { UserModel, saltRounds } = require("../schemas/users");
-const config = require("../../config/vars");
-const { Literals } = require("../../literal/literals");
+const { UserModel, saltRounds } = require("../db/schemas/users");
+const config = require("../config/vars");
+const { Literals } = require("../literal/literals");
 
-class UserRepository {
+class UserService {
     static async ensureAdminUser() {
         try {
             const user = await UserModel.findOne({ username: config.admin.id });
@@ -212,4 +212,4 @@ class UserRepository {
     }
 }
 
-module.exports = { UserRepository };
+module.exports = { UserService };
