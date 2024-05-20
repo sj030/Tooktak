@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useCallback } from 'react';
-import axiosInstance from '../services/config/axiosInstance';
 import { toast } from 'react-toastify';
+import { RequestFetchUsersApi, RequestCreateUserApi, RequestDeleteUserApi } from '../services/user';
 
 const UserContext = createContext({
     users: [],
@@ -24,7 +24,7 @@ export const UserProvider = ({ children }) => {
 
     const fetchUsers = useCallback(async (page = 1) => {
         try {
-            const res = await axiosInstance.get('/account', { params: { page } });
+            const res = await RequestFetchUsersApi(page);
             if (res.status === 200) {
                 setUsers(res.data.data);
                 setTotalUsers(res.data.total_count);
@@ -38,7 +38,7 @@ export const UserProvider = ({ children }) => {
 
     const handleAddUser = useCallback(async (username, password) => {
         try {
-            const response = await axiosInstance.post('/account/add', { username, password });
+            const response = await RequestCreateUserApi(username, password);
             if (response.status === 201) {
                 toast.success("계정 생성 완료");
                 fetchUsers(1);
@@ -55,7 +55,7 @@ export const UserProvider = ({ children }) => {
     const handleDeleteUser = useCallback(async () => {
         if (selectedUser) {
             try {
-                await axiosInstance.delete(`/account/${selectedUser.username}`);
+                await RequestDeleteUserApi(selectedUser.username); // selectedUser 전달
                 toast.success("계정 삭제 완료");
                 fetchUsers(currentPage);
                 setSelectedUser(null);
