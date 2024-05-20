@@ -36,7 +36,7 @@ class LogService {
                     f_name: null,
                     error: resultobj.message,
                 });
-                res.status(400).send({ message: resultobj.message });
+                res.status(400).json({ message: resultobj.message });
                 break;
             case 500:
                 // 서버 오류 시 로깅 및 500 에러 응답
@@ -48,7 +48,7 @@ class LogService {
                     f_name: null,
                     error: resultobj.message,
                 });
-                res.status(500).send({ message: resultobj.message });
+                res.status(500).json({ message: resultobj.message });
                 break;
         }
     }
