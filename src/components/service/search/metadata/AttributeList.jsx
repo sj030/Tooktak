@@ -18,7 +18,7 @@ export default function AttributeList() {
                     return <TextBox
                         key={hospital + attribute.name}
                         label={attribute.name}
-                        placeholder={attribute.type}
+                        placeholder={"(선택)"}
                         setValue={(value) => setText(attribute.name, value)}
                         value={attribute.value}
                     />
@@ -38,6 +38,8 @@ export default function AttributeList() {
                         setEnd={(end) => setRange(attribute.name, attribute.start, end)}
                         start={attribute.start}
                         end={attribute.end}
+                        placeholder1={"(선택)"}
+                        placeholder2={"(선택)"}
                     />
                 default:
                     return null;
