@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { getCookie } from "./cookies";
 
-const baseURL = 'http://localhost:3001/'; // cors의 경우 서버에서 처리함
+const baseURL = "/api/"; // Nginx가 /api/ 경로로 백엔드 요청을 프록시함
 
 const axiosInstance = axios.create({
     baseURL: baseURL, // API의 기본 URL
