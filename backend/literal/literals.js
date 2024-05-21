@@ -1,11 +1,22 @@
 const Literals = {
     SERVICE: {
         ADD_SERVICE_SUCCESS: "Service added successfully",
+        ADD_SERVICE_FAILED: "Failed to add new service",
+
         NO_SERVICE_ERROR: "No Service Found",
+        SERVICE_FETCH_SUCCESS: "Services fetch successfully",
+        SERVICE_FETCH_FAILED: "Failed to fetch services",
     },
     FILE: {
         ADD_FILE_SUCCESS: "File added successfully",
+        ADD_FILE_FAILED: "Failed to add new file",
+
+        NO_FILE_ERROR: "No File Found",
+        FILE_FETCH_SUCCESS: "Files fetch successfully",
+        FILE_FETCH_FAILED: "Failed to fetch files",
+
         ADD_PATIENT_SUCCESS: "Patient added successfully",
+        ADD_PATIENT_FAILED: "Failed to add new patient",
     },
     FTP: { // 다운로드 
         REMOTE_FILE_NAME: "output.zip", // FTP 서버에 업로드되는 이름
