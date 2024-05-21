@@ -46,6 +46,10 @@ class FileRepository {
     static async findByIds(ids) {
         return await FileModel.find({ _id: { $in: ids } });
     }
+
+    static async deleteAll() {
+        await FileModel.deleteMany({});
+    }
 }
 
 module.exports = { FileRepository };
