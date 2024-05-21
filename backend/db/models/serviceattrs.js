@@ -23,6 +23,10 @@ class ServiceAttrRepository {
     static async findAll() {
         return await ServiceAttrModel.find({});
     }
+
+    static async deleteAll() {
+        await ServiceAttrModel.deleteMany({});
+    }
 }
 
 module.exports = { ServiceAttrRepository };

@@ -66,6 +66,175 @@ class FileService {
     static async addFiles(files) {
         await FileRepository.insertMany(files);
     }
+
+    static async setDummyFiles() {
+        await FileRepository.deleteAll();
+        const dummy = [
+            {
+                "serviceName": "한양대병원 신경과",
+                "f_name": "chapter1",
+                "f_path": "/upload/5c0fd1c54e394jg.mp3",
+                "f_extension": ".mp4",
+                "f_date": "2023-03-05",
+                "chapter": 1,
+                "p_no": "1"
+            },
+            {
+                "serviceName": "한양대병원 신경과",
+                "f_name": "chapter2",
+                "f_path": "/upload/5c0fd1c54e395jg.mp3",
+                "f_extension": ".mp4",
+                "f_date": "2023-03-05",
+                "chapter": 2,
+                "p_no": "1"
+            },
+            {
+                "serviceName": "한양대병원 신경과",
+                "f_name": "chapter3",
+                "f_path": "/upload/5c0fd1c54e396jg.mp3",
+                "f_extension": ".mp4",
+                "f_date": "2023-03-05",
+                "chapter": 3,
+                "p_no": "1"
+            },
+            {
+                "serviceName": "한양대병원 신경과",
+                "f_name": "chapter4",
+                "f_path": "/upload/5c0fd1c54e397jg.mp3",
+                "f_extension": ".mp4",
+                "f_date": "2023-03-05",
+                "chapter": 4,
+                "p_no": "1"
+            },
+            {
+                "serviceName": "한양대병원 신경과",
+                "f_name": "chapter5",
+                "f_path": "/upload/5c0fd1c54e398jg.mp3",
+                "f_extension": ".mp4",
+                "f_date": "2023-03-05",
+                "chapter": 5,
+                "p_no": "1"
+            },
+            {
+                "serviceName": "한양대병원 신경과",
+                "f_name": "chapter1",
+                "f_path": "/upload/fj1.mp3",
+                "f_extension": ".mp4",
+                "f_date": "2023-03-07",
+                "chapter": 1,
+                "p_no": "2"
+            },
+            {
+                "serviceName": "한양대병원 신경과",
+                "f_name": "chapter1",
+                "f_path": "/upload/fj1.mp3",
+                "f_extension": ".mp4",
+                "f_date": "2023-03-07",
+                "chapter": 1,
+                "p_no": "2"
+            },
+            {
+                "serviceName": "한양대병원 신경과",
+                "f_name": "chapter2",
+                "f_path": "/upload/fj2.mp3",
+                "f_extension": ".mp4",
+                "f_date": "2023-03-07",
+                "chapter": 2,
+                "p_no": "2"
+            },
+            {
+                "serviceName": "한양대병원 신경과",
+                "f_name": "chapter1",
+                "f_path": "/upload/fa921.mp3",
+                "f_extension": ".mp4",
+                "f_date": "2024-01-05",
+                "chapter": 1,
+                "p_no": "3"
+            },
+            {
+                "serviceName": "한양대병원 신경과",
+                "f_name": "chapter2",
+                "f_path": "/upload/fa922.mp3",
+                "f_extension": ".mp4",
+                "f_date": "2024-01-05",
+                "chapter": 2,
+                "p_no": "3"
+            },
+            {
+                "serviceName": "한양대병원 신경과",
+                "f_name": "chapter3",
+                "f_path": "/upload/fa932.mp3",
+                "f_extension": ".mp4",
+                "f_date": "2024-01-05",
+                "chapter": 3,
+                "p_no": "3"
+            },
+            {
+                "serviceName": "전주",
+                "f_name": "chapter1",
+                "f_path": "/upload/cv91.mp3",
+                "f_extension": ".mp4",
+                "f_date": "2023-03-03",
+                "chapter": 1,
+                "p_no": "4"
+            },
+            {
+                "serviceName": "전주",
+                "f_name": "chapter2",
+                "f_path": "/upload/cv92.mp3",
+                "f_extension": ".mp4",
+                "f_date": "2023-03-03",
+                "chapter": 2,
+                "p_no": "4"
+            },
+            {
+                "serviceName": "전주",
+                "f_name": "chapter3",
+                "f_path": "/upload/cv93.mp3",
+                "f_extension": ".mp4",
+                "f_date": "2023-03-03",
+                "chapter": 3,
+                "p_no": "4"
+            },
+            {
+                "serviceName": "전주",
+                "f_name": "chapter4",
+                "f_path": "/upload/cv94.mp3",
+                "f_extension": ".mp4",
+                "f_date": "2023-03-03",
+                "chapter": 4,
+                "p_no": "4"
+            },
+            {
+                "serviceName": "전주",
+                "f_name": "chapter1",
+                "f_path": "/upload/bd1.mp3",
+                "f_extension": ".mp4",
+                "f_date": "2023-03-07",
+                "chapter": 1,
+                "p_no": "5"
+            },
+            {
+                "serviceName": "전주",
+                "f_name": "chapter2",
+                "f_path": "/upload/bd2.mp3",
+                "f_extension": ".mp4",
+                "f_date": "2023-03-07",
+                "chapter": 2,
+                "p_no": "5"
+            },
+            {
+                "serviceName": "전주",
+                "f_name": "chapter3",
+                "f_path": "/upload/bd3.mp3",
+                "f_extension": ".mp4",
+                "f_date": "2023-03-07",
+                "chapter": 3,
+                "p_no": "5"
+            }
+        ];
+        await FileRepository.insertMany(dummy);
+    }
 }
 
 module.exports = { FileService };

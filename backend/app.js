@@ -12,9 +12,18 @@ const hospitalRouter = require("./routes/service");
 // 로깅
 const mongoose = require("./config/mongoose");
 const logger = require("./config/logger");
+// 더미 데이터용 
+const { ServiceAttrService } = require("./services/serviceattrservice");
+const { FileService } = require("./services/fileservice");
+const { PatientService } = require("./services/patientservice");
 
 // MongoDB 연결
 mongoose.connect();
+// 더미 데이터 생성
+ServiceAttrService.setDummyServices();
+FileService.setDummyFiles();
+PatientService.setDummyPatients();
+
 const app = express();
 
 // CORS 미들웨어 활성화
