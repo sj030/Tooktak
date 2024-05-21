@@ -1,9 +1,9 @@
 const express = require("express");
 const router = express.Router();
-const { AuthController } = require("../controller/authController");
+const { AuthController } = require("../controller/authcontroller");
 const authenticateToken = require("../middleware/authenticateToken");
 const isAdmin = require("../middleware/isAdmin");
-const { LogController } = require("../controller/logController");
+const { LogController } = require("../controller/logcontroller");
 
 /**
  * @function 로그인 엔드포인트

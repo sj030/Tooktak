@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const config = require("../config/vars");
-const { UserService } = require("../services/usersService");
+const { UserService } = require("../services/usersservice");
 const logger = require("../config/logger"); // 로거 구성을 가져옴
 const { Literals } = require("../literal/literals");
 

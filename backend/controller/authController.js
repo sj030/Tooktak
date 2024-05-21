@@ -1,4 +1,4 @@
-const { UserService } = require("../services/usersService");
+const { UserService } = require("../services/usersservice");
 const logger = require("../config/logger");
 
 class AuthController {
