@@ -10,11 +10,11 @@
 chmod +x setup.sh
 ./setup.sh
 ```
-- cmd에 다음을 입력해주세요.
+-  Docker Compose를 사용하여 컨테이너를 빌드하고 실행합니다.
 ```
 docker-compose up --build
 ```
-- 브라우저에서 url창에 `localhost`를 입력하면 이용할 수 있습니다.
+- 브라우저에서 url창에 `localhost`를 입력하면 서비스를 이용할 수 있습니다.
 
 
 ### 그 외 
