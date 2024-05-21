@@ -9,7 +9,7 @@ class UserService {
         try {
             const user = await UserModel.findOne({ username: config.admin.id });
             if (!user) {
-                const hash = bcrypt.hash(config.admin.password, saltRounds);
+                const hash = await bcrypt.hash(config.admin.password, saltRounds);
                 const newUser = new UserModel({
                     username: config.admin.id,
                     password: hash,

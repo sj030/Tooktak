@@ -1,4 +1,4 @@
-const { LogService } = require("../services/logService");
+const { LogService } = require("../services/logservice");
 const logger = require("../config/logger"); // 로거 설정 가져오기
 const { Literals } = require("../literal/literals");
 
