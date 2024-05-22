@@ -74,14 +74,26 @@ router.post("/search", async (req, res) => {
 
     await FileService.getAllMetaDataByQuery(await ServiceAttrService.getServiceByName(req.body.name), req.body.attributes)
         .then((result) => {
-            logger.info(Literals.FILE.FILE_FETCH_SUCCESS, { // authservice나 logservice에 적은거 참고해주세요
-                // username: 나중에 미들웨어 넣으면 로그인한 유저 이름 넣어주세요
-                ip: req.ip,
-                // role: 나중에 미들웨어 넣으면 로그인한 유저 role 넣어주세요
-                requestUrl: req.originalUrl,
-                f_name: req.body.name + " " + req.body.attributes.f_name
-            });
-            res.status(200).send(result);
+            if (result.length === 0) {
+                logger.error(Literals.FILE.NO_FILE_ERROR, {
+                    //username
+                    ip: req.ip,
+                    //role
+                    requestUrl: req.originalUrl,
+                    f_name: req.body.name + " " + req.body.attributes.f_name
+                });
+                res.status(400).send(Literals.FILE.NO_FILE_ERROR);
+            }
+            else {
+                logger.info(Literals.FILE.FILE_FETCH_SUCCESS, { // authservice나 logservice에 적은거 참고해주세요
+                    // username: 나중에 미들웨어 넣으면 로그인한 유저 이름 넣어주세요
+                    ip: req.ip,
+                    // role: 나중에 미들웨어 넣으면 로그인한 유저 role 넣어주세요
+                    requestUrl: req.originalUrl,
+                    f_name: req.body.name + " " + req.body.attributes.f_name
+                });
+                res.status(200).send(result);
+            }
         })
         .catch((error) => {
             logger.error(Literals.FILE.FILE_FETCH_FAILED, { // authservice나 logservice에 적은거 참고해주세요
