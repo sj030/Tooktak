@@ -1,18 +1,9 @@
-import {fileDummy, metadataDummy} from "./dummyData";
+import axiosInstance from "./config/axiosInstance";
 
 export function getMetadata() {
-    return new Promise(resolve => {
-        setTimeout(() => {
-            resolve(metadataDummy);
-        }, 1000);
-    });
+    return axiosInstance.get('service/attributes')
 }
 
-
-export function getFileList(filter) {
-    return new Promise(resolve => {
-        setTimeout(() => {
-            resolve(fileDummy);
-        }, 1000);
-    });
+export function getFileList(hospital, attributes) {
+    return axiosInstance.post('service/search', {name: hospital, attributes: attributes})
 }

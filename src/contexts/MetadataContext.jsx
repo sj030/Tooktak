@@ -1,22 +1,22 @@
 import {createContext, useContext, useEffect, useReducer, useRef} from "react";
 import {metadataReducer} from "./MetadataReducer";
-import {getMetadata} from "../services/searchApi";
+import {getFileList, getMetadata} from "../services/searchApi";
 
 const referenceContext = createContext(null);
 const metadataContext = createContext(null);
 const metadataDispatchContext = createContext(null);
 
 export function MetadataProvider({children}) {
-    const [metadata, dispatch] = useReducer(metadataReducer, null);
+    const [metadata, dispatch] = useReducer(metadataReducer, {hospital: "", attributes: []});
     const referenceData = useRef(null);
     useEffect(() => {
-        getMetadata().then((data) => {
-            referenceData.current = data
+        getMetadata().then((res) => {
+            referenceData.current = res.data
             dispatch({
                 type: "INIT",
                 payload: {
-                    hospital: data[0].name,  // Adjusted to use the actual data
-                    attributes: data[0].attributes
+                    hospital: referenceData.current[0].name,  // Adjusted to use the actual data
+                    attributes: referenceData.current[0].attributes
                 }
             });
         }).catch(error => {
@@ -58,6 +58,40 @@ export function useHospital() {
 export function useMetadata() {
     const data = useContext(metadataContext);
     return data ? {hospital: data.hospital, attributes: data.attributes} : {hospital: "", attributes: []};
+}
+
+export function useGetFileList() {
+    const data = useContext(metadataContext);
+    const attributes={}
+    data.attributes.forEach((attribute)=>{
+        switch (attribute.type) {
+            case "text":
+                if(attribute["value"]&& attribute["value"].length>0){
+                    attributes[attribute.name]={"text":attribute.value};
+                }
+                break;
+            case "range":
+                if(attribute["start"] || attribute["end"]){
+                    if(attribute["start"].length>0){
+                        attributes[attribute.name]={max:attribute.start};
+                    }
+                    if(attribute["end"].length>0){
+                        attributes[attribute.name]={...attributes[attribute.name],min:attribute.end};
+                    }
+                }
+                break;
+            case "checkbox":
+                if(attribute["value"]){
+                    attributes[attribute.name]={list:[attribute.value]};
+                }
+                break;
+            default:
+                break;
+        }
+    });
+    return ()=> {
+        return getFileList(data.hospital, attributes)
+    };
 }
 
 export function useAttributeDispatch() {
