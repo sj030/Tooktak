@@ -39,11 +39,12 @@ function makeQueryWithAttr(serviceAttrs, query, key) {
 
 function getSearchQuery(serviceAttrs, query) {
     let searchQuery = {};
-    searchQuery["serviceName"] = serviceAttrs["serviceName"];
+    searchQuery["serviceName"] = serviceAttrs["name"];
     for (const key in query) {
         const searchKey = standardFileAttrs.includes(key) ? key : "patient.attributes." + key;
         searchQuery[searchKey] = makeQueryWithAttr(serviceAttrs["attributes"], query[key], key);
     }
+    console.log(searchQuery);
     return searchQuery;
 }
 
