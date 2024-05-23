@@ -14,6 +14,7 @@ Docker를 설치합니다. 자세한 설치 방법은 [Docker 공식 문서](htt
 Windows 사용자라면 Docker Desktop을 설치하고, WSL 2와 통합해야 합니다. Docker Desktop은 [Docker Desktop 다운로드 페이지](https://www.docker.com/products/docker-desktop)에서 설치할 수 있습니다. 설치 후 다음을 확인합니다:
 - Docker Desktop 실행
 - "Settings" -> "Resources" -> "WSL Integration"에서 Ubuntu 배포판 활성화
+- [wsl 설명서](https://learn.microsoft.com/ko-kr/windows/wsl/tutorials/wsl-containers)를 참고하세요.
 
 ### 3. `setup.sh` 스크립트 실행
 프로젝트 루트 디렉토리로 이동하여 `setup.sh` 스크립트에 실행 권한을 부여한 후 실행합니다.
@@ -38,3 +39,6 @@ chmod +x setup.sh
 ```
 mongodb://localhost:27017
 ```
+### Docker Desktop 설치 후 실행이 안되는 오류   
+1. Docker Desktop의 이전 버전을 설치합니다. (ex. ver 4.26.0)
+2. Docker Desktop을 다시 실행합니다.
