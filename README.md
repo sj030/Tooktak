@@ -39,3 +39,6 @@ chmod +x setup.sh
 ```
 mongodb://localhost:27017
 ```
+### Docker Desktop 설치 후 실행이 안되는 오류   
+1. Docker Desktop의 이전 버전을 설치합니다. (ex. ver 4.26.0)
+2. Docker Desktop을 다시 실행합니다.
