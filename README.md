@@ -27,8 +27,8 @@ chmod +x setup.sh
 
 ## 문제 해결
 ### MongoDB Compass와 연결되지 않는 경우
-로컬에서 MongoDB가 이미 실행 중이라면 이를 중지합니다.
-MongoDB Compass URI 입력란에 다음을 입력합니다.
+1. 로컬에서 MongoDB가 이미 실행 중이라면 이를 중지합니다.   
+2. MongoDB Compass URI 입력란에 다음을 입력합니다.   
 ```
 mongodb://localhost:27017
 ```
