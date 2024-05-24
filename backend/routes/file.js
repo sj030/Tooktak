@@ -39,48 +39,6 @@ router.get("/download/:zipId", (req, res) => {
         });
 });
 
-// ZIP 파일 생성 및 다운로드, 
-router.post("/download", async (req, res) => {
-    DownloadService.downloadZip(req, res)
-        .then((result) => {
-            logger.info("성공메시지 알아서 적어주세요~", { // authservice나 logservice에 적은거 참고해주세요
-                // username: 나중에 미들웨어 넣으면 로그인한 유저 이름 넣어주세요
-                ip: req.ip,
-                // role: 나중에 미들웨어 넣으면 로그인한 유저 role 넣어주세요
-                requestUrl: req.originalUrl,
-                // f_name: 생성된 zip 파일 이름 넣어주세요
-            });
-            res.status(200).send(result);
-        })
-        .catch((error) => {
-            logger.error("에러메시지 알아서 적어주세요~", { // authservice나 logservice에 적은거 참고해주세요
-                // username: 나중에 미들웨어 넣으면 로그인한 유저 이름 넣어주세요
-                ip: req.ip,
-                // role: 나중에 미들웨어 넣으면 로그인한 유저 role 넣어주세요
-                requestUrl: req.originalUrl,
-                // f_name: zip 파일 이름 넣어주세요
-                error: error.message
-            });
-            res.status(500).send(error.message);
-        });
-});
-
-// SSE 엔드포인트 연결 설정, 다운로드 진행도(%) 확인
-router.get("/download/progress", (req, res) => {
-    DownloadService.sendDownloadProgress(req, res)
-        .catch((error) => {
-            logger.error("에러메시지 알아서 적어주세요~", { // authservice나 logservice에 적은거 참고해주세요
-                // username: 나중에 미들웨어 넣으면 로그인한 유저 이름 넣어주세요
-                ip: req.ip,
-                // role: 나중에 미들웨어 넣으면 로그인한 유저 role 넣어주세요
-                requestUrl: req.originalUrl,
-                // f_name: 다운로드 되는 파일 이름 넣을 수 있으면 넣고, 아니면 null 써주세요
-                error: error.message
-            });
-            res.status(500).send(error.message);
-        });
-});
-
 // 중복 필터 검색 용 API(기본형, 병원 추가예정)
 router.post("/search", async (req, res) => {
     // FileService.getNthPageByQuery(serviceAttrs, query, page, limit) 사용 시 페이징 처리
