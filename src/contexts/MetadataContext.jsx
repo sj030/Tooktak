@@ -1,6 +1,7 @@
 import {createContext, useContext, useEffect, useReducer, useRef} from "react";
 import {metadataReducer} from "./MetadataReducer";
 import {getFileList, getMetadata} from "../services/searchApi";
+import {useInitFile} from "./FileContext";
 
 const referenceContext = createContext(null);
 const metadataContext = createContext(null);
@@ -11,7 +12,17 @@ export function MetadataProvider({children}) {
     const referenceData = useRef(null);
     useEffect(() => {
         getMetadata().then((res) => {
-            referenceData.current = res.data
+            referenceData.current = res.data.map((item) => {
+                    return {
+                        name: item.name, attributes: item.attributes.map((attribute) => {
+                            if (attribute.option === "range") {
+                                return {...attribute, value: {min: "", max: ""}}
+                            }
+                            return {...attribute, value: ""}
+                        })
+                    }
+                }
+            )
             dispatch({
                 type: "INIT",
                 payload: {
@@ -62,57 +73,51 @@ export function useMetadata() {
 
 export function useGetFileList() {
     const data = useContext(metadataContext);
-    const attributes={}
-    data.attributes.forEach((attribute)=>{
-        switch (attribute.type) {
+    const initFile = useInitFile();
+    const attributes = {}
+    data.attributes.forEach((attribute) => {
+        switch (attribute.option) {
             case "text":
-                if(attribute["value"]&& attribute["value"].length>0){
-                    attributes[attribute.name]={"text":attribute.value};
+                if (attribute["value"].length > 0) {
+                    attributes[attribute.name] = {text: attribute.value};
                 }
                 break;
             case "range":
-                if(attribute["start"] || attribute["end"]){
-                    if(attribute["start"].length>0){
-                        attributes[attribute.name]={max:attribute.start};
-                    }
-                    if(attribute["end"].length>0){
-                        attributes[attribute.name]={...attributes[attribute.name],min:attribute.end};
-                    }
+                if (attribute.value.min.length > 0) {
+                    attributes[attribute.name] = {min: attribute.value.min};
                 }
+                if (attribute.value.max.length > 0) {
+                    attributes[attribute.name] = {...attributes[attribute.name], max: attribute.value.max};
+                }
+
                 break;
             case "checkbox":
-                if(attribute["value"]){
-                    attributes[attribute.name]={list:[attribute.value]};
+                if (attribute["value"].length > 0) {
+                    attributes[attribute.name] = {list: [attribute.value]};
                 }
                 break;
             default:
                 break;
         }
     });
-    return ()=> {
-        return getFileList(data.hospital, attributes)
-    };
+    return () => {
+        getFileList(data.hospital, attributes).then((res) => {
+            initFile(res.data);
+        }).catch(error => {
+            initFile([])
+            console.error("Failed to fetch file list:", error);
+        })
+    }
 }
 
 export function useAttributeDispatch() {
     const dispatch = useContext(metadataDispatchContext);
     return {
-        setText: (attribute, value) => dispatch({
-            type: "TEXT_ATTRIBUTE",
+        setAttribute: (attribute, value) => dispatch({
+            type: "SET_ATTRIBUTE",
             name: attribute,
             value: value
         }),
-        setRange: (attribute, start, end) => dispatch({
-            type: "RANGE_ATTRIBUTE",
-            name: attribute,
-            start: start,
-            end: end
-        }),
-        setCheckbox: (attribute, value) => dispatch({
-            type: "CHECKBOX_ATTRIBUTE",
-            name: attribute,
-            value: value
-        })
     };
 }
 

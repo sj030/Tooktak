@@ -38,8 +38,8 @@ export function useFileList() {
 
 export function useInitFile() {
     const dispatch = useContext(FileDispatchContext);
-    return (fileList) => {
-        dispatch({type: "INIT_FILE_LIST", fileList: fileList});
+    return (fileData) => {
+        dispatch({type: "INIT_FILE_LIST", fileData: fileData});
     }
 }
 
