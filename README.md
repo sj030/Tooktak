@@ -10,7 +10,7 @@
 ### 1. Docker 설치
 Docker를 설치합니다. 자세한 설치 방법은 [Docker 공식 문서](https://docs.docker.com/engine/install/)를 참조하세요.
 
-### 2. Docker Desktop 설치 (Windows 사용자)
+### 2. Docker Desktop 설치 (Windows, MacOS 사용자)
 Windows 사용자라면 Docker Desktop을 설치하고, WSL 2와 통합해야 합니다. Docker Desktop은 [Docker Desktop 다운로드 페이지](https://www.docker.com/products/docker-desktop)에서 설치할 수 있습니다. 설치 후 다음을 확인합니다:
 - Docker Desktop 실행
 - "Settings" -> "Resources" -> "WSL Integration"에서 Ubuntu 배포판 활성화
