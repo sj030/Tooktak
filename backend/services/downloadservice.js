@@ -1,31 +1,21 @@
 const fs = require("fs");
 const JSZip = require("jszip");
 const path = require("path");
-const ftp = require("basic-ftp")
 const { FileRepository } = require("../db/models/files");
 const { Literals } = require("../literal/literals");
+const { v4: uuidv4 } = require('uuid');
 
-let subscriber = null;
-const ftpInfo = {
-    host: process.env.FTP_HOST,
-    user: process.env.FTP_USER,
-    password: process.env.FTP_PASSWORD,
-    uploadedFilename: Literals.FTP.REMOTE_FILE_NAME
-};
-
-async function getFilepathsFromBody(body){
-    const { objectIDs } = body;
-    const files = await FileRepository.findByIds(objectIDs);
+// 다운로드 대상 파일 경로의 공통 폴더 루트 반환 함수
+async function getFilePathsFromIDs(IDs) {
+    const files = await FileRepository.findByIds(IDs);
     const filePaths = files.map(file => file.f_path);
-    return filePaths;
+    return filePaths
 }
 
 // 다운로드 대상 파일 경로의 공통 폴더 루트 반환 함수
 function findCommonTopFolder(filePaths) {
     if (filePaths.length === 0) return "";
-
     let commonTopFolder = path.dirname(filePaths[0]);
-
     for (let i = 1; i < filePaths.length; i++) {
         const currentPath = filePaths[i];
         const currentFolder = path.dirname(currentPath);
@@ -37,7 +27,7 @@ function findCommonTopFolder(filePaths) {
     return commonTopFolder;
 }
 
-function buildStream(filePaths){
+async function buildZip(filePaths){
     const zip = new JSZip();
     const commonTopPath = findCommonTopFolder(filePaths);       // 파일 경로 리스트에서 최상위 경로 추출
     const topLevelFolderName = path.basename(commonTopPath);    // 최상위 경로에서 폴더 이름 추출
@@ -57,63 +47,82 @@ function buildStream(filePaths){
         const fileName = folders[folders.length - 1];
         currentZipFolder.file(fileName, fileData);
     }
-    const stream = zip.generateNodeStream({ type: "nodebuffer", streamFiles: true });
-    return stream;
-}
 
-async function connectToFtp(){
-    const client = new ftp.Client();
-    await client.access(ftpInfo);
-    return client;
-}
+    const zipId = uuidv4();
+    const outputFilePath = path.join("C:/Users/user/Downloads", `${zipId}.zip`);
 
-async function uploadAndTrack(client, stream){
-    let lastProgressSentTime = Date.now();
-    client.trackProgress(info => {
-        const now = Date.now();
-        const progress = {
-            type: 'ftpUpload',
-            filename: Literals.FTP.REMOTE_FILE_NAME,
-            transferred: info.bytesOverall,
-            total: info.bytesOverall,
-            percentage: (info.bytesOverall / info.bytesOverall) * 100
-        };
-        subscriber.write(`data: ${JSON.stringify(progress)}\n\n`);
-        if(now - lastProgressSentTime >= 100){  //0.1초 마다 진행도 발송
-            if(subscriber) subscriber.write(`data: ${JSON.stringify(progress)}\n\n`);
-            lastProgressSentTime = now;
-        }
-        if(progress.percentage === 100) {
-            subscriber.write(`data: ${JSON.stringify(progress)}\n\n`);
-            subscriber.end();
-        }
-    });
-    // FTP 서버로 파일을 업로드
-    await client.uploadFrom(stream, Literals.FTP.REMOTE_FILE_NAME);
+    const content = await zip.generateAsync({ type: "nodebuffer" });
+    fs.writeFileSync(outputFilePath, content);
+
+    const stats = fs.statSync(outputFilePath);
+    const fileSize = stats.size;
+    return { zipId, fileSize };
 }
 
 class DownloadService {
-    static async ftpServerUpload(body){
-        //const { filePaths } = body;
-        const filePaths = await getFilepathsFromBody(body);
-        const stream = buildStream(filePaths);
-        const client = await connectToFtp();
-        await uploadAndTrack(client, stream);
+    static async createZip(req, res){
+        //const { filePaths } = req.body;
+        const { IDs } = req.body;
+        const filePaths = getFilePathsFromIDs(IDs)
+        const { zipId, fileSize } = await buildZip(filePaths);
+        const sendInfo = { zipId, fileSize }
+        return sendInfo;
     }
 
-    static getFTPInfo(){
-        return ftpInfo;
-    }
-
-    static async sendDownloadProgress(req, res) {
-        res.setHeader('Content-Type', 'text/event-stream');
-        res.setHeader('Cache-Control', 'no-cache');
-        res.setHeader('Connection', 'keep-alive');
-        subscriber = res;
-        req.on('close', () => {
-            subscriber = null;
-            //req.end();
+    // path 관련 및 모듈화에 대해 추가 수정 들어갈 예정
+    static async downloadZip(req, res){
+        const {zipId} = req.params.zipId;
+        const filePath = path.join("C:/Users/user/Downloads", zipId)+".zip";
+        console.log("filepath: ",filePath);
+        
+        if (!fs.existsSync(filePath)) {
+            res.status(404).send('File not found');
+            return;
+        }
+        const fileSize = fs.statSync(filePath).size;
+        console.log("fileSize: ",fileSize);
+        
+        const range = req.headers.range;
+        res.set({
+            'Content-Type': 'application/zip',
+            'Content-Length': fileSize,
+            'Content-Disposition': `attachment; zipId="${zipId}"`,
+            'a': 'public, max-age=31536000'
         });
+        if (range) {
+            const parts = range.replace(/bytes=/, '').split('-');
+            const start = parseInt(parts[0], 10);
+            console.log('start: ', start);
+            const end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1;
+            console.log('end: ', end);
+            if (start >= fileSize || end > fileSize) {
+                res.status(416).header('Content-Range', `bytes */${fileSize}`).send("range is invalid");
+                return;
+            }
+            const chunksize = (end - start) + 1;
+            res.writeHead(206, {
+                'Content-Type': 'application/zip',
+                'Content-Range': `bytes ${start}-${end}/${fileSize}`,
+                'Content-Length': chunksize,
+            });
+            const file = fs.createReadStream(filePath, { start, end });
+            let downloadedBytes = 0;
+            file.on('data', function (chunk) {
+                downloadedBytes += chunk.length;
+                res.write(chunk);
+            });
+            file.on('end', function () {
+                console.log('Download completed');
+                res.end();
+            });
+            file.on('error', function (err) {
+                console.log('Error while downloading file:', err);
+                res.status(500).send('Error while downloading file');
+            });
+        } else {
+            const file = fs.createReadStream(filePath);
+            file.pipe(res);
+        }
     }
 }
 

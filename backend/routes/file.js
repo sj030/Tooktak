@@ -21,47 +21,20 @@ router.post("/upload/data", uploadMiddleware, (req, res) => {
     res.json({ header: req.file });
 });
 
-// ZIP 파일 생성 및 다운로드, 
-router.post("/download", async (req, res) => {
-    DownloadService.ftpServerUpload(req.body)
-        .then(() => {
-            return DownloadService.getFTPInfo();
-        })
-        .then((ftpInfo) => {
-            logger.info("성공메시지 알아서 적어주세요~", { // authservice나 logservice에 적은거 참고해주세요
-                // username: 나중에 미들웨어 넣으면 로그인한 유저 이름 넣어주세요
-                ip: req.ip,
-                // role: 나중에 미들웨어 넣으면 로그인한 유저 role 넣어주세요
-                requestUrl: req.originalUrl,
-                // f_name: 생성된 zip 파일 이름 넣어주세요
-            });
-            res.status(200).send(ftpInfo);
+// Zip 파일 생성 API, download에서의 파일과 대응되는 zipId와 해당 zip파일의 Size 정보를 클라이언트에게 전달
+router.post("/createZip", (req, res) => {
+    DownloadService.createZip(req, res)
+        .then((sendInfo) => {
+            res.status(200).send(sendInfo);
         })
         .catch((error) => {
-            logger.error("에러메시지 알아서 적어주세요~", { // authservice나 logservice에 적은거 참고해주세요
-                // username: 나중에 미들웨어 넣으면 로그인한 유저 이름 넣어주세요
-                ip: req.ip,
-                // role: 나중에 미들웨어 넣으면 로그인한 유저 role 넣어주세요
-                requestUrl: req.originalUrl,
-                // f_name: zip 파일 이름 넣어주세요
-                error: error.message
-            });
             res.status(500).send(error.message);
         });
 });
-
-// SSE 엔드포인트 연결 설정, 다운로드 진행도(%) 확인
-router.get("/download/progress", (req, res) => {
-    DownloadService.sendDownloadProgress(req, res)
+// zipId에 해당하는 파일을 클라이언트에게 전송, range가 설정되어 있다면 해당 부분만, 미설정 시 전체 파일을 전송함
+router.get("/download/:zipId", (req, res) => {
+    DownloadService.downloadZip(req, res)
         .catch((error) => {
-            logger.error("에러메시지 알아서 적어주세요~", { // authservice나 logservice에 적은거 참고해주세요
-                // username: 나중에 미들웨어 넣으면 로그인한 유저 이름 넣어주세요
-                ip: req.ip,
-                // role: 나중에 미들웨어 넣으면 로그인한 유저 role 넣어주세요
-                requestUrl: req.originalUrl,
-                // f_name: 다운로드 되는 파일 이름 넣을 수 있으면 넣고, 아니면 null 써주세요
-                error: error.message
-            });
             res.status(500).send(error.message);
         });
 });
