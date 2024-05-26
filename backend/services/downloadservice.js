@@ -49,7 +49,7 @@ async function buildZip(filePaths){
     }
 
     const zipId = uuidv4();
-    const outputFilePath = path.join("C:/Users/user/Downloads", `${zipId}.zip`);
+    const outputFilePath = path.join(process.env.MIDDLE_DIRECTORY_PATH, `${zipId}.zip`);
 
     const content = await zip.generateAsync({ type: "nodebuffer" });
     fs.writeFileSync(outputFilePath, content);
@@ -72,7 +72,7 @@ class DownloadService {
     // path 관련 및 모듈화에 대해 추가 수정 들어갈 예정
     static async downloadZip(req, res){
         const {zipId} = req.params.zipId;
-        const filePath = path.join("C:/Users/user/Downloads", zipId)+".zip";
+        const filePath = path.join(process.env.MIDDLE_DIRECTORY_PATH, zipId)+".zip";
         console.log("filepath: ",filePath);
         
         if (!fs.existsSync(filePath)) {
