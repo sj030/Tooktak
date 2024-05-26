@@ -14,7 +14,12 @@ async function getFilePathsFromIDs(IDs) {
 
 // 다운로드 대상 파일 경로의 공통 폴더 루트 반환 함수
 function findCommonTopFolder(filePaths) {
-    if (filePaths.length === 0) return "";
+    if (!Array.isArray(filePaths)) {
+        throw new Error("The filePaths must be an array.");
+    }
+    if (filePaths.length === 0) {
+        throw new Error("The filePaths array is empty.");
+    }
     let commonTopFolder = path.dirname(filePaths[0]);
     for (let i = 1; i < filePaths.length; i++) {
         const currentPath = filePaths[i];
