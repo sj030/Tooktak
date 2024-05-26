@@ -1,9 +1,10 @@
 import {Button} from "../../commons/Button";
-import {useStep} from "../../../contexts/UploadFileContext";
+import {useStep, useUploadAll} from "../../../contexts/UploadFileContext";
 
 export default function UploadFooter() {
     const step=useStep()
+    const uploadAll=useUploadAll()
     return <>
-        {step === "upload" && <Button children={"upload"}/>}
+        {step === "upload" && <Button onClick={uploadAll} children={"upload"}/>}
     </>
 }
