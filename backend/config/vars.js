@@ -26,6 +26,10 @@ module.exports = {
     admin: {
         id: process.env.ADMIN_ID, // 관리자 ID
         password: process.env.ADMIN_PW // 관리자 비밀번호
-    }
+    },
 
+    path: {
+        upload: process.env.UPLOAD_DIRECTORY_PATH,
+        zip: process.env.ZIP_DIRECTORY_PATH
+    }
 }

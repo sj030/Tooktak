@@ -5,6 +5,8 @@ const path = require("path");
 const ftp = require("basic-ftp")
 const { FileRepository } = require("../db/models/files");
 const { Literals } = require("../literal/literals");
+const config = require("../config/vars");
+
 
 const allowedFileTypes = ["xlsx"]; // 허용된 파일 확장자
 
@@ -17,7 +19,7 @@ class MetaTransferService {
      * @returns {object} multer 객체
      */
     static initMulter() {
-        const uploadDir = "./uploads";
+        const uploadDir = config.path.upload;
         // uploads 폴더가 없다면 폴더 생성
         if (!fs.existsSync(uploadDir)) {
             fs.mkdirSync(uploadDir);
