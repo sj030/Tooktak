@@ -1,5 +1,5 @@
 import {useDirectory} from "../../../contexts/UploadFileContext";
-import {Directory} from "../../commons/Directory";
+import {Directory} from "./Directory";
 import {Grid} from "../../layout/Grid";
 
 export default function DirectoryBox() {
