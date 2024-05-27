@@ -22,7 +22,7 @@ router.post("/upload/data", uploadMiddleware, (req, res) => {
 });
 
 // Zip 파일 생성 API, download에서의 파일과 대응되는 zipId와 해당 zip파일의 Size 정보를 클라이언트에게 전달
-router.post("/createZip", (req, res) => {
+router.post("/zip", (req, res) => {
     DownloadService.createZip(req, res)
         .then((sendInfo) => {
             res.status(200).send(sendInfo);
@@ -33,7 +33,7 @@ router.post("/createZip", (req, res) => {
 });
 
 // 테스트용 response 뱉는 API
-router.post("/createZipTest", (req, res) => {
+router.post("/test/zip", (req, res) => {
     DownloadService.createZipTestResponse(req, res)
         .then((sendInfo) => {
             res.status(200).send(sendInfo);
