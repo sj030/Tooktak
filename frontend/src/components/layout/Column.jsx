@@ -4,3 +4,4 @@ export function Columns({ children, isGapless }) {
 export function Column({ children, ratio }) {
   return <div className={`column is-${ratio}`}>{children}</div>;
 }
+
