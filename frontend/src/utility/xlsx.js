@@ -1,7 +1,7 @@
 import * as XLSX from "xlsx";
 import {parseAndFormatDate} from "./date";
 
-export function handleFileUpload(event, initXlsx) {
+export function handleFileUpload(event, initXlsx,dateCol, nameCol) {
     const file = event.target.files[0];
     const reader = new FileReader();
     reader.onload = (e) => {
@@ -19,7 +19,7 @@ export function handleFileUpload(event, initXlsx) {
             row.forEach((cell, index) => {
                 rowData[headers[index]] = String(cell);  // Forcefully convert cell values to string
             });
-            const key = parseAndFormatDate(rowData["검사일자"]) + "/" + rowData["환자명"];
+            const key = parseAndFormatDate(rowData[dateCol]) + "/" + rowData[nameCol];
             data[key] = rowData;
         });
         initXlsx(data);

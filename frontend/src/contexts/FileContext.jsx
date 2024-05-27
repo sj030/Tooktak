@@ -1,5 +1,6 @@
 import {createContext, useContext, useReducer} from "react";
 import {fileReducer} from "./FileReducer";
+import {getFileZip} from "../services/download";
 
 const initialState = {
     hospital: "",
@@ -38,21 +39,27 @@ export function useFileList() {
 
 export function useInitFile() {
     const dispatch = useContext(FileDispatchContext);
-    return (fileList) => {
-        dispatch({type: "INIT_FILE_LIST", fileList: fileList});
+    return (fileData) => {
+        dispatch({type: "INIT_FILE_LIST", fileData: fileData});
     }
+}
+
+export function useDownload() {
+    const fileList = useContext(FileContext);
+    const f = fileList.files.filter((file) => file.selected).map((file) => file.f_path);
+    return () => getFileZip(f)
 }
 
 
 export function useSelectFile() {
     const dispatch = useContext(FileDispatchContext);
-    const select=(file_id) => {
+    const select = (file_id) => {
         dispatch({type: "SELECT_FILE", file_id: file_id});
     };
-    const selectAll=()=>{
+    const selectAll = () => {
         dispatch({type: "SELECT_ALL"});
     };
-    const unselectAll=()=>{
+    const unselectAll = () => {
         dispatch({type: "UNSELECT_ALL"});
     };
     return {select, selectAll, unselectAll};

@@ -10,7 +10,7 @@ import {DropBox} from "../../../commons/DropBox";
 
 export default function AttributeList() {
     const {hospital,attributes} = useMetadata();
-    const { setText, setRange, setCheckbox } = useAttributeDispatch();
+    const { setAttribute } = useAttributeDispatch();
     return <Grid>
         {attributes.map((attribute) => {
             switch (attribute.option) {
@@ -18,8 +18,8 @@ export default function AttributeList() {
                     return <TextBox
                         key={hospital + attribute.name}
                         label={attribute.name}
-                        placeholder={"(선택)"}
-                        setValue={(value) => setText(attribute.name, value)}
+                        placeholder={"(전체선택)"}
+                        setValue={(value) => setAttribute(attribute.name, value)}
                         value={attribute.value}
                     />
                 case "checkbox":
@@ -27,19 +27,18 @@ export default function AttributeList() {
                         key={hospital + attribute.name}
                         label={attribute.name}
                         options={attribute.list}
-                        setValue={(value) => setCheckbox(attribute.name, value)}
+                        setValue={(value) => setAttribute(attribute.name, value)}
                         value={attribute.value}
                     />
                 case "range":
                     return <RangeBox
                         key={hospital + attribute.name}
                         label={attribute.name}
-                        setStart={(start) => setRange(attribute.name, start, attribute.end)}
-                        setEnd={(end) => setRange(attribute.name, attribute.start, end)}
-                        start={attribute.start}
-                        end={attribute.end}
-                        placeholder1={"(선택)"}
-                        placeholder2={"(선택)"}
+                        setStart={(start) => setAttribute(attribute.name, {...attribute.value, min: start})}
+                        setEnd={(end) => setAttribute(attribute.name, {...attribute.value, max: end})}
+                        value={attribute.value}
+                        placeholder1={"(전체선택)"}
+                        placeholder2={"(전체선택)"}
                     />
                 default:
                     return null;
