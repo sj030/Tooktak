@@ -16,9 +16,23 @@ const upload = MetaTransferService.initMulter();
 const uploadMiddleware = upload.single("filekey"); // filekey는 클라이언트에서 전송한 파일의 키 값, single()은 하나의 파일만 업로드할 때 사용 (array()는 여러 파일 업로드)
 
 // test 용도의 업로드 API
-router.post("/upload/data", uploadMiddleware, (req, res) => {
-    console.log(req.file);
-    res.json({ header: req.file });
+router.post("/upload/data", uploadMiddleware, async (req, res) => {
+    try {
+        // req -> {"id":8, "attributes":{"S-NO":1, "참여날짜":"2023-03-05","성명":"홍길동","병록번호":1,"나이":78,"성별":"남","MMSE":45,"최종학력":"고졸","CDT":30}}
+        if (!req.body) {
+            console.log("body is null");
+            return res.status(400).send("body is null");
+        }
+
+        var meta = JSON.parse(req.body['metadata']);
+        const {id, attributes} = meta; 
+        const document = await PatientService.addPatients([{"id":id, "attributes":attributes}]); 
+
+        res.status(200).send("succes");
+    } catch (error) {
+        console.error('Error processing upload:', error);
+        res.status(400).send('Internal Server Error');
+    }
 });
 
 // Zip 파일 생성 API, download에서의 파일과 대응되는 zipId와 해당 zip파일의 Size 정보를 클라이언트에게 전달
