@@ -14,7 +14,12 @@ async function getFilePathsFromIDs(IDs) {
 
 // 다운로드 대상 파일 경로의 공통 폴더 루트 반환 함수
 function findCommonTopFolder(filePaths) {
-    if (filePaths.length === 0) return "";
+    if (!Array.isArray(filePaths)) {
+        throw new Error("The filePaths must be an array.");
+    }
+    if (filePaths.length === 0) {
+        throw new Error("The filePaths array is empty.");
+    }
     let commonTopFolder = path.dirname(filePaths[0]);
     for (let i = 1; i < filePaths.length; i++) {
         const currentPath = filePaths[i];
@@ -49,7 +54,7 @@ async function buildZip(filePaths){
     }
 
     const zipId = uuidv4();
-    const outputFilePath = path.join("C:/Users/user/Downloads", `${zipId}.zip`);
+    const outputFilePath = path.join(process.env.MIDDLE_DIRECTORY_PATH, `${zipId}.zip`);
 
     const content = await zip.generateAsync({ type: "nodebuffer" });
     fs.writeFileSync(outputFilePath, content);
@@ -72,7 +77,7 @@ class DownloadService {
     // path 관련 및 모듈화에 대해 추가 수정 들어갈 예정
     static async downloadZip(req, res){
         const {zipId} = req.params.zipId;
-        const filePath = path.join("C:/Users/user/Downloads", zipId)+".zip";
+        const filePath = path.join(process.env.MIDDLE_DIRECTORY_PATH, zipId)+".zip";
         console.log("filepath: ",filePath);
         
         if (!fs.existsSync(filePath)) {
