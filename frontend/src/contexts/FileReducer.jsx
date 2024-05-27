@@ -1,10 +1,15 @@
 export function fileReducer(state, action) {
     switch (action.type) {
         case "INIT_FILE_LIST":
+            if(action.fileData.length===0) return {hospital: "file not found", attributes: [], files: []};
+            const hospital=action.fileData[0].serviceName;
+            const attribute=Object.keys(action.fileData[0].patient.attributes);
             return {
-                ...action.fileList,
-                files: action.fileList.files.map((file) => {
-                    file.selected = false;
+                hospital: hospital,
+                attributes: attribute,
+                files: action.fileData.map((file) => {
+                    file["selected"] = false;
+                    file["file_id"]=file._id;
                     return file;
                 }),
             };
