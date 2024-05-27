@@ -25,7 +25,7 @@ export default function uploadFileReducer(state, action) {
             const fileKey = path[1] + "/" + path[2] + "/" + path[3];
             const newDirectoryList = {...state};
             // 1. directoryList에서 해당 파일을 찾아서 삭제한다.
-            delete newDirectoryList[dirPath].files[fileKey];
+            newDirectoryList[dirPath].files[fileKey] = fileKey + " upload success";
             // 2. 해당 폴더의 파일이 없다면 state를 xlsxOnly로 변경한다.
             if (Object.keys(newDirectoryList[dirPath].files).length === 0) {
                 newDirectoryList[dirPath].state = "success";

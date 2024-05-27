@@ -16,9 +16,9 @@ export function MetadataProvider({children}) {
                     return {
                         name: item.name, attributes: item.attributes.map((attribute) => {
                             if (attribute.option === "range") {
-                                return {...attribute, value: {min: "", max: ""}}
+                                return {...attribute,visible:false, value: {min: "", max: ""}}
                             }
-                            return {...attribute, value: ""}
+                            return {...attribute,visible:false, value: ""}
                         })
                     }
                 }
@@ -49,6 +49,22 @@ export function MetadataProvider({children}) {
 export function useHospitals() {
     const data = useContext(referenceContext);
     return data ? data.map((item) => item.name) : [];
+}
+
+export function useAttributes() {
+    const data = useContext(metadataContext);
+    return data ? data.attributes : [];
+}
+
+export function useAttributeVisible(){
+    const dispatch = useContext(metadataDispatchContext);
+    return (attributeName,visible) => {
+        dispatch({
+            type: "SET_ATTRIBUTE_VISIBLE",
+            name: attributeName,
+            visible: visible
+        });
+    }
 }
 
 export function useHospital() {
