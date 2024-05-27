@@ -4,6 +4,8 @@ const path = require("path");
 const { FileRepository } = require("../db/models/files");
 const { Literals } = require("../literal/literals");
 const { v4: uuidv4 } = require('uuid');
+const config = require("../config/vars");
+
 
 // 다운로드 대상 파일 경로의 공통 폴더 루트 반환 함수
 async function getFilePathsFromIDs(IDs) {
@@ -54,7 +56,7 @@ async function buildZip(filePaths){
     }
 
     const zipId = uuidv4();
-    const outputFilePath = path.join(process.env.MIDDLE_DIRECTORY_PATH, `${zipId}.zip`);
+    const outputFilePath = path.join(config.path.zip, `${zipId}.zip`);
 
     const content = await zip.generateAsync({ type: "nodebuffer" });
     fs.writeFileSync(outputFilePath, content);
@@ -77,7 +79,7 @@ class DownloadService {
     // path 관련 및 모듈화에 대해 추가 수정 들어갈 예정
     static async downloadZip(req, res){
         const {zipId} = req.params.zipId;
-        const filePath = path.join(process.env.MIDDLE_DIRECTORY_PATH, zipId)+".zip";
+        const filePath = path.join(config.path.zip, zipId)+".zip";
         console.log("filepath: ",filePath);
         
         if (!fs.existsSync(filePath)) {
