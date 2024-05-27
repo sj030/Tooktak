@@ -74,14 +74,6 @@ class DownloadService {
         return sendInfo;
     }
 
-    static async createZipTestResponse(req, res){
-        const { IDs } = req.body;
-        const zipId = "created";            // 생성해둔 zip파일 이름 created.zip으로 설정 요함
-        const fileSize = 1024;              // 연계 테스트 시 다운로드 할 파일 바이트 수 설정 요함
-        const sendInfo = { zipId, fileSize }
-        return sendInfo;
-    }
-
     // path 관련 및 모듈화에 대해 추가 수정 들어갈 예정
     static async downloadZip(req, res){
         const {zipId} = req.params.zipId;
