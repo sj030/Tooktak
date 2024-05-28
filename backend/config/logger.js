@@ -1,7 +1,13 @@
 const winston = require("winston");
 require("winston-mongodb");
-const { combine, timestamp, printf, errors, metadata } = winston.format;
+const { combine, printf, errors, metadata } = winston.format;
 const config = require("../config/vars");
+const moment = require("moment-timezone");
+
+const timestamp = winston.format((info) => {
+    info.timestamp = moment().tz('Asia/Seoul').format('YYYY-MM-DD HH:mm:ss');
+    return info;
+});
 
 // MongoDB 저장을 위한 메타 데이터 포맷
 const mongoDBFormat = printf((info) => {

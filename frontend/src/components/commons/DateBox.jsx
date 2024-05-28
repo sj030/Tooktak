@@ -1,4 +1,3 @@
-
 import React from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -6,17 +5,15 @@ import 'react-datepicker/dist/react-datepicker.css';
 export default function DateBox({ label, start, end, setStart, setEnd, setDateRange }) {
     const handleStartChange = (date) => {
         setStart(date);
-        if (end) {
-            setDateRange(date, end);  // 변경된 startDate와 기존 endDate로 setDateRange 호출
-        } else {
-            setDateRange(date, date);  // endDate가 없는 경우 startDate만 반영
-        }
+        const adjustedEndDate = end ? new Date(end.getTime()) : new Date(date.getTime());
+        setDateRange(date, adjustedEndDate);
     };
 
     const handleEndChange = (date) => {
-        setEnd(date);
+        const adjustedEndDate = new Date(date.getTime());
+        setEnd(adjustedEndDate);
         if (start) {
-            setDateRange(start, date);  // 기존 startDate와 변경된 endDate로 setDateRange 호출
+            setDateRange(start, adjustedEndDate);
         }
     };
 
@@ -27,10 +24,9 @@ export default function DateBox({ label, start, end, setStart, setEnd, setDateRa
                     <div className="level-left">
                         <label className="label">{label}</label>
                     </div>
-                    <div className="date-picker field has-addons is-primary is-outlined is-fullwidth
-">
-                        <DatePicker className="input"
-
+                    <div className="date-picker field has-addons is-primary is-outlined is-fullwidth">
+                        <DatePicker
+                            className="input"
                             selected={start}
                             onChange={handleStartChange}
                             selectsStart
@@ -39,8 +35,8 @@ export default function DateBox({ label, start, end, setStart, setEnd, setDateRa
                             placeholderText="시작 날짜"
                         />
                         <span> ~ </span>
-                        <DatePicker className="input"
-
+                        <DatePicker
+                            className="input"
                             selected={end}
                             onChange={handleEndChange}
                             selectsEnd
@@ -53,6 +49,5 @@ export default function DateBox({ label, start, end, setStart, setEnd, setDateRa
                 </div>
             </div>
         </div>
-
     );
 }

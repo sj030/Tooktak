@@ -1,5 +1,6 @@
 // mongoose 모듈 불러오기
 const mongoose = require("mongoose");
+const moment = require('moment-timezone');
 // 비밀번호 해싱 시 사용할 라운드 수
 const saltRounds = 10;
 
@@ -31,7 +32,7 @@ const usersSchema = new mongoose.Schema({
         default: null
     }
 }, {
-    timestamps: true,
+    timestamps: { currentTime: () => moment().tz('Asia/Seoul').toDate() } // timestamps 옵션을 사용하여 createdAt과 updatedAt을 자동으로 설정
 });
 
 // User 모델 스키마로 정의

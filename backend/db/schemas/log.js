@@ -1,11 +1,12 @@
 // mongoose 모듈 불러오기
 const mongoose = require("mongoose");
+const moment = require('moment-timezone');
 
 const logSchema = new mongoose.Schema({
     timestamp: {
         type: Date,
-        maxlength: 128,
         required: true,
+        default: () => moment().tz('Asia/Seoul').toDate() // 한국 시간으로 저장
     },
     level: {
         type: String,

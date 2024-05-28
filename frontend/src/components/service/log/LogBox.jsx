@@ -1,3 +1,4 @@
+import React from 'react';
 import { LTable } from "../../commons/LTable";
 import { Grid } from "../../layout/Grid";
 import { DropBox } from "../../commons/DropBox";
@@ -7,7 +8,7 @@ import { useLogs } from "../../../contexts/LogContext";
 import { useQueryParams, useSetStart, useSetEnd, useSetDateRange } from "../../../contexts/Querycontext";
 import { useUpdateQueryParams } from "../../../contexts/Querycontext";
 import { LogPagination } from "./LogPagination";
-import { LogSearch } from "./LogSearch";
+import moment from 'moment-timezone';
 
 export function LogBox() {
     const logsObject = useLogs();
@@ -19,7 +20,14 @@ export function LogBox() {
     const setDateRange = useSetDateRange();
 
     const items = Array.isArray(logs) ? logs.map(log => [
-        log.timestamp, log.level, log.message, log.meta?.username, log.meta?.ip, log.meta?.requestUrl, log.meta?.f_name, log.meta?.error
+        moment(log.timestamp).tz('Asia/Seoul').format('YYYY-MM-DD HH:mm:ss'), // timestamp를 한국 시간으로 변환
+        log.level,
+        log.message,
+        log.meta?.username,
+        log.meta?.ip,
+        log.meta?.requestUrl,
+        log.meta?.f_name,
+        log.meta?.error
     ]) : [];
 
     return (
