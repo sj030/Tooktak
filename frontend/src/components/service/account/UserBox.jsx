@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useUsers } from '../../../contexts/UserContext';
 import { UTable } from '../../commons/UTable';
 import { UserPagination } from './UserPagination';
@@ -6,7 +6,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 export function UserBox() {
-    const { users, totalUsers, itemsPerPage, currentPage, handlePageClick, selectedUser, setSelectedUser, handleDeleteUser } = useUsers();
+    const { users, totalUsers, itemsPerPage, currentPage, handlePageClick, selectedUser, setSelectedUser, handleDeleteUser, fetchUsers } = useUsers();
     const items = users.map(user => [
         user.username, user.role, user.createdAt, user.updatedAt
     ]);
@@ -15,6 +15,10 @@ export function UserBox() {
         const user = users.find(u => u.username === item[0]);
         setSelectedUser(user);
     };
+
+    useEffect(() => {
+        fetchUsers();
+    }, [fetchUsers]);
 
     return (
         <div>
