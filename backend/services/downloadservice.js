@@ -68,24 +68,20 @@ class DownloadService {
     static async createZip(req, res){
         //const { filePaths } = req.body;
         const { IDs } = req.body;
-        const filePaths = getFilePathsFromIDs(IDs)
-        const { zipId, fileSize } = await buildZip(filePaths);
-        const sendInfo = { zipId, fileSize }
-        return sendInfo;
-    }
-
-    static async createZipTestResponse(req, res){
-        const { IDs } = req.body;
-        const zipId = "created";            // 생성된 zip파일 이름 예시 (원래는 uuid)
-        const fileSize = 1024;              // 생성된 파일 크기 예시
+        // const filePaths = getFilePathsFromIDs(IDs)
+        // const { zipId, fileSize } = await buildZip(filePaths);
+        // const sendInfo = { zipId, fileSize }
+        // return sendInfo;
+        const zipId = "mini";
+        const fileSize = 26958472
         const sendInfo = { zipId, fileSize }
         return sendInfo;
     }
 
     // path 관련 및 모듈화에 대해 추가 수정 들어갈 예정
     static async downloadZip(req, res){
-        const {zipId} = req.params.zipId;
-        const filePath = path.join(process.env.MIDDLE_DIRECTORY_PATH, zipId)+".zip";
+        const {zipId} = req.params;
+        const filePath = path.resolve(__dirname, "..", zipId) + ".zip";
         console.log("filepath: ",filePath);
         
         if (!fs.existsSync(filePath)) {
