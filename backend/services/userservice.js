@@ -143,7 +143,12 @@ class UserService {
                     message: Literals.ACCOUNT.CREATE_ERROR_EXISTS
                 });
             }
-
+            if (!userData.role) {
+                return JSON.stringify({
+                    status: 400,
+                    message: "Role is required"
+                });
+            }
             const hashedPassword = await bcrypt.hash(userData.password, saltRounds);
             userData.password = hashedPassword;
 
