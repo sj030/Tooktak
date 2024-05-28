@@ -5,6 +5,5 @@ export function getMetadata() {
 }
 
 export function getFileList(hospital, attributes) {
-    console.log(hospital, attributes)
     return axiosInstance.post('file/search', {name: hospital, attributes: attributes})
 }
