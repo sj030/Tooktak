@@ -1,8 +1,8 @@
 import {LargeSection} from "../components/commons/Section";
 import {Card} from "../components/commons/Card";
-import {Button} from "../components/commons/Button";
 import UploadBox from "../components/service/upload/UploadBox";
 import {UploadFileProvider} from "../contexts/UploadFileContext";
+import UploadFooter from "../components/service/upload/UploadFooter";
 
 export default function Upload() {
     return (
@@ -10,7 +10,7 @@ export default function Upload() {
             <LargeSection>
                 <Card header={"데이터 업로드"}
                       body={<UploadBox/>}
-                      footer={<Button children={"upload"}/>}/>
+                      footer={<UploadFooter/>}/>
             </LargeSection>
         </UploadFileProvider>
     );

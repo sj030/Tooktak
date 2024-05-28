@@ -1,22 +1,33 @@
 import {createContext, useContext, useEffect, useReducer, useRef} from "react";
 import {metadataReducer} from "./MetadataReducer";
-import {getMetadata} from "../services/searchApi";
+import {getFileList, getMetadata} from "../services/searchApi";
+import {useInitFile} from "./FileContext";
 
 const referenceContext = createContext(null);
 const metadataContext = createContext(null);
 const metadataDispatchContext = createContext(null);
 
 export function MetadataProvider({children}) {
-    const [metadata, dispatch] = useReducer(metadataReducer, null);
+    const [metadata, dispatch] = useReducer(metadataReducer, {hospital: "", attributes: []});
     const referenceData = useRef(null);
     useEffect(() => {
-        getMetadata().then((data) => {
-            referenceData.current = data
+        getMetadata().then((res) => {
+            referenceData.current = res.data.map((item) => {
+                    return {
+                        name: item.name, attributes: item.attributes.map((attribute) => {
+                            if (attribute.option === "range") {
+                                return {...attribute,visible:false, value: {min: "", max: ""}}
+                            }
+                            return {...attribute,visible:false, value: ""}
+                        })
+                    }
+                }
+            )
             dispatch({
                 type: "INIT",
                 payload: {
-                    hospital: data[0].name,  // Adjusted to use the actual data
-                    attributes: data[0].attributes
+                    hospital: referenceData.current[0].name,  // Adjusted to use the actual data
+                    attributes: referenceData.current[0].attributes
                 }
             });
         }).catch(error => {
@@ -40,6 +51,22 @@ export function useHospitals() {
     return data ? data.map((item) => item.name) : [];
 }
 
+export function useAttributes() {
+    const data = useContext(metadataContext);
+    return data ? data.attributes : [];
+}
+
+export function useAttributeVisible(){
+    const dispatch = useContext(metadataDispatchContext);
+    return (attributeName,visible) => {
+        dispatch({
+            type: "SET_ATTRIBUTE_VISIBLE",
+            name: attributeName,
+            visible: visible
+        });
+    }
+}
+
 export function useHospital() {
     const dispatch = useContext(metadataDispatchContext);
     const referenceData = useContext(referenceContext);
@@ -60,25 +87,53 @@ export function useMetadata() {
     return data ? {hospital: data.hospital, attributes: data.attributes} : {hospital: "", attributes: []};
 }
 
+export function useGetFileList() {
+    const data = useContext(metadataContext);
+    const initFile = useInitFile();
+    const attributes = {}
+    data.attributes.forEach((attribute) => {
+        switch (attribute.option) {
+            case "text":
+                if (attribute["value"].length > 0) {
+                    attributes[attribute.name] = {text: attribute.value};
+                }
+                break;
+            case "range":
+                if (attribute.value.min.length > 0) {
+                    attributes[attribute.name] = {min: attribute.value.min};
+                }
+                if (attribute.value.max.length > 0) {
+                    attributes[attribute.name] = {...attributes[attribute.name], max: attribute.value.max};
+                }
+
+                break;
+            case "checkbox":
+                if (attribute["value"].length > 0) {
+                    attributes[attribute.name] = {list: [attribute.value]};
+                }
+                break;
+            default:
+                break;
+        }
+    });
+    return () => {
+        getFileList(data.hospital, attributes).then((res) => {
+            initFile(res.data);
+        }).catch(error => {
+            initFile([])
+            console.error("Failed to fetch file list:", error);
+        })
+    }
+}
+
 export function useAttributeDispatch() {
     const dispatch = useContext(metadataDispatchContext);
     return {
-        setText: (attribute, value) => dispatch({
-            type: "TEXT_ATTRIBUTE",
+        setAttribute: (attribute, value) => dispatch({
+            type: "SET_ATTRIBUTE",
             name: attribute,
             value: value
         }),
-        setRange: (attribute, start, end) => dispatch({
-            type: "RANGE_ATTRIBUTE",
-            name: attribute,
-            start: start,
-            end: end
-        }),
-        setCheckbox: (attribute, value) => dispatch({
-            type: "CHECKBOX_ATTRIBUTE",
-            name: attribute,
-            value: value
-        })
     };
 }
 

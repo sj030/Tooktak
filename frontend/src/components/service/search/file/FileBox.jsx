@@ -1,23 +1,24 @@
 import {SmallSection} from "../../../commons/Section";
 import {Card} from "../../../commons/Card";
-import {Button} from "../../../commons/Button";
-import {useFileHospital, useFileList} from "../../../../contexts/FileContext";
+import { useFileHospital, useFileList} from "../../../../contexts/FileContext";
 import {FileTable} from "./FileTable";
 import {useState} from "react";
 import DownloadModal from "./DownloadModal";
+import DownloadFooter from "./DownloadFooter";
 
 export default function FileBox() {
     const Hospital = useFileHospital();
     const [active, setActive] = useState(false);
+    const [progress, setProgress] = useState(0);
     const file = useFileList();
     return file.length>0 ?(
         <SmallSection>
             <Card
                 header={Hospital}
                 body={<FileTable/>}
-                footer={<Button children={"다운로드"} onClick={() => setActive(true)}/>}
+                footer={<DownloadFooter setActive={setActive} setProgress={setProgress}/>}
             />
-            {<DownloadModal active={active} setActive={setActive}/>}
+            {<DownloadModal progress={progress} active={active} setActive={setActive}/>}
         </SmallSection>
     ):null;
 }
