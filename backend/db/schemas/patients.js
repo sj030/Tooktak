@@ -5,10 +5,6 @@ const mongoose = require("mongoose");
  * p_no를 기준으로 파일 모델이 환자를 찾기에 unique
  */
 const patientSchema = mongoose.Schema({
-    id: { // 환자 번호
-        type: String,
-        required: true
-    },
     attributes: mongoose.Schema.Types.Mixed // 환자의 속성
 });
 

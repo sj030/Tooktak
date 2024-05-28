@@ -25,9 +25,9 @@ router.post("/upload/data", uploadMiddleware, async (req, res) => {
         }
 
         var meta = JSON.parse(req.body['metadata']);
-        const {id, attributes} = meta; 
-        const document = await PatientService.addPatients([{"id":id, "attributes":attributes}]); 
-
+        var attribute = meta["attributes"];        
+        await PatientService.addPatients([{"attributes":attribute}]); 
+        
         res.status(200).send("succes");
     } catch (error) {
         console.error('Error processing upload:', error);
