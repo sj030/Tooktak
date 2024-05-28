@@ -46,16 +46,6 @@ router.post("/zip", (req, res) => {
         });
 });
 
-router.post("/test/zip", (req, res) => {
-    DownloadService.createZipTestResponse(req, res)
-        .then((sendInfo) => {
-            res.status(200).send(sendInfo);
-        })
-        .catch((error) => {
-            res.status(500).send(error.message);
-        });
-});
-
 // zipId에 해당하는 파일을 클라이언트에게 전송, range가 설정되어 있다면 해당 부분만, 미설정 시 전체 파일을 전송함
 router.get("/download/:zipId", (req, res) => {
     DownloadService.downloadZip(req, res)
