@@ -1,14 +1,13 @@
 import { LTable } from "../../commons/LTable";
 import { Grid } from "../../layout/Grid";
 import { DropBox } from "../../commons/DropBox";
-import { Button } from "../../commons/Button";
-import DateBox from "../../commons/DateBox";
 import { TextBox } from "../../commons/TextBox";
+import DateBox from "../../commons/DateBox";
 import { useLogs } from "../../../contexts/LogContext";
-import { useQueryParams, useSetEnd, useSetStart, useSetDateRange } from "../../../contexts/Querycontext";
+import { useQueryParams, useSetStart, useSetEnd, useSetDateRange } from "../../../contexts/Querycontext";
 import { useUpdateQueryParams } from "../../../contexts/Querycontext";
-import { useSyncQueryParams } from "../../../services/log";
 import { LogPagination } from "./LogPagination";
+import { LogSearch } from "./LogSearch";
 
 export function LogBox() {
     const logsObject = useLogs();
@@ -17,7 +16,6 @@ export function LogBox() {
     const updateQueryParams = useUpdateQueryParams();
     const setStartDate = useSetStart();
     const setEndDate = useSetEnd();
-    const syncQueryParams = useSyncQueryParams();
     const setDateRange = useSetDateRange();
 
     const items = Array.isArray(logs) ? logs.map(log => [
@@ -28,11 +26,12 @@ export function LogBox() {
         <>
             <DateBox
                 label={"date"}
-                field={"date"}
                 start={startDate}
                 end={endDate}
                 setStart={(value) => setStartDate(value)}
-                setEnd={(value) => setEndDate(value)} />
+                setEnd={(value) => setEndDate(value)}
+                setDateRange={(start, end) => setDateRange(start, end)} // setDateRange 전달
+            />
             <Grid min={7}>
                 <TextBox
                     label={"username"}
@@ -57,15 +56,6 @@ export function LogBox() {
                     value={queryParams.f_name}
                     setValue={(value) => updateQueryParams('f_name', value)} />
             </Grid>
-            <Button color="purple" className="is-normal mx-2 columns" children={"apply"} onClick={(e) => {
-                e.preventDefault();
-                if (startDate && endDate) {
-                    setDateRange(startDate, endDate);
-                    syncQueryParams({ ...queryParams, date: `${startDate}_to_${endDate}` });
-                } else {
-                    syncQueryParams(queryParams);
-                }
-            }}></Button>
             <LTable
                 header={["timestamp", "level", "message", "username", "ip", "requestUrl", "f_name", "error"]}
                 items={items}

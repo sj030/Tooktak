@@ -76,17 +76,9 @@ class DownloadService {
         return sendInfo;
     }
 
-    static async createZipTestResponse(req, res){
-        const { IDs } = req.body;
-        const zipId = "created";            // 생성된 zip파일 이름 예시 (원래는 uuid)
-        const fileSize = 1024;              // 생성된 파일 크기 예시
-        const sendInfo = { zipId, fileSize }
-        return sendInfo;
-    }
-
     // path 관련 및 모듈화에 대해 추가 수정 들어갈 예정
     static async downloadZip(req, res){
-        const {zipId} = req.params.zipId;
+        const {zipId} = req.params;
         const filePath = path.join(config.path.zip, zipId)+".zip";
         console.log("filepath: ",filePath);
         

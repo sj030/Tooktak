@@ -36,9 +36,9 @@ export const UserProvider = ({ children }) => {
         }
     }, []);
 
-    const handleAddUser = useCallback(async (username, password) => {
+    const handleAddUser = useCallback(async (username, password, role) => {
         try {
-            const response = await RequestCreateUserApi(username, password);
+            const response = await RequestCreateUserApi(username, password, role);
             if (response && response.status === 201) {
                 toast.success("계정 생성 완료");
                 fetchUsers(1);

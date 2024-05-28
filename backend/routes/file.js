@@ -25,9 +25,9 @@ router.post("/upload/data", uploadMiddleware, async (req, res) => {
         }
 
         var meta = JSON.parse(req.body['metadata']);
-        const {id, attributes} = meta; 
-        const document = await PatientService.addPatients([{"id":id, "attributes":attributes}]); 
-
+        var attribute = meta["attributes"];        
+        await PatientService.addPatients([{"attributes":attribute}]); 
+        
         res.status(200).send("succes");
     } catch (error) {
         console.error('Error processing upload:', error);
@@ -38,16 +38,6 @@ router.post("/upload/data", uploadMiddleware, async (req, res) => {
 // Zip 파일 생성 API, download에서의 파일과 대응되는 zipId와 해당 zip파일의 Size 정보를 클라이언트에게 전달
 router.post("/zip", (req, res) => {
     DownloadService.createZip(req, res)
-        .then((sendInfo) => {
-            res.status(200).send(sendInfo);
-        })
-        .catch((error) => {
-            res.status(500).send(error.message);
-        });
-});
-
-router.post("/test/zip", (req, res) => {
-    DownloadService.createZipTestResponse(req, res)
         .then((sendInfo) => {
             res.status(200).send(sendInfo);
         })
