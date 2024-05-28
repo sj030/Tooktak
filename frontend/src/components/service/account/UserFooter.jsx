@@ -2,14 +2,16 @@ import React, { useState } from 'react';
 import { useUsers } from '../../../contexts/UserContext';
 import { Button } from '../../commons/Button';
 import { IdInputField, PwInputField } from '../../commons/Input';
+import { DropBox } from '../../commons/DropBox';
 
 
 export function UserFooter() {
-    const { handleAddUser, fetchUsers, handleDeleteUser, selectedUser } = useUsers();
+    const { handleAddUser, handleDeleteUser, selectedUser } = useUsers();
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [role, setRole] = useState('');
     const [showAddUserForm, setShowAddUserForm] = useState(false);
-
+    const roleOptions = ['DATA', 'AI'];
     const handleAddUserClick = () => {
         setShowAddUserForm(true);
     };
@@ -18,20 +20,21 @@ export function UserFooter() {
         setShowAddUserForm(false);
         setUsername('');
         setPassword('');
+        setRole('');
     };
 
     const handleCreateUser = () => {
-        handleAddUser(username, password);
+        handleAddUser(username, password, role);
         handleCloseAddUserForm();
     };
 
     return (
         <div className="user-footer">
-            <Button color="purple" className="mx-1" onClick={fetchUsers}>Search</Button>
             <Button color="green" className="mx-1" onClick={handleAddUserClick}>Add User</Button>
             {selectedUser && (
                 <Button color="red" className="mx-1" onClick={handleDeleteUser}>Delete User</Button>
             )}
+
             {showAddUserForm && (
                 <div className="overlay" onClick={handleCloseAddUserForm}>
                     <div className="add-user-form" onClick={(e) => e.stopPropagation()}>
@@ -51,6 +54,16 @@ export function UserFooter() {
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 placeholder="password"
+                            />
+                        </div>
+                        
+                        <div className="form-group">
+                            <DropBox
+                                label="role"
+                                value={role}
+                                setValue={setRole} 
+                                placeholder="필수"
+                                options={roleOptions}
                             />
                         </div>
                         <div className="form-actions">
