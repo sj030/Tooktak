@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const moment = require('moment-timezone');
 
 /**
  * 파일 스키마 정의.
@@ -34,7 +35,7 @@ const fileSchema = new mongoose.Schema({
         required: true,
     }
 }, {
-    timestamps: true
+    timestamps: { currentTime: () => moment().tz('Asia/Seoul').toDate() } // timestamps 옵션을 사용하여 createdAt과 updatedAt을 자동으로 설정
 });
 
 const FileModel = mongoose.model("File", fileSchema);
