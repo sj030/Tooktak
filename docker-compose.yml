@@ -55,7 +55,7 @@ services:
   certbot:
     build:
       context: .
-      dockerfile: Dockerfile.certbot
+      dockerfile: dockerfile.certbot
     container_name: certbot
     volumes:
       - ./nginx/certbot/conf:/etc/letsencrypt
