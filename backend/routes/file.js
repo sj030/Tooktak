@@ -62,24 +62,24 @@ router.post("/upload/data", uploadMiddleware, async (req, res) => {
 router.post("/zip", (req, res) => {
     DownloadService.createZip(req, res)
         .then((sendInfo) => {
-            // logger.info(Literals.ZIP.ZIP_SUCCESS, { 
-            //     username: req.user.data.username,
-            //     ip: req.ip,
-            //     role: req.user.data.role,
-            //     requestUrl: req.originalUrl,
-            //     f_name: "Zip Id : " + sendInfo.zipId +" Zip Size : " + sendInfo.fileSize,
-            // });
+            logger.info(Literals.ZIP.ZIP_SUCCESS, { 
+                //username: req.user.data.username,
+                ip: req.ip,
+                //role: req.user.data.role,
+                requestUrl: req.originalUrl,
+                f_name: "Zip Id : " + sendInfo.zipId +" Zip Size : " + sendInfo.fileSize,
+            });
             res.status(200).send(sendInfo);
         })
         .catch((error) => {
-            // logger.error(Literals.ZIP.ZIP_FAILED, {
-            //     username: req.user.data.username,
-            //     ip: req.ip,
-            //     role: req.user.data.role,
-            //     requestUrl: req.originalUrl,
-            //     f_name: null,
-            //     error: error.message
-            // });
+            logger.error(Literals.ZIP.ZIP_FAILED, {
+                //username: req.user.data.username,
+                ip: req.ip,
+                //role: req.user.data.role,
+                requestUrl: req.originalUrl,
+                f_name: null,
+                error: error.message
+            });
             res.status(500).send(error.message);
         });
 });
@@ -88,14 +88,14 @@ router.post("/zip", (req, res) => {
 router.get("/download/:zipId", (req, res) => {
     DownloadService.downloadZip(req, res)
         .catch((error) => {
-            // logger.error(Literals.ZIP.ZIP_SEND_FAILED, {
-            //     username: req.user.data.username,
-            //     ip: req.ip,
-            //     role: req.user.data.role,
-            //     requestUrl: req.originalUrl,
-            //     f_name: null,
-            //     error: error.message
-            // });
+            logger.error(Literals.ZIP.ZIP_SEND_FAILED, {
+                //username: req.user.data.username,
+                ip: req.ip,
+                //role: req.user.data.role,
+                requestUrl: req.originalUrl,
+                f_name: null,
+                error: error.message
+            });
             res.status(500).send(error.message);
         });
 });
