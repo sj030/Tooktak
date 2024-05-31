@@ -1,6 +1,6 @@
 import axiosInstance from "./config/axiosInstance";
 
-const CHUNK_SIZE = 512 * 1024; // 512MB 단위 청크 크기
+const CHUNK_SIZE = 16 * 1024 *1024; // 512MB 단위 청크 크기
 export function getFileZip(filePaths) {
     return axiosInstance.post('file/zip', filePaths)
 }
@@ -25,7 +25,10 @@ export async function getDownload(writable, zipId, fileSize, setProgress) {
             const response = await axiosInstance.get('file/download/' + zipId, config);
             await writable.write(response.data);
             downloadedSize += response.data.size;
-            setProgress((downloadedSize / fileSize) * 100);
+            setProgress({
+                percent: (downloadedSize / fileSize) * 100
+                , message: `다운로드 중...(${downloadedSize}/${fileSize} bytes)`
+            });
         }
     }
 }
