@@ -6,8 +6,10 @@ services:
       context: ./frontend
     ports:
       - "80:80"
+      - "443:443"  # 추가
     depends_on:
       - backend
+      - certbot  # 추가
 
   backend:
     build:
@@ -17,12 +19,12 @@ services:
     ports:
       - "3001:3001"
     env_file:
-      - ./backend/.env  # 환경 변수 파일 추가
+      - ./backend/.env
     depends_on:
       - mongo
     volumes:
-      - ./uploads:/usr/src/app/uploads  # 업로드 디렉토리 마운트
-      - ./zips:/usr/src/app/zips  # ZIP 파일 생성 디렉토리 마운트
+      - ./uploads:/usr/src/app/uploads
+      - ./zips:/usr/src/app/zips
 
   mongo:
     image: mongo:latest
@@ -31,5 +33,13 @@ services:
     volumes:
       - mongo-data:/data/db
 
+  certbot:
+    image: certbot/certbot
+    volumes:
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
+
 volumes:
   mongo-data:
+  certbot-conf:  # 추가
+  certbot-www:  # 추가
