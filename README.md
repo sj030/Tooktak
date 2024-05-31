@@ -1,44 +1,90 @@
 ## 👏 Tooktak 프로젝트
 산학협력프로젝트 과목 (3230) 팀 프로젝트
 
-## 실행 환경
-- Linux(Ubuntu 등)
-- WSL (Windows Subsystem for Linux)
-- MacOS
+## 프로젝트 설명
+이 프로젝트는 클라우드 인스턴스에서 실행되는 풀스택 애플리케이션입니다.   
+리액트 프론트엔드와 Node.js 백엔드로 구성되어 있으며, Nginx를 사용하여 리버스 프록시와 정적 파일 서빙을 담당합니다.   
+인증서는 Let's Encrypt를 사용하여 HTTPS를 지원합니다.
 
-## 실행 방법
-### 1. Docker 설치
-Docker를 설치합니다. 자세한 설치 방법은 [Docker 공식 문서](https://docs.docker.com/engine/install/)를 참조하세요.
+## 배포 준비
+### 1. 인스턴스 생성
 
-### 2. Docker Desktop 설치 (Windows, MacOS 사용자)
-Windows 사용자라면 Docker Desktop을 설치하고, WSL 2와 통합해야 합니다. Docker Desktop은 [Docker Desktop 다운로드 페이지](https://www.docker.com/products/docker-desktop)에서 설치할 수 있습니다. 설치 후 다음을 확인합니다:
-- Docker Desktop 실행
-- "Settings" -> "Resources" -> "WSL Integration"에서 Ubuntu 배포판 활성화
-- [wsl 설명서](https://learn.microsoft.com/ko-kr/windows/wsl/tutorials/wsl-containers)를 참고하세요.
+GCP 또는 AWS에서 인스턴스를 생성합니다.
+인스턴스의 방화벽 설정에서 TCP 포트 80과 443을 엽니다.
+### 2. 도메인 설정
 
-### 3. `setup.sh` 스크립트 실행
-프로젝트 루트 디렉토리로 이동하여 `setup.sh` 스크립트에 실행 권한을 부여한 후 실행합니다.
+인스턴스의 고정 IP를 사용하여 도메인을 구입하거나 설정합니다.
+### 3. 리포지토리 클론
+
+인스턴스의 SSH에 접속하여 프로젝트 리포지토리를 클론합니다.
+
 ```
-chmod +x setup.sh
+git clone https://github.com/your-repo/Tooktak.git
+
+cd Tooktak
+```
+
+## 환경 설정
+
+### 1. Nginx 설정
+- /frontend/nginx.conf 파일을 열어 tooktak1234.duckdns.org 모든 부분을 설정한 도메인으로 변경합니다.
+- 인증서를 처리하기 위해 주석에 맞추어 코드를 주석처리합니다.
+
+### 2. 설치 스크립트 실행
+- 프로젝트 루트에서 설치 스크립트를 실행하여 필요한 설정을 완료합니다.
+```
+chmod +x ./setup.sh
 ./setup.sh
 ```
 
-### 4. Docker Compose를 사용하여 컨테이너 빌드 및 실행
-다음 명령어를 실행하여 Docker Compose를 사용하여 컨테이너를 빌드하고 실행합니다.
+### 3. Docker Compose 빌드 및 실행
+- Docker Compose를 사용하여 애플리케이션을 빌드하고 실행합니다.
 ```
-(sudo) docker-compose up --build
+sudo docker-compose up --build -d
 ```
 
-### 5. 브라우저에서 서비스 접속
-브라우저의 주소창에 localhost를 입력하여 서비스를 이용할 수 있습니다.
+## SSL 인증서 발급
+### 1. Let's Encrypt 인증서 발급
+- Certbot을 사용하여 SSL 인증서를 발급받습니다. 이메일과 도메인을 적절히 입력합니다.
+```
+sudo docker run -it --rm \
+  -v $(pwd)/certbot/conf:/etc/letsencrypt \
+  -v $(pwd)/certbot/www:/var/www/certbot \
+  certbot/certbot certonly \
+  --webroot --webroot-path=/var/www/certbot \
+  --email yourEmail@example.com --agree-tos --no-eff-email \
+  -d yourDomain
+```
 
-## 문제 해결
-### MongoDB Compass와 연결되지 않는 경우
-1. 로컬에서 MongoDB가 이미 실행 중이라면 이를 중지합니다.
-2. MongoDB Compass URI 입력란에 다음을 입력합니다.
+### 2. Docker Compose 중지
+- 인증서 발급 후 Docker Compose를 중지합니다.
+
 ```
-mongodb://localhost:27017
+sudo docker-compose down
 ```
-### Docker Desktop 설치 후 실행이 안되는 오류   
-1. Docker Desktop의 이전 버전을 설치합니다. (ex. ver 4.26.0)
-2. Docker Desktop을 다시 실행합니다.
+
+### 3. Nginx 설정 업데이트
+- /frontend/nginx.conf 파일에서 주석을 해제합니다.
+- tooktak1234.duckdns.org 모든 부분이 설정한 도메인으로 변경되었는지 검토합니다.
+
+```
+server {
+    listen 443 ssl;
+    server_name yourDomain;  
+    ssl_certificate /etc/letsencrypt/live/yourDomain/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/yourDomain/privkey.pem;
+    ...
+}
+```
+### 4. Docker Compose 재실행
+- 변경된 설정을 적용하기 위해 Docker Compose를 다시 빌드하고 실행합니다.
+
+```
+sudo docker-compose up --build -d
+```
+
+## 서비스 접근
+- 브라우저에서 설정한 도메인으로 접속하여 서비스를 이용할 수 있습니다.
+
+## 인증서 자동 갱신 (옵션)
+Let's Encrypt 인증서는 90일 동안 유효합니다. 인증서 자동 갱신을 설정하여 갱신을 자동화할 수도 있습니다.
