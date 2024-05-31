@@ -9,6 +9,7 @@ class PatientService {
         await PatientRepository.deleteAll();
         const dummy = [
             {
+                "id": "1",
                 "attributes": {
                     "S-NO": 1,
                     "참여날짜": "2023-03-05",
@@ -22,6 +23,7 @@ class PatientService {
                 }
             },
             {
+                "id": "2",
                 "attributes": {
                     "S-NO": 2,
                     "참여날짜": "2023-03-07",
@@ -35,6 +37,7 @@ class PatientService {
                 }
             },
             {
+                "id": "3",
                 "attributes": {
                     "S-NO": 3,
                     "참여날짜": "2024-01-05",
@@ -48,6 +51,7 @@ class PatientService {
                 }
             },
             {
+                "id": "4",
                 "attributes": {
                     "No.": 4,
                     "데이터 수집 날짜": "2023-03-03",
@@ -60,6 +64,7 @@ class PatientService {
                 }
             },
             {
+                "id": "5",
                 "attributes": {
                     "No.": 5,
                     "데이터 수집 날짜": "2023-03-07",
