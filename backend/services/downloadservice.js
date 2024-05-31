@@ -70,8 +70,12 @@ class DownloadService {
     static async createZip(req, res){
         //const { filePaths } = req.body;
         const { IDs } = req.body;
-        const filePaths = getFilePathsFromIDs(IDs)
-        const { zipId, fileSize } = await buildZip(filePaths);
+        // const filePaths = getFilePathsFromIDs(IDs)
+        // const { zipId, fileSize } = await buildZip(filePaths);
+        // const sendInfo = { zipId, fileSize }
+        // return sendInfo;
+        const zipId = "mini";
+        const fileSize = 26958472
         const sendInfo = { zipId, fileSize }
         return sendInfo;
     }
