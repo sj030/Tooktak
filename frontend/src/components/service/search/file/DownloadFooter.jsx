@@ -18,7 +18,7 @@ export default function DownloadFooter({setProgress, setActive}) {
             const writable = await handle.createWritable();
             const {data: {zipId, fileSize}} = await download();
             setActive(true);
-            await getDownload(zipId, fileSize, setProgress);
+            await getDownload(writable,zipId, fileSize, setProgress);
             await writable.close();
             alert('파일 다운로드 완료!');
             setActive(false);
