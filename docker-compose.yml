@@ -6,10 +6,12 @@ services:
       context: ./frontend
     ports:
       - "80:80"
-      - "443:443"  # 추가
+      - "443:443"
+    volumes:
+      - ./certbot/www:/var/www/certbot
     depends_on:
       - backend
-      - certbot  # 추가
+      - certbot
 
   backend:
     build:
@@ -41,5 +43,3 @@ services:
 
 volumes:
   mongo-data:
-  certbot-conf:  # 추가
-  certbot-www:  # 추가
