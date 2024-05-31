@@ -3,7 +3,8 @@ import ProgressBar from "../../../commons/ProgressBar";
 
 export default function DownloadModal({progress,active, setActive}) {
     return <Modal body={<>
-        <ProgressBar percent={progress}/>
+        <ProgressBar percent={progress.percent}/>
+        <p>{progress.message}</p>
     </>}
                   onClose={() => {
                   }}

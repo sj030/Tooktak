@@ -9,7 +9,7 @@ import DownloadFooter from "./DownloadFooter";
 export default function FileBox() {
     const Hospital = useFileHospital();
     const [active, setActive] = useState(false);
-    const [progress, setProgress] = useState(0);
+    const [progress, setProgress] = useState({percent: 0, message: ""});
     const file = useFileList();
     return file.length>0 ?(
         <SmallSection>
