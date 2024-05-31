@@ -7,13 +7,13 @@ const { Literals } = require("../literal/literals");
 const logger = require("../config/logger");
 
 // 서비스를 추가합니다.
-router.post("/", authenticateToken, async (req, res) => {
+router.post("/", async (req, res) => {
     await ServiceAttrService.addServices(req.body)
         .then(() => {
             logger.info(Literals.SERVICE.ADD_SERVICE_SUCCESS, { 
-                username: req.user.data.username,
+                //username: req.user.data.username,
                 ip: req.ip,
-                role: req.user.data.role,
+                //role: req.user.data.role,
                 requestUrl: req.originalUrl,
                 f_name: null
             });
@@ -21,9 +21,9 @@ router.post("/", authenticateToken, async (req, res) => {
         })
         .catch((error) => {
             logger.error(Literals.SERVICE.ADD_SERVICE_FAILED, { // authservice나 logservice에 적은거 참고해주세요
-                username: req.user.data.username,
+                //username: req.user.data.username,
                 ip: req.ip,
-                role: req.user.data.role,
+                //role: req.user.data.role,
                 requestUrl: req.originalUrl,
                 f_name: null,
                 error: error.message
@@ -33,14 +33,14 @@ router.post("/", authenticateToken, async (req, res) => {
 });
 
 // 모든 서비스 이름을 가져옵니다. 
-router.get("/attributes", authenticateToken, async (req, res) => {
+router.get("/attributes", async (req, res) => {
     await ServiceAttrService.getAllServicesWithAttributes()
         .then((result) => {
             if (result.length === 0) {
                 logger.error(Literals.SERVICE.NO_SERVICE_ERROR, { 
-                    username: req.user.data.username,
+                    //username: req.user.data.username,
                     ip: req.ip,
-                    role: req.user.data.role,
+                    //role: req.user.data.role,
                     requestUrl: req.originalUrl,
                     f_name: null,
                     error: Literals.SERVICE.NO_SERVICE_ERROR
@@ -49,9 +49,9 @@ router.get("/attributes", authenticateToken, async (req, res) => {
             }
             else {
                 logger.info(Literals.SERVICE.SERVICE_FETCH_SUCCESS, { 
-                    username: req.user.data.username,
+                    //username: req.user.data.username,
                     ip: req.ip,
-                    role: req.user.data.role,
+                    //role: req.user.data.role,
                     requestUrl: req.originalUrl,
                     f_name: null
                 });
@@ -60,9 +60,9 @@ router.get("/attributes", authenticateToken, async (req, res) => {
         })
         .catch((error) => {
             logger.error(Literals.SERVICE.SERVICE_FETCH_FAILED, { 
-                username: req.user.data.username,
+                //username: req.user.data.username,
                 ip: req.ip,
-                role: req.user.data.role,
+                //role: req.user.data.role,
                 requestUrl: req.originalUrl,
                 f_name: null,
                 error: error.message
