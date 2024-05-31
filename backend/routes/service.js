@@ -43,7 +43,7 @@ router.get("/attributes", authenticateToken, async (req, res) => {
                     role: req.user.data.role,
                     requestUrl: req.originalUrl,
                     f_name: null,
-                    error: error.message
+                    error: Literals.SERVICE.NO_SERVICE_ERROR
                 });
                 res.status(400).send(Literals.SERVICE.NO_SERVICE_ERROR);
             }
@@ -86,7 +86,7 @@ router.get("/attributes/:name", authenticateToken, async (req, res) => {
                     role: req.user.data.role,
                     requestUrl: req.originalUrl,
                     f_name: null,
-                    error: error.message
+                    error: Literals.SERVICE.NO_SERVICE_ERROR
                 });
                 res.status(400).send(Literals.SERVICE.NO_SERVICE_ERROR);
             }
