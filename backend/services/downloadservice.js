@@ -83,7 +83,7 @@ class DownloadService {
     // path 관련 및 모듈화에 대해 추가 수정 들어갈 예정
     static async downloadZip(req, res){
         const {zipId} = req.params;
-        const filePath = path.join(config.path.zip, zipId)+".zip";
+        const filePath = path.resolve(__dirname, "..", zipId)+".zip";
         console.log("filepath: ",filePath);
         
         if (!fs.existsSync(filePath)) {
