@@ -106,5 +106,6 @@ export function useUploadAll() {
                 fail(file);
             }
         }
+        alert('파일 업로드 완료!');
     };
 }
