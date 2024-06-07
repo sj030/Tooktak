@@ -72,11 +72,18 @@ function useUploadFail(){
         dispatch({type: "UPLOAD_FAIL", file: file});
     }
 }
+function useLoading(){
+    const {dispatch}=useContext(DirectoryContext);
+    return (file) => {
+        dispatch({type: "UPLOADING", file: file});
+    }
+}
 
 export function useUploadAll() {
     const {directoryList} = useContext(DirectoryContext);
     const success = useUploadSuccess();
     const fail = useUploadFail();
+    const loading = useLoading();
     const fileList = [];
     Object.entries(directoryList).forEach(([_, dir]) => {
         if(dir.state!=="ready") return;
@@ -87,10 +94,15 @@ export function useUploadAll() {
     });
     return async () => {
         for (const {file, attributes} of fileList) {
-            const res = await upload(file, attributes);
-            if (res.status === 200) {
-                success(file);
-            }else{
+            loading(file);
+            try {
+                const res = await upload(file, attributes);
+                if (res.status === 200) {
+                    success(file);
+                }else{
+                    fail(file);
+                }
+            }catch (e) {
                 fail(file);
             }
         }
