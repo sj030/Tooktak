@@ -2,12 +2,10 @@ export default function uploadFileReducer(state, action) {
     switch (action.type) {
         case "INIT_DATA":
             const directoryList = {};
-            // 1. xlsx 파일의 데이터를 읽어서 attributeList와 directoryList를 만든다.
             Object.entries(action.xlsx).forEach(([key, value]) => {
                 directoryList[key] = {attributes: value, state: "xlsxOnly", files: {}};
             });
             directoryList["no_xlsx_data"] = {state: "fileOnly", files: {}};
-            //2. file의 데이터를 읽어서 directoryList에 추가한다.
             Object.entries(action.file).forEach(([key, value]) => {
                 const path = key.split("/");
                 const dirPath = path[0] + "/" + path[1];
@@ -18,16 +16,20 @@ export default function uploadFileReducer(state, action) {
                     directoryList["no_xlsx_data"].files[key] = value;
                 }
             });
+            //add fileNumber to each directory
+            Object.entries(directoryList).forEach(([key, value]) => {
+                value.fileNum = Object.keys(value.files).length;
+            });
             return directoryList;
         case "UPLOAD_SUCCESS":
             const path = action.file.webkitRelativePath.split("/");
             const dirPath = path[1] + "/" + path[2];
             const fileKey = path[1] + "/" + path[2] + "/" + path[3];
             const newDirectoryList = {...state};
-            // 1. directoryList에서 해당 파일을 찾아서 삭제한다.
             newDirectoryList[dirPath].files[fileKey] = fileKey + " upload success";
+            newDirectoryList[dirPath].fileNum -= 1;
             // 2. 해당 폴더의 파일이 없다면 state를 xlsxOnly로 변경한다.
-            if (Object.keys(newDirectoryList[dirPath].files).length === 0) {
+            if (newDirectoryList[dirPath].fileNum === 0) {
                 newDirectoryList[dirPath].state = "success";
             }
             return newDirectoryList;
@@ -39,6 +41,13 @@ export default function uploadFileReducer(state, action) {
             failDirectoryList[failDirPath].state = "error";
             failDirectoryList[failDirPath].files[failFileKey] = failFileKey + " upload fail";
             return failDirectoryList;
+        case  "UPLOADING":
+            const uploadingPath = action.file.webkitRelativePath.split("/");
+            const uploadingDirPath = uploadingPath[1] + "/" + uploadingPath[2];
+            const uploadingFileKey = uploadingPath[1] + "/" + uploadingPath[2] + "/" + uploadingPath[3];
+            const uploadingDirectoryList = {...state};
+            uploadingDirectoryList[uploadingDirPath].files[uploadingFileKey] = uploadingFileKey + " uploading...";
+            return uploadingDirectoryList;
         default:
             return state;
     }
