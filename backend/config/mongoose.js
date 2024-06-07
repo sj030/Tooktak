@@ -23,8 +23,14 @@ if (env === "dev") {
  * @returns {object} Mongoose 연결 객체
  * @public
  */
-exports.connect = () => {
-    mongoose.connect(mongo.uri); // 설정된 URI를 사용하여 MongoDB에 연결
-    UserService.ensureAdminUser(); // 연결 후 관리자 사용자가 있는지 확인하고 없으면 생성
+exports.connect = async () => {
+    try {
+        await mongoose.connect(mongo.uri, { useNewUrlParser: true, useUnifiedTopology: true });
+        logger.info("MongoDB connected");
+        await UserService.ensureAdminUser(); // 연결 후 관리자 사용자가 있는지 확인하고 없으면 생성
+    } catch (err) {
+        logger.error(`MongoDB connection error: ${err}`);
+        process.exit(-1);
+    }
     return mongoose.connection; // mongoose 연결 객체 반환
 };

@@ -9,39 +9,57 @@ const { FileService } = require("../services/fileservice");
 const { ServiceAttrService } = require("../services/serviceattrservice");
 const { Literals } = require("../literal/literals");
 const logger = require("../config/logger");
-
+const authenticateToken = require("../middleware/authenticateToken");
 
 // Multer 객체 생성 및 파일 업로드 미들웨어 설정 (TEST 용도입니다)
 const upload = MetaTransferService.initMulter();
 const uploadMiddleware = upload.single("filekey"); // filekey는 클라이언트에서 전송한 파일의 키 값, single()은 하나의 파일만 업로드할 때 사용 (array()는 여러 파일 업로드)
 
 // test 용도의 업로드 API
-router.post("/upload/data", uploadMiddleware, async (req, res) => {
+router.post("/upload", async (req, res) => {
     try {
-        // req -> {"id":8, "attributes":{"S-NO":1, "참여날짜":"2023-03-05","성명":"홍길동","병록번호":1,"나이":78,"성별":"남","MMSE":45,"최종학력":"고졸","CDT":30}}
-        if (!req.body) {
-            console.log("body is null");
-            return res.status(400).send("body is null");
-        }
-
-        var meta = JSON.parse(req.body['metadata']);
-        const {id, attributes} = meta; 
-        await PatientService.addPatients([{"id":id, "attributes":attributes}]); 
-        
-        res.status(200).send("succes");
+        const delay = Math.floor(Math.random() * (4000 - 2000 + 1) + 2000);
+        setTimeout(() => {
+            // Send a 200 OK response with success message after the delay
+            res.status(200).send("success");
+        }, delay);
     } catch (error) {
+        // logger.error(Literals.SERVICE.ADD_PATIENT_FAILED, {
+        //     username: req.user.data.username,
+        //     ip: req.ip,
+        //     role: req.user.data.role,
+        //     requestUrl: req.originalUrl,
+        //     f_name: null,
+        //     error: error.message
+        // });
         console.error('Error processing upload:', error);
         res.status(400).send('Internal Server Error');
     }
 });
 
+
 // Zip 파일 생성 API, download에서의 파일과 대응되는 zipId와 해당 zip파일의 Size 정보를 클라이언트에게 전달
 router.post("/zip", (req, res) => {
     DownloadService.createZip(req, res)
         .then((sendInfo) => {
+            logger.info(Literals.ZIP.ZIP_SUCCESS, { 
+                //username: req.user.data.username,
+                ip: req.ip,
+                //role: req.user.data.role,
+                requestUrl: req.originalUrl,
+                f_name: "Zip Id : " + sendInfo.zipId +" Zip Size : " + sendInfo.fileSize,
+            });
             res.status(200).send(sendInfo);
         })
         .catch((error) => {
+            logger.error(Literals.ZIP.ZIP_FAILED, {
+                //username: req.user.data.username,
+                ip: req.ip,
+                //role: req.user.data.role,
+                requestUrl: req.originalUrl,
+                f_name: null,
+                error: error.message
+            });
             res.status(500).send(error.message);
         });
 });
@@ -50,6 +68,14 @@ router.post("/zip", (req, res) => {
 router.get("/download/:zipId", (req, res) => {
     DownloadService.downloadZip(req, res)
         .catch((error) => {
+            logger.error(Literals.ZIP.ZIP_SEND_FAILED, {
+                //username: req.user.data.username,
+                ip: req.ip,
+                //role: req.user.data.role,
+                requestUrl: req.originalUrl,
+                f_name: null,
+                error: error.message
+            });
             res.status(500).send(error.message);
         });
 });
@@ -59,24 +85,24 @@ router.post("/search", async (req, res) => {
     // FileService.getNthPageByQuery(serviceAttrs, query, page, limit) 사용 시 페이징 처리
     const page = req.query.page ? parseInt(req.query.page) : 1;
     const limit = req.query.limit ? parseInt(req.query.limit) : 10; // 기본으로 출력하는 개수
-
     await FileService.getAllMetaDataByQuery(await ServiceAttrService.getServiceByName(req.body.name), req.body.attributes)
         .then((result) => {
             if (result.length === 0) {
                 logger.error(Literals.FILE.NO_FILE_ERROR, {
-                    //username
+                    //username: req.user.data.username,
                     ip: req.ip,
-                    //role
+                    //role: req.user.data.role,
                     requestUrl: req.originalUrl,
-                    f_name: req.body.name + " " + req.body.attributes.f_name
+                    f_name: req.body.name + " " + req.body.attributes.f_name,
+                    error: Literals.FILE.NO_FILE_ERROR
                 });
                 res.status(400).send(Literals.FILE.NO_FILE_ERROR);
             }
             else {
-                logger.info(Literals.FILE.FILE_FETCH_SUCCESS, { // authservice나 logservice에 적은거 참고해주세요
-                    // username: 나중에 미들웨어 넣으면 로그인한 유저 이름 넣어주세요
+                logger.info(Literals.FILE.FILE_FETCH_SUCCESS, { 
+                    //username: req.user.data.username,
                     ip: req.ip,
-                    // role: 나중에 미들웨어 넣으면 로그인한 유저 role 넣어주세요
+                    //role: req.user.data.role,
                     requestUrl: req.originalUrl,
                     f_name: req.body.name + " " + req.body.attributes.f_name
                 });
@@ -84,10 +110,10 @@ router.post("/search", async (req, res) => {
             }
         })
         .catch((error) => {
-            logger.error(Literals.FILE.FILE_FETCH_FAILED, { // authservice나 logservice에 적은거 참고해주세요
-                // username: 나중에 미들웨어 넣으면 로그인한 유저 이름 넣어주세요
+            logger.error(Literals.FILE.FILE_FETCH_FAILED, { 
+                //username: req.user.data.username,
                 ip: req.ip,
-                // role: 나중에 미들웨어 넣으면 로그인한 유저 role 넣어주세요
+                //role: req.user.data.role,
                 requestUrl: req.originalUrl,
                 f_name: req.body.name + " " + req.body.attributes.f_name,
                 error: error.message
@@ -100,22 +126,22 @@ router.post("/search", async (req, res) => {
 router.post("/patients", async (req, res) => {
     await PatientService.addPatients(req.body)
         .then(() => {
-            logger.info(Literals.FILE.ADD_PATIENT_SUCCESS, { // authservice나 logservice에 적은거 참고해주세요
-                // username: 나중에 미들웨어 넣으면 로그인한 유저 이름 넣어주세요
+            logger.info(Literals.FILE.ADD_PATIENT_SUCCESS, { 
+                //username: req.user.data.username,
                 ip: req.ip,
-                // role: 나중에 미들웨어 넣으면 로그인한 유저 role 넣어주세요
+                //role: req.user.data.role,
                 requestUrl: req.originalUrl,
-                // f_name: 관련되거나 필요한 파일 이름 있으면 넣어주시고 아니면 null 적어주세요
+                fname: null
             });
             res.status(200).send(Literals.FILE.ADD_PATIENT_SUCCESS);
         })
         .catch((error) => {
-            logger.error(Literals.FILE.ADD_PATIENT_FAILED, { // authservice나 logservice에 적은거 참고해주세요
-                // username: 나중에 미들웨어 넣으면 로그인한 유저 이름 넣어주세요
+            logger.error(Literals.FILE.ADD_PATIENT_FAILED, { 
+                //username: req.user.data.username,
                 ip: req.ip,
-                // role: 나중에 미들웨어 넣으면 로그인한 유저 role 넣어주세요
+                //role: req.user.data.role,
                 requestUrl: req.originalUrl,
-                // f_name: 관련되거나 필요한 파일 이름 있으면 넣어주시고 아니면 null 적어주세요
+                fname: null,
                 error: error.message
             });
             res.status(500).send(error.message);
@@ -126,20 +152,20 @@ router.post("/patients", async (req, res) => {
 router.post("/", async (req, res) => {
     await FileService.addFiles(req.body)
         .then(() => {
-            logger.info(Literals.FILE.ADD_FILE_SUCCESS, { // authservice나 logservice에 적은거 참고해주세요
-                // username: 나중에 미들웨어 넣으면 로그인한 유저 이름 넣어주세요
+            logger.info(Literals.FILE.ADD_FILE_SUCCESS, { 
+                //username: req.user.data.username,
                 ip: req.ip,
-                // role: 나중에 미들웨어 넣으면 로그인한 유저 role 넣어주세요
+                //role: req.user.data.role,
                 requestUrl: req.originalUrl,
                 f_name: req.body.serviceName + " " + req.body.f_name + " " + req.body.f_extension + " patientNo: " + req.body.patientNo
             });
             res.status(200).send(Literals.FILE.ADD_FILE_SUCCESS);
         })
         .catch((error) => {
-            logger.error(Literals.FILE.ADD_FILE_FAILED, { // authservice나 logservice에 적은거 참고해주세요
-                // username: 나중에 미들웨어 넣으면 로그인한 유저 이름 넣어주세요
+            logger.error(Literals.FILE.ADD_FILE_FAILED, { 
+                //username: req.user.data.username,
                 ip: req.ip,
-                // role: 나중에 미들웨어 넣으면 로그인한 유저 role 넣어주세요
+                //role: req.user.data.role,
                 requestUrl: req.originalUrl,
                 f_name: req.body.serviceName + " " + req.body.f_name + " " + req.body.f_extension + " patientNo: " + req.body.patientNo,
                 error: error.message

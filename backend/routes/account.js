@@ -32,7 +32,7 @@ router.post("/refresh", AuthController.refresh);
  * @function 사용자 추가 엔드포인트
  * @route POST account/add
  * @middleware authenticateToken, isAdmin
- * @param {object} req - 요청 객체 (username과 password를 포함)
+ * @param {object} req - 요청 객체 (username과 password, role을 포함)
  * @param {object} res - 응답 객체 (새로운 사용자 정보 반환)
  * @returns {object} 201 - 사용자 생성 성공 시 사용자 정보 반환
  * @returns {object} 400 - 요청 데이터 유효성 검사 실패 시 에러 메시지 반환

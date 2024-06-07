@@ -18,9 +18,10 @@ const Literals = {
         ADD_PATIENT_SUCCESS: "Patient added successfully",
         ADD_PATIENT_FAILED: "Failed to add new patient",
     },
-    FTP: { // 다운로드 
-        REMOTE_FILE_NAME: "output.zip", // FTP 서버에 업로드되는 이름
+    ZIP: { // 다운로드 
         ZIP_SUCCESS: "Zip file created and sended successfully",
+        ZIP_SEND_FAILED: "Send zip file failed",
+        ZIP_FAILED: "Create zip file failed",
     },
     LOG: {
         USER_DATA_CORRUPTED: "User data is corrupted",

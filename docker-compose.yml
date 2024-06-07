@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
+    depends_on:
+      - backend
+      - certbot
+
+  backend:
+    build:
+      context: ./backend
+    environment:
+      - TZ=Asia/Seoul
+    ports:
+      - "3001:3001"
+    env_file:
+      - ./backend/.env
+    depends_on:
+      - mongo
+    volumes:
+      - ./uploads:/usr/src/app/uploads
+      - ./zips:/usr/src/app/zips
+
+  mongo:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+  certbot:
+    image: certbot/certbot
+    volumes:
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
+
+volumes:
+  mongo-data:

@@ -9,7 +9,7 @@ class UserService {
         try {
             const user = await UserModel.findOne({ username: config.admin.id });
             if (!user) {
-                const hash = bcrypt.hash(config.admin.password, saltRounds);
+                const hash = await bcrypt.hash(config.admin.password, saltRounds);
                 const newUser = new UserModel({
                     username: config.admin.id,
                     password: hash,
@@ -143,7 +143,12 @@ class UserService {
                     message: Literals.ACCOUNT.CREATE_ERROR_EXISTS
                 });
             }
-
+            if (!userData.role) {
+                return JSON.stringify({
+                    status: 400,
+                    message: "Role is required"
+                });
+            }
             const hashedPassword = await bcrypt.hash(userData.password, saltRounds);
             userData.password = hashedPassword;
 

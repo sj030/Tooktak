@@ -1,4 +1,4 @@
-const { UserService } = require("../services/userservice")
+const { UserService } = require("../services/userservice");
 const logger = require("../config/logger");
 
 class AuthController {
@@ -80,14 +80,14 @@ class AuthController {
     }
 
     static async createUser(req, res) {
-        const { username, password } = req.body;
+        const { username, password, role } = req.body;
 
-        if (!username || !password) {
-            return res.status(400).json({ message: "Username and password are required" });
+        if (!username || !password || !role) {
+            return res.status(400).json({ message: "Username, password, and role are required" });
         }
 
         const authUsername = req.user.data.username;
-        const result = await UserService.addUser({ username, password });
+        const result = await UserService.addUser({ username, password, role});
         const resultobj = JSON.parse(result);
         const ip = req.ip;
 
