@@ -75,7 +75,7 @@ class DownloadService {
         // const sendInfo = { zipId, fileSize }
         // return sendInfo;
         const zipId = "mini";
-        const fileSize = 26958472
+        const fileSize = 8986606;
         const sendInfo = { zipId, fileSize }
         return sendInfo;
     }
